@@ -180,7 +180,7 @@
 
 	<ShowXML>true</ShowXML>
 
-	<TemplateDirectory>Modules</TemplateDirectory>
+	<TemplateDirectory>Modules.Release</TemplateDirectory>
 
 	<PostBuildCurrentDb>SQLite\MSSQLServerAuditor.PostBuildCurrentDb.xml</PostBuildCurrentDb>
 

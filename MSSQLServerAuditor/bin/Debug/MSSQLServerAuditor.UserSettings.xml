@@ -12,7 +12,7 @@
 		<showsinglecnntab>true</showsinglecnntab>
 		<showclosetabconfirm>false</showclosetabconfirm>
 		<WarnAboutUnsignedQuery>true</WarnAboutUnsignedQuery>
-		<TemplateDirectory>Modules</TemplateDirectory>
+		<TemplateDirectory>Modules.Release</TemplateDirectory>
 
 		<MainWindowState>
 			<Location>
