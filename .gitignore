@@ -1,3 +1,15 @@
+# User-specific files
+*.suo
+*.user
+*.userosscache
+*.sln.docstates
+
+# User-specific files (MonoDevelop/Xamarin Studio)
+*.userprefs
+
+# Visual Studio 2015 cache/options directory
+.vs/
+
 # Object files
 *.o
 *.ko
@@ -30,3 +42,17 @@
 
 # Debug files
 *.dSYM/
+
+# svn
+.svn
+
+[Tt]humbs.db
+[Dd]esktop.ini
+
+# Visual Studio 2014 CTP
+**/*.sln.ide
+
+*.[Cc]ache
+*.log
+*.tmp
+*~
