@@ -23,4 +23,4 @@ How to run:
 1. Download repository
 2. Check the file "Build all64.cmd" to fix the location of MSBuild.exe. The default location is "C:\Windows\Microsoft.NET\Framework64\v4.0.30319\"
 3. Build project by "Build all64.cmd"
-4. Start "MSSQLServerAuditor\bin\Release\MSSQLServerAuditor.exe"
+4. Start "MSSQLServerAuditor\bin\Debug\MSSQLServerAuditor.exe"
