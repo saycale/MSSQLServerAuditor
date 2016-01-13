@@ -1,0 +1,114 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<root xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+<sqlquery type="MSSQL">
+	<sql-select name="GetInstanceCPUUtilization4StressTest">
+		<description>
+			The query is used as the stress tests for MSSQLServerAuditor. It will display CPU usage
+			on the server. The data comes from dm_os_ring_buffers which only stored data for the
+			past 4 HOURS. Within the ring buffers, data is averaged at the minute level. There are
+			variables limit the results to a smaller time window and for hiding the details.
+		</description>
+		<sql-select-text MinSupportedVersion="10.*" MaxSupportedVersion="*" signature="">
+			DECLARE
+				 @dateReportTime [DATETIME]
+				,@intReportId    [INTEGER]
+			;
+
+			DECLARE
+				@tbl TABLE
+				(
+					 [ReportTime]                   [DATETIME]      NOT NULL
+					,[ReportId]                     [INTEGER]       NOT NULL
+					,[EventTime]                    [DATETIME]      NOT NULL
+					,[RecordTimeStamp]              [BIGINT]        NOT NULL
+					,[RecordRingBufferType]         [NVARCHAR](128) NOT NULL
+					,[MemoryUtilization]            [INTEGER]       NULL
+					,[SystemIdle]                   [INTEGER]       NULL
+					,[SQLProcessCPUUtilization]     [INTEGER]       NULL
+					,[OtherProcessesCPUUtilization] [INTEGER]       NULL
+				);
+
+			SET @dateReportTime = GETDATE();
+			SET @intReportId    = 1;
+
+			WHILE (@intReportId &lt;= ISNULL(@NumberOfExecutions, 1))
+			BEGIN
+				INSERT INTO @tbl
+				(
+					 [ReportTime]
+					,[ReportId]
+					,[EventTime]
+					,[RecordTimeStamp]
+					,[RecordRingBufferType]
+					,[MemoryUtilization]
+					,[SystemIdle]
+					,[SQLProcessCPUUtilization]
+					,[OtherProcessesCPUUtilization]
+				)
+				SELECT
+					 @dateReportTime
+					,@intReportId
+					,y.RecordEventTime
+					,y.[RecordTimeStamp]
+					,y.[RingBufferType]
+					,y.[MemoryUtilization]
+					,y.[SystemIdle]
+					,y.[ProcessUtilization]
+					,100 - y.[SystemIdle] - y.[ProcessUtilization]
+				FROM
+					(
+						SELECT
+							 x.[RecordEventTime]                                                                             AS [RecordEventTime]
+							,x.[RecordTimeStamp]                                                                             AS [RecordTimeStamp]
+							,x.[RingBufferType]                                                                              AS [RingBufferType]
+							,XMLRecord.value('(//Record/@id)[1]', 'int')                                                     AS [RecordId]
+							,XMLRecord.value('(//Record/@type)[1]', 'VARCHAR(128)')                                          AS [RecordType]
+							,XMLRecord.value('(//Record/@time)[1]', 'bigint')                                                AS [RecordTime]
+							,XMLRecord.value('(./Record/SchedulerMonitorEvent/SystemHealth/SystemIdle)[1]', 'int')           AS [SystemIdle]
+							,XMLRecord.value('(./Record/SchedulerMonitorEvent/SystemHealth/ProcessUtilization)[1]', 'int')   AS [ProcessUtilization]
+							,XMLRecord.value('(./Record/SchedulerMonitorEvent/SystemHealth/MemoryUtilization)[1]', 'bigint') AS [MemoryUtilization]
+						FROM (
+							SELECT
+								 DATEADD(ms, t.[timestamp] - tSDOSI.[ms_ticks], GETDATE()) AS [RecordEventTime]
+								,t.[timestamp]                                             AS [RecordTimeStamp]
+								,t.[ring_buffer_type]                                      AS [RingBufferType]
+								,CONVERT(XML, t.[record])                                  AS [XMLRecord]
+							FROM
+								[sys].[dm_os_ring_buffers] t
+								CROSS JOIN [sys].[dm_os_sys_info] AS tSDOSI
+							WHERE
+								t.[ring_buffer_type] = N'RING_BUFFER_SCHEDULER_MONITOR'
+								AND t.[record] LIKE '% %'
+								AND (tSDOSI.[ms_ticks] - t.[timestamp]) &lt; 2147483647
+						) AS x
+					) AS y
+				;
+
+				WAITFOR DELAY @WaitForDelay;
+
+				SET @intReportId = @intReportId + 1;
+			END
+
+			SELECT
+				 t.[ReportTime]                   AS [ReportTime]
+				,t.[ReportId]                     AS [ReportId]
+				,t.[EventTime]                    AS [EventTime]
+				,t.[RecordTimeStamp]              AS [RecordTimeStamp]
+				,t.[RecordRingBufferType]         AS [RecordRingBufferType]
+				,t.[MemoryUtilization]            AS [MemoryUtilization]
+				,t.[SystemIdle]                   AS [SystemIdle]
+				,t.[SQLProcessCPUUtilization]     AS [SQLProcessCPUUtilization]
+				,t.[OtherProcessesCPUUtilization] AS [OtherProcessesCPUUtilization]
+			FROM
+				@tbl t
+			ORDER BY
+				t.[EventTime] ASC
+			;
+		</sql-select-text>
+		<sql-select-parameters>
+			<sql-select-parameter name="@WaitForDelay"       type="NVarChar" />
+			<sql-select-parameter name="@NumberOfExecutions" type="Int"      />
+		</sql-select-parameters>
+	</sql-select>
+</sqlquery>
+</root>

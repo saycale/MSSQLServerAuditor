@@ -1,0 +1,46 @@
+﻿<?xml version="1.0" encoding="UTF-8"?>
+<MSSQLServerAuditorTemplate id="SQLiteExternal" type="SQLiteExternal" xmlns:xi="http://www.w3.org/2003/XInclude" version="1.0">
+	<i18n name="en">
+		SQLite
+	</i18n>
+	<i18n name="ru">
+		SQLite
+	</i18n>
+
+	<template id="1000000" name="SQLiteVersion" file="sqlite\MSSQLServerAuditor.SQLiteVersion.xsl" icon="doc" showIfEmpty="true" showNumberOfRecords="true" hideEmptyResultDatabases="false">
+		<i18n name="en">
+			SQLite Version
+		</i18n>
+		<i18n name="ru">
+			Версия SQLite
+		</i18n>
+
+		<sql-select id="1" file="SQLQuery\sqlite\MSSQLServerAuditor.SQLiteQuery.External.CheckVersion.xml" name="GetSQLiteVersion" hierarchy="">
+		</sql-select>
+	</template>
+
+	<template id="2000000" name="SQLiteTables" file="sqlite\MSSQLServerAuditor.SQLiteTables.xsl" icon="doc" showIfEmpty="true" showNumberOfRecords="true" hideEmptyResultDatabases="false">
+		<i18n name="en">
+			SQLite tables
+		</i18n>
+		<i18n name="ru">
+			SQLite tables
+		</i18n>
+
+		<sql-select id="1" file="SQLQuery\sqlite\MSSQLServerAuditor.SQLiteQuery.External.Tables.xml" name="GetSQLiteTables" hierarchy="">
+		</sql-select>
+	</template>
+
+	<template id="3000000" name="SQLiteCurrentDatetime" file="sqlite\MSSQLServerAuditor.SQLiteCurrentDatetime.xsl" icon="doc" showIfEmpty="true" showNumberOfRecords="true" hideEmptyResultDatabases="false">
+		<i18n name="en">
+			Current Date
+		</i18n>
+		<i18n name="ru">
+			Сегодняшняя дата
+		</i18n>
+
+		<sql-select id="1" file="SQLQuery\sqlite\MSSQLServerAuditor.SQLiteQuery.CurrentDate.xml" name="GetSQLiteCurrentDate" hierarchy="">
+		</sql-select>
+	</template>
+
+</MSSQLServerAuditorTemplate>

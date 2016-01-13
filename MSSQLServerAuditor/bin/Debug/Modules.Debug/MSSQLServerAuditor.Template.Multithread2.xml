@@ -1,0 +1,97 @@
+﻿<?xml version="1.0" encoding="UTF-8"?>
+<MSSQLServerAuditorTemplate id="Multithread2" type="MSSQL" xmlns:xi="http://www.w3.org/2003/XInclude" version="1.0">
+	<i18n name="en">
+		Multithread test2
+	</i18n>
+	<i18n name="ru">
+		Тестирование многопоточной обработки2
+	</i18n>
+
+	<template id="100001" name="MultithreadTestQuery_01" file="mssql\Instance\MSSQLServerAuditor.MultithreadTestQuery.xsl" icon="folder" showIfEmpty="true" showNumberOfRecords="true">
+		<i18n name="en">
+			Test 01
+		</i18n>
+		<i18n name="ru">
+			Тест 01
+		</i18n>
+
+		<sql-select id="0" file="SQLQuery\mssql\MSSQLServerAuditor.MSSQLQuery.MultithreadTestQuery.xml" name="GetMultithreadTestQuery" hierarchy="">
+			<parameter name="@WaitForDelay" value="00:00:15.000"/>
+		</sql-select>
+
+		<schedule
+			schedule_name        = "Multithread2:MultithreadTestQuery_01:Every10Seconds"
+			enabled              = "false"
+			schedule_type        = "0"
+			freq_type            = "3"
+			freq_interval        = "1"
+			active_start_date    = "19001001"
+			active_end_date      = "99991231"
+
+			freq_day_type        = "1"
+			freq_subday_type     = "0"
+			freq_subday_interval = "10"
+			active_start_time    = "000000"
+			active_end_time      = "235959"
+		></schedule>
+	</template>
+
+	<template id="100002" name="MultithreadTestQuery_02" file="mssql\Instance\MSSQLServerAuditor.MultithreadTestQuery.xsl" icon="folder" showIfEmpty="true" showNumberOfRecords="true">
+		<i18n name="en">
+			Test 02
+		</i18n>
+		<i18n name="ru">
+			Тест 02
+		</i18n>
+
+		<sql-select id="0" file="SQLQuery\mssql\MSSQLServerAuditor.MSSQLQuery.MultithreadTestQuery.xml" name="GetMultithreadTestQuery" hierarchy="">
+			<parameter name="@WaitForDelay" value="00:00:20.000"/>
+		</sql-select>
+
+		<schedule
+			schedule_name        = "Multithread2:MultithreadTestQuery_02:Every10Seconds"
+			enabled              = "false"
+			schedule_type        = "0"
+			freq_type            = "3"
+			freq_interval        = "1"
+			active_start_date    = "19001001"
+			active_end_date      = "99991231"
+
+			freq_day_type        = "1"
+			freq_subday_type     = "0"
+			freq_subday_interval = "10"
+			active_start_time    = "000000"
+			active_end_time      = "235959"
+		></schedule>
+	</template>
+	<!--
+	<template id="100003" name="MultithreadTestQuery_03" file="mssql\Instance\MSSQLServerAuditor.MultithreadTestQuery.xsl" icon="folder" showIfEmpty="true" showNumberOfRecords="true">
+		<i18n name="en">
+			Test 03
+		</i18n>
+		<i18n name="ru">
+			Тест 03
+		</i18n>
+
+		<sql-select id="0" file="SQLQuery\mssql\MSSQLServerAuditor.MSSQLQuery.MultithreadTestQuery.xml" name="GetMultithreadTestQuery" hierarchy="">
+			<parameter name="@WaitForDelay" value="00:00:15.000"/>
+		</sql-select>
+
+		<schedule
+			schedule_name        = "Multithread2:MultithreadTestQuery_03:Every10Seconds"
+			enabled              = "false"
+			schedule_type        = "0"
+			freq_type            = "3"
+			freq_interval        = "1"
+			active_start_date    = "19001001"
+			active_end_date      = "99991231"
+
+			freq_day_type        = "1"
+			freq_subday_type     = "0"
+			freq_subday_interval = "10"
+			active_start_time    = "000000"
+			active_end_time      = "235959"
+		></schedule>
+	</template>
+	-->
+</MSSQLServerAuditorTemplate>

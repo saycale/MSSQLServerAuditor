@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<root xmlns:xi="http://www.w3.org/2003/XInclude">
+<sqlquery type="EventLog">
+	<sql-select name="GetLogonHistory">
+		<name>
+			GetLogonHistory
+		</name>
+		<description>
+			get messages from event log: EntryType 528 or 4624.
+		</description>
+		<reference>
+			https://msdn.microsoft.com/en-us/library/system.diagnostics.eventing.reader.eventlogquery%28v=vs.110%29.aspx
+		</reference>
+		<reference>
+			https://msdn.microsoft.com/en-us/library/bb671200(v=vs.110).aspx
+		</reference>
+		<reference>
+			http://serverfault.com/questions/571732/filtering-security-logs-by-user-and-logon-type
+		</reference>
+		<sql-select-text MinSupportedVersion="*" MaxSupportedVersion="*" signature="">
+			&lt;QueryList&gt;
+				&lt;Query Id=&quot;0&quot; Path=&quot;Security&quot;&gt;
+					&lt;Select Path=&quot;Security&quot;&gt;
+						*[System[(EventID=&quot;4624&quot;)]
+						and
+						System[TimeCreated[timediff(@SystemTime) &amp;lt;= 900000]]
+						and
+						EventData[Data[@Name=&quot;LogonType&quot;]
+						and
+						(Data=&quot;7&quot; or Data=&quot;8&quot; or Data=&quot;10&quot; or Data=&quot;3&quot;)]
+						and
+						EventData[Data[@Name=&quot;TargetUserName&quot;]
+						and
+						(Data &gt; &quot;$&quot;)]
+						]
+					&lt;/Select&gt;
+				&lt;/Query&gt;
+			&lt;/QueryList&gt;
+		</sql-select-text>
+		<sql-select-parameters>
+			<sql-select-parameter name="@colEventId"         type="NVarChar" />
+			<sql-select-parameter name="@colUsername"        type="NVarChar" />
+			<sql-select-parameter name="@colClientIPAddress" type="NVarChar" />
+			<sql-select-parameter name="@colTimeGenerated"   type="NVarChar" />
+		</sql-select-parameters>
+	</sql-select>
+</sqlquery>
+</root>

@@ -1,0 +1,1073 @@
+﻿<?xml version="1.0" encoding="UTF-8"?>
+<MSSQLServerAuditorTemplate id="sqlite_mssql_analysis" type="SQLite-MSSQL" startuptemplateid="" xmlns:xi="http://www.w3.org/2003/XInclude" version="1.0">
+	<i18n name="en">
+		SQLite: MSSQL: Historical Data: Analysis
+	</i18n>
+	<i18n name="ru">
+		SQLite: MSSQL: Анализ исторических данных
+	</i18n>
+
+	<MainWindowTitle>
+		<i18n name="en">
+			$ConnectionName$ $ModuleName$ $ApplicationProductName$ $ApplicationProductVersion$
+		</i18n>
+		<i18n name="ru">
+			$ConnectionName$ $ModuleName$ $ApplicationProductName$ $ApplicationProductVersion$
+		</i18n>
+	</MainWindowTitle>
+
+	<TreeTitle>
+		<i18n name="en">
+			$ConnectionName$ : $ModuleName$
+		</i18n>
+		<i18n name="ru">
+			$ConnectionName$ : $ModuleName$
+		</i18n>
+	</TreeTitle>
+
+	<template id="2000000" name="HistoricalData24Hours" IsHideTabs="false" file="" icon="folder" showIfEmpty="true" showNumberOfRecords="false">
+		<i18n name="en">
+			24 Hours
+		</i18n>
+		<i18n name="ru">
+			24 Часа
+		</i18n>
+
+		<template id="2100000" name="Activity" IsHideTabs="false" file="" icon="folder" showIfEmpty="true" showNumberOfRecords="false">
+			<i18n name="en">
+				Activity
+			</i18n>
+			<i18n name="ru">
+				Активность
+			</i18n>
+
+			<template id="2110000" name="InstanceCPUUtilization" IsHideTabs="false" file="sqlite\Audit\Processes\CPU\MSSQLServerAuditor.InstanceCPUUtilization.xsl" icon="doc" showIfEmpty="true" showNumberOfRecords="false">
+				<i18n name="en">
+					CPU
+				</i18n>
+				<i18n name="ru">
+					Процессор
+				</i18n>
+
+				<sql-select id="GetInstanceCPUUtilization" name="GetInstanceCPUUtilization" file="SQLQuery\sqlite\DMV\InstanceCPUInfo.xml" hierarchy="">
+					<parameter name="@EventDayMin"         value=""       />
+					<parameter name="@EventDayMax"         value=""       />
+					<parameter name="@strDateTimeModifier" value="-1 day" />
+				</sql-select>
+			</template>
+
+			<template id="2120000" name="InstanceMemoryUtilization" IsHideTabs="false" file="sqlite\Audit\Processes\Memory\MSSQLServerAuditor.InstanceMemoryUtilization.xsl" icon="doc" showIfEmpty="true" showNumberOfRecords="false">
+				<i18n name="en">
+					Memory
+				</i18n>
+				<i18n name="ru">
+					Память
+				</i18n>
+
+				<sql-select id="GetInstanceMemoryUtilization" name="GetInstanceMemoryUtilization" file="SQLQuery\sqlite\DMV\InstanceMemoryInfo.xml" hierarchy="">
+					<parameter name="@EventDayMin"         value=""       />
+					<parameter name="@EventDayMax"         value=""       />
+					<parameter name="@strDateTimeModifier" value="-1 day" />
+				</sql-select>
+			</template>
+
+			<template id="2130000" name="InstanceNetworkStatus" IsHideTabs="false" file="sqlite\Audit\Processes\MSSQLServerAuditor.InstanceNetworkStatus.Graph.xsl" icon="doc" showIfEmpty="true" showNumberOfRecords="false">
+				<i18n name="en">
+					Network
+				</i18n>
+				<i18n name="ru">
+					Сеть
+				</i18n>
+
+				<sql-select id="GetInstanceNetworkStatus" name="GetInstanceNetworkStatus" file="SQLQuery\sqlite\MSSQLQuery.Instance.GetNetworkStatus.xml" hierarchy="">
+					<parameter name="@EventDayMin"         value=""       />
+					<parameter name="@EventDayMax"         value=""       />
+					<parameter name="@strDateTimeModifier" value="-1 day" />
+				</sql-select>
+			</template>
+
+			<template id="2140000" name="InstanceWaitStatistics" IsHideTabs="false" file="sqlite\Audit\Processes\MSSQLServerAuditor.GetSysDmOsWaitStats.Graph.xsl" icon="doc" showIfEmpty="true" showNumberOfRecords="false">
+				<i18n name="en">
+					Wait Statistics
+				</i18n>
+				<i18n name="ru">
+					Задержки
+				</i18n>
+
+				<sql-select id="GetInstanceSysDmOsWaitStats" name="GetInstanceSysDmOsWaitStats" file="SQLQuery\sqlite\MSSQLQuery.Instance.GetSysDmOsWaitStats.xml" hierarchy="">
+						<parameter name="@EventDayMin"         value=""       />
+						<parameter name="@EventDayMax"         value=""       />
+						<parameter name="@strDateTimeModifier" value="-1 day" />
+				</sql-select>
+			</template>
+
+			<template id="2150000" name="InstanceOSPerformanceCounters" IsHideTabs="false" file="" icon="folder" showIfEmpty="true" showNumberOfRecords="false">
+				<i18n name="en">
+					OS Performance Counters
+				</i18n>
+				<i18n name="ru">
+					Счётчики производительности
+				</i18n>
+
+				<template id="2151000" name="InstanceGeneralStatisticsUserConnections" IsHideTabs="false" file="sqlite\Audit\Processes\Instance.GeneralStatistics.UserConnections.Graph.xsl" icon="doc" showIfEmpty="true" showNumberOfRecords="false">
+					<i18n name="en">
+						User Connections
+					</i18n>
+					<i18n name="ru">
+						User Connections
+					</i18n>
+
+					<sql-select id="GetMSSQLInstanceGeneralStatisticsUserConnections" name="GetMSSQLInstanceGeneralStatisticsUserConnections" file="SQLQuery\sqlite\SQLite.MSSQL.Instance.GeneralStatistics.UserConnections.xml" hierarchy="">
+						<parameter name="@EventDayMin"         value=""       />
+						<parameter name="@EventDayMax"         value=""       />
+						<parameter name="@strDateTimeModifier" value="-1 day" />
+					</sql-select>
+				</template>
+
+				<template id="2152000" name="InstanceBufferCacheHitRatio" IsHideTabs="false" file="sqlite\Audit\Memory\MSSQLServerAuditor.InstanceBufferCacheHitRatio.Graph.xsl" icon="doc" showIfEmpty="true" showNumberOfRecords="false">
+					<i18n name="en">
+						Buffer Cache Hit Ratio
+					</i18n>
+					<i18n name="ru">
+						Buffer Cache Hit Ratio
+					</i18n>
+
+					<sql-select id="GetInstanceBufferCacheHitRatio" name="GetInstanceBufferCacheHitRatio" file="SQLQuery\sqlite\DMV\InstanceBufferCacheHitRatio.xml" hierarchy="">
+						<parameter name="@EventDayMin"         value=""       />
+						<parameter name="@EventDayMax"         value=""       />
+						<parameter name="@strDateTimeModifier" value="-1 day" />
+					</sql-select>
+				</template>
+
+				<template id="2153000" name="InstancePageLifeExpectancy" IsHideTabs="false" file="sqlite\Audit\Memory\MSSQLServerAuditor.InstancePageLifeExpectancy.Graph.xsl" icon="doc" showIfEmpty="true" showNumberOfRecords="false">
+					<i18n name="en">
+						Page Life Expectancy
+					</i18n>
+					<i18n name="ru">
+						Page Life Expectancy
+					</i18n>
+
+					<sql-select id="GetInstancePageLifeExpectancy" name="GetInstancePageLifeExpectancy" file="SQLQuery\sqlite\DMV\InstancePageLifeExpectancy.xml" hierarchy="">
+						<parameter name="@EventDayMin"         value=""       />
+						<parameter name="@EventDayMax"         value=""       />
+						<parameter name="@strDateTimeModifier" value="-1 day" />
+					</sql-select>
+				</template>
+
+				<template id="2154000" name="InstanceBatchRequestsSec" IsHideTabs="false" file="sqlite\Audit\Processes\MSSQLServerAuditor.InstanceBatchRequestsSec.Graph.xsl" icon="doc" showIfEmpty="true" showNumberOfRecords="false">
+					<i18n name="en">
+						Batch Requests / Sec
+					</i18n>
+					<i18n name="ru">
+						Batch Requests / Sec
+					</i18n>
+
+					<sql-select id="GetInstanceBatchRequestsSec" name="GetInstanceBatchRequestsSec" file="SQLQuery\sqlite\SQLite.MSSQL.Instance.BatchRequestsSec.xml" hierarchy="">
+						<parameter name="@EventDayMin"         value=""       />
+						<parameter name="@EventDayMax"         value=""       />
+						<parameter name="@strDateTimeModifier" value="-1 day" />
+					</sql-select>
+				</template>
+
+				<template id="2155000" name="InstanceLocksLockWaitsSecTotal" IsHideTabs="false" file="sqlite\Audit\Processes\Instance.Locks.LockWaitsSec.Total.Graph.xsl" icon="doc" showIfEmpty="true" showNumberOfRecords="false">
+					<i18n name="en">
+						Lock Waits / Sec
+					</i18n>
+					<i18n name="ru">
+						Lock Waits / Sec
+					</i18n>
+
+					<sql-select id="GetMSSQLInstanceLocksLockWaitsSecTotal" name="GetMSSQLInstanceLocksLockWaitsSecTotal" file="SQLQuery\sqlite\SQLite.MSSQL.Instance.Locks.LockWaits.xml" hierarchy="">
+						<parameter name="@EventDayMin"         value=""       />
+						<parameter name="@EventDayMax"         value=""       />
+						<parameter name="@strDateTimeModifier" value="-1 day" />
+					</sql-select>
+				</template>
+
+				<template id="2156000" name="InstanceCheckpointPagesSec" IsHideTabs="false" file="sqlite\Audit\Processes\Instance.BufferManager.CheckpointPagesSec.Graph.xsl" icon="doc" showIfEmpty="true" showNumberOfRecords="false">
+					<i18n name="en">
+						Checkpoint Pages / Sec
+					</i18n>
+					<i18n name="ru">
+						Checkpoint Pages / Sec
+					</i18n>
+
+					<sql-select id="GetInstanceCheckpointPagesSec" name="GetInstanceCheckpointPagesSec" file="SQLQuery\sqlite\SQLite.MSSQL.Instance.CheckpointPagesSec.xml" hierarchy="">
+						<parameter name="@EventDayMin"         value=""       />
+						<parameter name="@EventDayMax"         value=""       />
+						<parameter name="@strDateTimeModifier" value="-1 day" />
+					</sql-select>
+				</template>
+
+			</template>
+
+			<template id="2160000" name="InstanceProcesses" IsHideTabs="false" file="" icon="folder" showIfEmpty="true" showNumberOfRecords="false">
+				<i18n name="en">
+					Processes
+				</i18n>
+				<i18n name="ru">
+					Процессы
+				</i18n>
+
+				<template id="2161000" name="InstanceSummaryProcesses" IsHideTabs="false" file="sqlite\Audit\Processes\MSSQLServerAuditor.InstanceSummaryProcesses.Graph.xsl" icon="doc" showIfEmpty="true" showNumberOfRecords="false">
+					<i18n name="en">
+						Instance
+					</i18n>
+					<i18n name="ru">
+						Экземпляр
+					</i18n>
+
+					<sql-select id="GetInstanceSummaryProcesses" name="GetInstanceSummaryProcesses" file="SQLQuery\sqlite\MSSQLQuery.Instance.SummaryProcesses.xml" hierarchy="">
+						<parameter name="@EventDayMin"         value=""       />
+						<parameter name="@EventDayMax"         value=""       />
+						<parameter name="@strDateTimeModifier" value="-1 day" />
+					</sql-select>
+				</template>
+
+				<template id="2162000" name="InstanceProcessesByLogin" IsHideTabs="false" file="sqlite\Audit\Processes\Instance.ProcessesByLogin.Graph.xsl" icon="doc" showIfEmpty="true" showNumberOfRecords="false">
+					<i18n name="en">
+						Logins
+					</i18n>
+					<i18n name="ru">
+						Пользователи
+					</i18n>
+
+					<sql-select id="GetInstanceProcessesByLogin" name="GetInstanceProcessesByLogin" file="SQLQuery\sqlite\SQLite.Instance.ProcessesByLogin.xml" hierarchy="">
+						<parameter name="@EventDayMin"         value=""       />
+						<parameter name="@EventDayMax"         value=""       />
+						<parameter name="@strDateTimeModifier" value="-1 day" />
+					</sql-select>
+				</template>
+			</template>
+
+			<template id="2170000" name="InstanceIOStatusSummary" IsHideTabs="false" file="" icon="folder" showIfEmpty="true" showNumberOfRecords="false">
+				<i18n name="en">
+					IO
+				</i18n>
+				<i18n name="ru">
+					Ввод/вывод
+				</i18n>
+
+				<template id="2171000" name="InstanceIOStatus" IsHideTabs="false" file="" icon="folder" showIfEmpty="true" showNumberOfRecords="false">
+					<i18n name="en">
+						Instance
+					</i18n>
+					<i18n name="ru">
+						Экземпляр
+					</i18n>
+
+					<template id="2171100" name="InstanceIONumbersStatus" IsHideTabs="false" file="sqlite\IO\InstanceIOStatus.Number.Graph.xsl" icon="doc" showIfEmpty="true" showNumberOfRecords="false">
+						<i18n name="en">
+							Numbers
+						</i18n>
+						<i18n name="ru">
+							Количество
+						</i18n>
+
+						<sql-select id="GetInstanceIOStatus" name="GetInstanceIOStatus" file="SQLQuery\sqlite\DMV\InstanceIOStatus.xml" hierarchy="">
+							<parameter name="@EventDayMin"         value=""       />
+							<parameter name="@EventDayMax"         value=""       />
+							<parameter name="@strDateTimeModifier" value="-1 day" />
+						</sql-select>
+					</template>
+
+					<template id="2171200" name="InstanceIOStallStatus" IsHideTabs="false" file="sqlite\IO\InstanceIOStatus.Stall.Graph.xsl" icon="doc" showIfEmpty="true" showNumberOfRecords="false">
+						<i18n name="en">
+							Stalls (ms)
+						</i18n>
+						<i18n name="ru">
+							Задержки (мс)
+						</i18n>
+
+						<sql-select id="GetInstanceIOStatus" name="GetInstanceIOStatus" file="SQLQuery\sqlite\DMV\InstanceIOStatus.xml" hierarchy="">
+							<parameter name="@EventDayMin"         value=""       />
+							<parameter name="@EventDayMax"         value=""       />
+							<parameter name="@strDateTimeModifier" value="-1 day" />
+						</sql-select>
+					</template>
+				</template>
+
+				<template id="2172000" name="InstanceDiskIOStatus" IsHideTabs="false" file="" icon="folder" showIfEmpty="true" showNumberOfRecords="false">
+					<i18n name="en">
+						Disks
+					</i18n>
+					<i18n name="ru">
+						Диски
+					</i18n>
+
+					<template id="2172100" name="InstanceDiskIONumbersStatus" IsHideTabs="false" file="sqlite\IO\InstanceDiskIOStatus.Number.Graph.xsl" icon="doc" showIfEmpty="true" showNumberOfRecords="false">
+						<i18n name="en">
+							Number
+						</i18n>
+						<i18n name="ru">
+							Количество
+						</i18n>
+
+						<sql-select id="GetInstanceDiskIOStatus" name="GetInstanceDiskIOStatus" file="SQLQuery\sqlite\DMV\InstanceDiskIOStatus.xml" hierarchy="">
+							<parameter name="@EventDayMin"         value=""       />
+							<parameter name="@EventDayMax"         value=""       />
+							<parameter name="@strDateTimeModifier" value="-1 day" />
+							<parameter name="@Disk"                               />
+						</sql-select>
+					</template>
+
+					<template id="2172200" name="InstanceDiskIOStallStatus" IsHideTabs="false" file="sqlite\IO\InstanceDiskIOStatus.Stall.Graph.xsl" icon="doc" showIfEmpty="true" showNumberOfRecords="false">
+						<i18n name="en">
+							Stall (ms)
+						</i18n>
+						<i18n name="ru">
+							Задержки (мс)
+						</i18n>
+
+						<sql-select id="GetInstanceDiskIOStatus" name="GetInstanceDiskIOStatus" file="SQLQuery\sqlite\DMV\InstanceDiskIOStatus.xml" hierarchy="">
+							<parameter name="@EventDayMin"         value=""       />
+							<parameter name="@EventDayMax"         value=""       />
+							<parameter name="@strDateTimeModifier" value="-1 day" />
+							<parameter name="@Disk"                               />
+						</sql-select>
+					</template>
+				</template>
+
+				<template id="2173000" name="InstanceDatabaseIOStatus" IsHideTabs="false" file="" icon="folder" showIfEmpty="true" showNumberOfRecords="false">
+					<i18n name="en">
+						Databases
+					</i18n>
+					<i18n name="ru">
+						Базы данных
+					</i18n>
+
+					<template id="2173100" name="InstanceDatabaseIONumbersStatus" IsHideTabs="false" file="sqlite\IO\InstanceDBIOStatus.Number.Graph.xsl" icon="doc" showIfEmpty="true" showNumberOfRecords="false">
+						<i18n name="en">
+							Number
+						</i18n>
+						<i18n name="ru">
+							Количество
+						</i18n>
+
+						<sql-select id="GetInstanceDatabaseIOStatus" name="GetInstanceDatabaseIOStatus" file="SQLQuery\sqlite\DMV\InstanceDatabaseIOStatus.xml" hierarchy="">
+							<parameter name="@EventDayMin"         value=""       />
+							<parameter name="@EventDayMax"         value=""       />
+							<parameter name="@strDateTimeModifier" value="-1 day" />
+							<parameter name="@DatabaseName"                       />
+						</sql-select>
+					</template>
+
+					<template id="2173200" name="InstanceDatabaseIOStallStatus" IsHideTabs="false" file="sqlite\IO\InstanceDBIOStatus.Stall.Graph.xsl" icon="doc" showIfEmpty="true" showNumberOfRecords="false">
+						<i18n name="en">
+							Stall (ms)
+						</i18n>
+						<i18n name="ru">
+							Задержки (мс)
+						</i18n>
+
+						<sql-select id="GetInstanceDatabaseIOStatus" name="GetInstanceDatabaseIOStatus" file="SQLQuery\sqlite\DMV\InstanceDatabaseIOStatus.xml" hierarchy="">
+							<parameter name="@EventDayMin"         value=""       />
+							<parameter name="@EventDayMax"         value=""       />
+							<parameter name="@strDateTimeModifier" value="-1 day" />
+							<parameter name="@DatabaseName"                       />
+						</sql-select>
+					</template>
+				</template>
+			</template>
+		</template>
+	</template>
+
+	<template id="3100000" name="Activity" IsHideTabs="false" file="" icon="folder" showIfEmpty="true" showNumberOfRecords="false">
+		<i18n name="en">
+			Year (by days): Activity
+		</i18n>
+		<i18n name="ru">
+			Год (по дням): Активность
+		</i18n>
+
+		<template id="3110000" name="InstanceCPUUtilization" IsHideTabs="false" file="" icon="doc" showIfEmpty="true" showNumberOfRecords="false">
+			<i18n name="en">
+				CPU
+			</i18n>
+			<i18n name="ru">
+				Процессор
+			</i18n>
+
+			<group-select id="1" name="GetInstanceCPUUtilizationMonth" file="SQLQuery\sqlite\DMV\InstanceCPUInfo.xml">
+				<parameter name="@strDateTimeModifier" value="-12 month" />
+			</group-select>
+
+			<template id="3111000" group-select-id="1" name="GetInstanceCPUUtilizationDays" file="" icon="doc" showIfEmpty="true" showNumberOfRecords="false">
+				<group-select id="1" name="GetInstanceCPUUtilizationDays" file="SQLQuery\sqlite\DMV\InstanceCPUInfo.xml">
+					<parameter name="@EventDayMin" />
+					<parameter name="@EventDayMax" />
+				</group-select>
+
+				<template id="3111100" group-select-id="1" name="GetInstanceCPUUtilization" file="sqlite\Audit\Processes\CPU\MSSQLServerAuditor.InstanceCPUUtilization.xsl" icon="doc" showIfEmpty="true" showNumberOfRecords="false">
+					<sql-select id="GetInstanceCPUUtilization_History" name="GetInstanceCPUUtilization" file="SQLQuery\sqlite\DMV\InstanceCPUInfo.xml" hierarchy="">
+						<parameter name="@EventDayMin" />
+						<parameter name="@EventDayMax" />
+					</sql-select>
+				</template>
+			</template>
+		</template>
+
+		<template id="3120000" name="InstanceMemoryUtilization" IsHideTabs="false" file="" icon="doc" showIfEmpty="true" showNumberOfRecords="false">
+			<i18n name="en">
+				Memory
+			</i18n>
+			<i18n name="ru">
+				Память
+			</i18n>
+
+			<group-select id="1" name="GetInstanceMemoryUtilizationMonth" file="SQLQuery\sqlite\DMV\InstanceMemoryInfo.xml">
+				<parameter name="@strDateTimeModifier" value="-12 month" />
+			</group-select>
+
+			<template id="3121000" group-select-id="1" name="GetInstanceMemoryUtilizationDays" file="" icon="doc" showIfEmpty="true" showNumberOfRecords="false">
+				<group-select id="1" name="GetInstanceMemoryUtilizationDays" file="SQLQuery\sqlite\DMV\InstanceMemoryInfo.xml">
+					<parameter name="@EventDayMin" />
+					<parameter name="@EventDayMax" />
+				</group-select>
+
+				<template id="3121100" group-select-id="1" name="GetInstanceMemoryUtilization" file="sqlite\Audit\Processes\Memory\MSSQLServerAuditor.InstanceMemoryUtilization.xsl" icon="doc" showIfEmpty="true" showNumberOfRecords="false">
+					<sql-select id="Memory_History" name="GetInstanceMemoryUtilization" file="SQLQuery\sqlite\DMV\InstanceMemoryInfo.xml" hierarchy="">
+						<parameter name="@EventDayMin" />
+						<parameter name="@EventDayMax" />
+					</sql-select>
+				</template>
+			</template>
+		</template>
+
+		<template id="3130000" name="InstanceNetworkStatus" IsHideTabs="false" file="" icon="doc" showIfEmpty="true" showNumberOfRecords="false">
+			<i18n name="en">
+				Network
+			</i18n>
+			<i18n name="ru">
+				Сеть
+			</i18n>
+
+			<group-select id="1" name="GetInstanceNetworkStatusMonth" file="SQLQuery\sqlite\MSSQLQuery.Instance.GetNetworkStatus.xml">
+				<parameter name="@strDateTimeModifier" value="-12 month" />
+			</group-select>
+
+			<template id="3131000" group-select-id="1" name="GetInstanceNetworkStatusDays" file="" icon="doc" showIfEmpty="true" showNumberOfRecords="false">
+				<group-select id="1" name="GetInstanceNetworkStatusDays" file="SQLQuery\sqlite\MSSQLQuery.Instance.GetNetworkStatus.xml">
+					<parameter name="@EventDayMin" />
+					<parameter name="@EventDayMax" />
+				</group-select>
+
+				<template id="3131100" group-select-id="1" name="GetInstanceNetworkStatus" file="sqlite\Audit\Processes\MSSQLServerAuditor.InstanceNetworkStatus.Graph.xsl" icon="doc" showIfEmpty="true" showNumberOfRecords="false">
+					<sql-select id="GetInstanceNetworkStatus_History" name="GetInstanceNetworkStatus" file="SQLQuery\sqlite\MSSQLQuery.Instance.GetNetworkStatus.xml" hierarchy="">
+						<parameter name="@EventDayMin" />
+						<parameter name="@EventDayMax" />
+					</sql-select>
+				</template>
+			</template>
+		</template>
+
+		<template id="3140000" name="InstanceWaitStatistics" IsHideTabs="false" file="" icon="doc" showIfEmpty="true" showNumberOfRecords="false">
+			<i18n name="en">
+				Wait Statistics
+			</i18n>
+			<i18n name="ru">
+				Задержки
+			</i18n>
+
+			<group-select id="1" name="GetSysDmOsWaitStatsMonth" file="SQLQuery\sqlite\MSSQLQuery.Instance.GetSysDmOsWaitStats.xml">
+				<parameter name="@strDateTimeModifier" value="-12 month" />
+			</group-select>
+
+			<template id="3141000" group-select-id="1" name="GetSysDmOsWaitStatsDays" file="" icon="doc" showIfEmpty="true" showNumberOfRecords="false">
+				<group-select id="1" name="GetSysDmOsWaitStatsDays" file="SQLQuery\sqlite\MSSQLQuery.Instance.GetSysDmOsWaitStats.xml">
+					<parameter name="@EventDayMin" />
+					<parameter name="@EventDayMax" />
+				</group-select>
+
+				<template id="3141100" group-select-id="1" name="GetInstanceSysDmOsWaitStats" file="sqlite\Audit\Processes\MSSQLServerAuditor.GetSysDmOsWaitStats.Graph.xsl" icon="doc" showIfEmpty="true" showNumberOfRecords="false">
+					<sql-select id="GetSysDmOsWaitStats_History" name="GetInstanceSysDmOsWaitStats" file="SQLQuery\sqlite\MSSQLQuery.Instance.GetSysDmOsWaitStats.xml" hierarchy="">
+						<parameter name="@EventDayMin" />
+						<parameter name="@EventDayMax" />
+					</sql-select>
+				</template>
+			</template>
+		</template>
+
+		<template id="3150000" name="InstanceOSPerformanceCounters" IsHideTabs="false" file="" icon="folder" showIfEmpty="true" showNumberOfRecords="false">
+			<i18n name="en">
+				OS Performance Counters
+			</i18n>
+			<i18n name="ru">
+				Счётчики производительности
+			</i18n>
+
+			<template id="3151000" name="InstanceGeneralStatisticsUserConnections" IsHideTabs="false" file="" icon="doc" showIfEmpty="true" showNumberOfRecords="false">
+				<i18n name="en">
+					User Connections
+				</i18n>
+				<i18n name="ru">
+					User Connections
+				</i18n>
+
+				<group-select id="1" name="GetMSSQLInstanceGeneralStatisticsUserConnectionsMonth" file="SQLQuery\sqlite\SQLite.MSSQL.Instance.GeneralStatistics.UserConnections.xml">
+					<parameter name="@strDateTimeModifier" value="-12 month" />
+				</group-select>
+
+				<template id="3151100" group-select-id="1" name="GetMSSQLInstanceGeneralStatisticsUserConnectionsDays" file="" icon="doc" showIfEmpty="true" showNumberOfRecords="false">
+					<group-select id="1" name="GetMSSQLInstanceGeneralStatisticsUserConnectionsDays" file="SQLQuery\sqlite\SQLite.MSSQL.Instance.GeneralStatistics.UserConnections.xml">
+						<parameter name="@EventDayMin" />
+						<parameter name="@EventDayMax" />
+					</group-select>
+
+					<template id="3151110" group-select-id="1" name="GetMSSQLInstanceGeneralStatisticsUserConnections" file="sqlite\Audit\Processes\Instance.GeneralStatistics.UserConnections.Graph.xsl" icon="doc" showIfEmpty="true" showNumberOfRecords="false">
+						<sql-select id="1" name="GetMSSQLInstanceGeneralStatisticsUserConnections" file="SQLQuery\sqlite\SQLite.MSSQL.Instance.GeneralStatistics.UserConnections.xml" hierarchy="">
+							<parameter name="@EventDayMin" />
+							<parameter name="@EventDayMax" />
+						</sql-select>
+					</template>
+				</template>
+			</template>
+
+			<template id="3152000" name="InstanceBufferCacheHitRatio" IsHideTabs="false" file="" icon="doc" showIfEmpty="true" showNumberOfRecords="false">
+				<i18n name="en">
+					Buffer Cache Hit Ratio
+				</i18n>
+				<i18n name="ru">
+					Buffer Cache Hit Ratio
+				</i18n>
+
+				<group-select id="1" name="GetInstanceBufferCacheHitRatioMonth" file="SQLQuery\sqlite\DMV\InstanceBufferCacheHitRatio.xml">
+					<parameter name="@strDateTimeModifier" value="-12 month" />
+				</group-select>
+
+				<template id="3152100" group-select-id="1" name="GetInstanceBufferCacheHitRatioDays" file="" icon="doc" showIfEmpty="true" showNumberOfRecords="false">
+					<group-select id="1" name="GetInstanceBufferCacheHitRatioDays" file="SQLQuery\sqlite\DMV\InstanceBufferCacheHitRatio.xml">
+						<parameter name="@EventDayMin" />
+						<parameter name="@EventDayMax" />
+					</group-select>
+
+					<template id="3152110" group-select-id="1" name="GetInstanceBufferCacheHitRatio" file="sqlite\Audit\Memory\MSSQLServerAuditor.InstanceBufferCacheHitRatio.Graph.xsl" icon="doc" showIfEmpty="true" showNumberOfRecords="false">
+						<sql-select id="1" name="GetInstanceBufferCacheHitRatio" file="SQLQuery\sqlite\DMV\InstanceBufferCacheHitRatio.xml" hierarchy="">
+							<parameter name="@EventDayMin" />
+							<parameter name="@EventDayMax" />
+						</sql-select>
+					</template>
+				</template>
+			</template>
+
+			<template id="3153000" name="InstancePageLifeExpectancy" IsHideTabs="false" file="" icon="doc" showIfEmpty="true" showNumberOfRecords="false">
+				<i18n name="en">
+					PageLifeExpectancy
+				</i18n>
+				<i18n name="ru">
+					PageLifeExpectancy
+				</i18n>
+
+				<group-select id="1" name="GetInstancePageLifeExpectancyMonth" file="SQLQuery\sqlite\DMV\InstancePageLifeExpectancy.xml">
+					<parameter name="@strDateTimeModifier" value="-12 month" />
+				</group-select>
+
+				<template id="3153100" group-select-id="1" name="GetInstancePageLifeExpectancyDays" file="" icon="doc" showIfEmpty="true" showNumberOfRecords="false">
+					<group-select id="1" name="GetInstancePageLifeExpectancyDays" file="SQLQuery\sqlite\DMV\InstancePageLifeExpectancy.xml">
+						<parameter name="@EventDayMin" />
+						<parameter name="@EventDayMax" />
+					</group-select>
+
+					<template id="3153110" group-select-id="1" name="GetInstancePageLifeExpectancy" file="sqlite\Audit\Memory\MSSQLServerAuditor.InstancePageLifeExpectancy.Graph.xsl" icon="doc" showIfEmpty="true" showNumberOfRecords="false">
+						<sql-select id="1" name="GetInstancePageLifeExpectancy" file="SQLQuery\sqlite\DMV\InstancePageLifeExpectancy.xml" hierarchy="">
+							<parameter name="@EventDayMin" />
+							<parameter name="@EventDayMax" />
+						</sql-select>
+					</template>
+				</template>
+			</template>
+
+			<template id="3154000" name="InstanceBatchRequestsSec" IsHideTabs="false" file="" icon="doc" showIfEmpty="true" showNumberOfRecords="false">
+				<i18n name="en">
+					Batch Requests/Sec
+				</i18n>
+				<i18n name="ru">
+					Batch Requests/Sec
+				</i18n>
+
+				<group-select id="1" name="GetInstanceBatchRequestsSecMonth" file="SQLQuery\sqlite\SQLite.MSSQL.Instance.BatchRequestsSec.xml">
+					<parameter name="@strDateTimeModifier" value="-12 month" />
+				</group-select>
+
+				<template id="3154100" group-select-id="1" name="GetInstanceBatchRequestsSecDays" file="" icon="doc" showIfEmpty="true" showNumberOfRecords="false">
+					<group-select id="1" name="GetInstanceBatchRequestsSecDays" file="SQLQuery\sqlite\SQLite.MSSQL.Instance.BatchRequestsSec.xml">
+						<parameter name="@EventDayMin" />
+						<parameter name="@EventDayMax" />
+					</group-select>
+
+					<template id="3154110" group-select-id="1" name="GetInstanceBatchRequestsSec" file="sqlite\Audit\Processes\MSSQLServerAuditor.InstanceBatchRequestsSec.Graph.xsl" icon="doc" showIfEmpty="true" showNumberOfRecords="false">
+						<sql-select id="1" name="GetInstanceBatchRequestsSec" file="SQLQuery\sqlite\SQLite.MSSQL.Instance.BatchRequestsSec.xml" hierarchy="">
+							<parameter name="@EventDayMin" />
+							<parameter name="@EventDayMax" />
+						</sql-select>
+					</template>
+				</template>
+			</template>
+
+			<template id="3155000" name="InstanceLocksLockWaitsSecTotal" IsHideTabs="false" file="" icon="doc" showIfEmpty="true" showNumberOfRecords="false">
+				<i18n name="en">
+					Lock Waits / Sec
+				</i18n>
+				<i18n name="ru">
+					Lock Waits / Sec
+				</i18n>
+
+				<group-select id="1" name="GetMSSQLInstanceLocksLockWaitsSecTotalMonth" file="SQLQuery\sqlite\SQLite.MSSQL.Instance.Locks.LockWaits.xml">
+					<parameter name="@strDateTimeModifier" value="-12 month" />
+				</group-select>
+
+				<template id="3155100" group-select-id="1" name="GetMSSQLInstanceLocksLockWaitsSecTotalDays" file="" icon="doc" showIfEmpty="true" showNumberOfRecords="false">
+					<group-select id="1" name="GetMSSQLInstanceLocksLockWaitsSecTotalDays" file="SQLQuery\sqlite\SQLite.MSSQL.Instance.Locks.LockWaits.xml">
+						<parameter name="@EventDayMin" />
+						<parameter name="@EventDayMax" />
+					</group-select>
+
+					<template id="3155110" group-select-id="1" name="GetMSSQLInstanceLocksLockWaitsSecTotal" file="sqlite\Audit\Processes\Instance.Locks.LockWaitsSec.Total.Graph.xsl" icon="doc" showIfEmpty="true" showNumberOfRecords="false">
+						<sql-select id="1" name="GetMSSQLInstanceLocksLockWaitsSecTotal" file="SQLQuery\sqlite\SQLite.MSSQL.Instance.Locks.LockWaits.xml" hierarchy="">
+							<parameter name="@EventDayMin" />
+							<parameter name="@EventDayMax" />
+						</sql-select>
+					</template>
+				</template>
+			</template>
+
+			<template id="3156000" name="InstanceCheckpointPagesSec" IsHideTabs="false" file="" icon="doc" showIfEmpty="true" showNumberOfRecords="false">
+				<i18n name="en">
+					Checkpoint Pages / Sec
+				</i18n>
+				<i18n name="ru">
+					Checkpoint Pages / Sec
+				</i18n>
+
+				<group-select id="1" name="GetInstanceCheckpointPagesSecMonth" file="SQLQuery\sqlite\SQLite.MSSQL.Instance.CheckpointPagesSec.xml">
+					<parameter name="@strDateTimeModifier" value="-12 month" />
+				</group-select>
+
+				<template id="3156100" group-select-id="1" name="GetInstanceCheckpointPagesSecDays" file="" icon="doc" showIfEmpty="true" showNumberOfRecords="false">
+					<group-select id="1" name="GetInstanceCheckpointPagesSecDays" file="SQLQuery\sqlite\SQLite.MSSQL.Instance.CheckpointPagesSec.xml">
+						<parameter name="@EventDayMin" />
+						<parameter name="@EventDayMax" />
+					</group-select>
+
+					<template id="3156110" group-select-id="1" name="GetInstanceBufferCacheHitRatio" file="sqlite\Audit\Processes\Instance.BufferManager.CheckpointPagesSec.Graph.xsl" icon="doc" showIfEmpty="true" showNumberOfRecords="false">
+						<sql-select id="1" name="GetInstanceCheckpointPagesSec" file="SQLQuery\sqlite\SQLite.MSSQL.Instance.CheckpointPagesSec.xml" hierarchy="">
+							<parameter name="@EventDayMin" />
+							<parameter name="@EventDayMax" />
+						</sql-select>
+					</template>
+				</template>
+			</template>
+
+		</template>
+
+		<template id="3160000" name="InstanceProcesses" IsHideTabs="false" file="" icon="folder" showIfEmpty="true" showNumberOfRecords="false">
+			<i18n name="en">
+				Processes
+			</i18n>
+			<i18n name="ru">
+				Процессы
+			</i18n>
+
+			<template id="3161000" name="InstanceSummaryProcesses" IsHideTabs="false" file="" icon="doc" showIfEmpty="true" showNumberOfRecords="false">
+				<i18n name="en">
+					Instance
+				</i18n>
+				<i18n name="ru">
+					Экземпляр
+				</i18n>
+
+				<group-select id="1" name="GetInstanceSummaryProcessesMonth" file="SQLQuery\sqlite\MSSQLQuery.Instance.SummaryProcesses.xml">
+					<parameter name="@strDateTimeModifier" value="-12 month" />
+				</group-select>
+
+				<template id="3161100" group-select-id="1" name="GetInstanceSummaryProcessesDays" file="" icon="doc" showIfEmpty="true" showNumberOfRecords="false">
+					<group-select id="1" name="GetInstanceSummaryProcessesDays" file="SQLQuery\sqlite\MSSQLQuery.Instance.SummaryProcesses.xml">
+						<parameter name="@EventDayMin" />
+						<parameter name="@EventDayMax" />
+					</group-select>
+
+					<template id="3161110" group-select-id="1" name="GetInstanceSummaryProcesses" file="sqlite\Audit\Processes\MSSQLServerAuditor.InstanceSummaryProcesses.Graph.xsl" icon="doc" showIfEmpty="true" showNumberOfRecords="false">
+						<sql-select id="GetInstanceSummaryProcesses_History" name="GetInstanceSummaryProcesses" file="SQLQuery\sqlite\MSSQLQuery.Instance.SummaryProcesses.xml" hierarchy="">
+							<parameter name="@EventDayMin" />
+							<parameter name="@EventDayMax" />
+						</sql-select>
+					</template>
+				</template>
+			</template>
+
+			<template id="3162000" name="InstanceProcessesByLogin" IsHideTabs="false" file="" icon="doc" showIfEmpty="true" showNumberOfRecords="false">
+				<i18n name="en">
+					Logins
+				</i18n>
+				<i18n name="ru">
+					Пользователи
+				</i18n>
+
+				<group-select id="1" name="GetInstanceProcessesByLoginMonth" file="SQLQuery\sqlite\SQLite.Instance.ProcessesByLogin.xml">
+					<parameter name="@strDateTimeModifier" value="-12 month" />
+				</group-select>
+
+				<template id="3162100" group-select-id="1" name="GetInstanceProcessesByLoginDays" file="" icon="doc" showIfEmpty="true" showNumberOfRecords="false">
+					<group-select id="1" name="GetInstanceProcessesByLoginDays" file="SQLQuery\sqlite\SQLite.Instance.ProcessesByLogin.xml">
+						<parameter name="@EventDayMin" />
+						<parameter name="@EventDayMax" />
+					</group-select>
+
+					<template id="3162110" group-select-id="1" name="GetInstanceProcessesByLogin" file="sqlite\Audit\Processes\Instance.ProcessesByLogin.Graph.xsl" icon="doc" showIfEmpty="true" showNumberOfRecords="false">
+						<sql-select id="GetInstanceProcessesByLogin_History" name="GetInstanceProcessesByLogin" file="SQLQuery\sqlite\SQLite.Instance.ProcessesByLogin.xml" hierarchy="">
+							<parameter name="@EventDayMin" />
+							<parameter name="@EventDayMax" />
+						</sql-select>
+					</template>
+				</template>
+			</template>
+		</template>
+
+		<template id="3170000" name="InstanceIOStatusSummary" IsHideTabs="false" file="" icon="folder" showIfEmpty="true" showNumberOfRecords="false">
+			<i18n name="en">
+				IO
+			</i18n>
+			<i18n name="ru">
+				Ввод/вывод
+			</i18n>
+
+			<template id="3171000" name="InstanceIOStatusSummary" IsHideTabs="false" file="" icon="folder" showIfEmpty="true" showNumberOfRecords="false">
+				<i18n name="en">
+					Instance
+				</i18n>
+				<i18n name="ru">
+					Экземпляр
+				</i18n>
+
+				<group-select id="1" name="GetInstanceIOStatusMonth" file="SQLQuery\sqlite\DMV\InstanceIOStatus.xml">
+					<parameter name="@strDateTimeModifier" value="-12 month" />
+				</group-select>
+
+				<template id="3171100" group-select-id="1" name="GetInstanceIOStatusDays" file="" icon="doc" showIfEmpty="true" showNumberOfRecords="false">
+					<group-select id="1" name="GetInstanceIOStatusDays" file="SQLQuery\sqlite\DMV\InstanceIOStatus.xml">
+						<parameter name="@EventDayMin" />
+						<parameter name="@EventDayMax" />
+					</group-select>
+
+					<template id="3171110" group-select-id="1" name="GetInstanceIOStatus" file="sqlite\IO\InstanceIOStatus.Number.Graph.xsl" icon="doc" showIfEmpty="true" showNumberOfRecords="false">
+						<sql-select id="IO_History" name="GetInstanceIOStatus" file="SQLQuery\sqlite\DMV\InstanceIOStatus.xml" hierarchy="">
+							<parameter name="@EventDayMin" />
+							<parameter name="@EventDayMax" />
+						</sql-select>
+					</template>
+				</template>
+			</template>
+
+			<template id="3172000" name="Disks IO Statistics" file="" icon="folder" showIfEmpty="true" showNumberOfRecords="false">
+				<i18n name="en">
+					Disks
+				</i18n>
+				<i18n name="ru">
+					Диски
+				</i18n>
+
+				<template id="3172100" name="InstanceDiskIONumbersStatus" IsHideTabs="false" file="" icon="doc" showIfEmpty="true" showNumberOfRecords="false">
+					<i18n name="en">
+						Number
+					</i18n>
+					<i18n name="ru">
+						Количество
+					</i18n>
+
+					<group-select id="1" name="GetInstanceDiskIOStatusMonth" file="SQLQuery\sqlite\DMV\InstanceDiskIOStatus.xml">
+						<parameter name="@strDateTimeModifier" value="-12 month" />
+					</group-select>
+
+					<template id="3172110" group-select-id="1" name="GetInstanceDiskIOStatusDays" file="" icon="doc" showIfEmpty="true" showNumberOfRecords="false">
+						<group-select id="1" name="GetInstanceDiskIOStatusDays" file="SQLQuery\sqlite\DMV\InstanceDiskIOStatus.xml">
+							<parameter name="@EventDayMin" />
+							<parameter name="@EventDayMax" />
+						</group-select>
+
+						<template id="3172111" group-select-id="1" name="InstanceDiskIONumbersStatus" IsHideTabs="false" file="sqlite\IO\InstanceDiskIOStatus.Number.Graph.xsl" icon="doc" showIfEmpty="true" showNumberOfRecords="false">
+							<sql-select id="GetInstanceDiskIOStatus" name="GetInstanceDiskIOStatus" file="SQLQuery\sqlite\DMV\InstanceDiskIOStatus.xml" hierarchy="">
+								<parameter name="@EventDayMin"         />
+								<parameter name="@EventDayMax"         />
+								<parameter name="@strDateTimeModifier" />
+								<parameter name="@Disk"                />
+							</sql-select>
+						</template>
+					</template>
+				</template>
+
+				<template id="3172200" name="InstanceDiskIOStallStatus" IsHideTabs="false" file="" icon="doc" showIfEmpty="true" showNumberOfRecords="false">
+					<i18n name="en">
+						Stall
+					</i18n>
+					<i18n name="ru">
+						Задержки
+					</i18n>
+
+					<group-select id="1" name="GetInstanceDiskIOStatusMonth" file="SQLQuery\sqlite\DMV\InstanceDiskIOStatus.xml">
+						<parameter name="@strDateTimeModifier" value="-12 month" />
+					</group-select>
+
+					<template id="3172210" group-select-id="1" name="GetInstanceDiskIOStatusDays" file="" icon="doc" showIfEmpty="true" showNumberOfRecords="false">
+						<group-select id="1" name="GetInstanceDiskIOStatusDays" file="SQLQuery\sqlite\DMV\InstanceDiskIOStatus.xml">
+							<parameter name="@EventDayMin" />
+							<parameter name="@EventDayMax" />
+						</group-select>
+
+						<template id="3172211" group-select-id="1" name="InstanceDiskIOStallStatus" IsHideTabs="false" file="sqlite\IO\InstanceDiskIOStatus.Stall.Graph.xsl" icon="doc" showIfEmpty="true" showNumberOfRecords="false">
+							<sql-select id="GetInstanceDiskIOStatus" name="GetInstanceDiskIOStatus" file="SQLQuery\sqlite\DMV\InstanceDiskIOStatus.xml" hierarchy="">
+								<parameter name="@EventDayMin"         />
+								<parameter name="@EventDayMax"         />
+								<parameter name="@strDateTimeModifier" />
+								<parameter name="@Disk"                />
+							</sql-select>
+						</template>
+					</template>
+				</template>
+			</template>
+
+			<template id="3173000" name="Databases IO Statistics" file="" icon="folder" showIfEmpty="true" showNumberOfRecords="false">
+				<i18n name="en">
+					Databases
+				</i18n>
+				<i18n name="ru">
+					Базы данных
+				</i18n>
+
+				<template id="3173100" name="InstanceDBIONumbersStatus" IsHideTabs="false" file="" icon="doc" showIfEmpty="true" showNumberOfRecords="false">
+					<i18n name="en">
+						Number
+					</i18n>
+					<i18n name="ru">
+						Количество
+					</i18n>
+
+					<group-select id="1" name="GetInstanceDatabaseIOStatusMonth" file="SQLQuery\sqlite\DMV\InstanceDatabaseIOStatus.xml">
+						<parameter name="@strDateTimeModifier" value="-12 month" />
+					</group-select>
+
+					<template id="3173110" group-select-id="1" name="GetInstanceDatabaseIOStatusDays" file="" icon="doc" showIfEmpty="true" showNumberOfRecords="false">
+						<group-select id="1" name="GetInstanceDatabaseIOStatusDays" file="SQLQuery\sqlite\DMV\InstanceDatabaseIOStatus.xml">
+							<parameter name="@EventDayMin" />
+							<parameter name="@EventDayMax" />
+						</group-select>
+
+						<template id="3173111" group-select-id="1" name="InstanceDBIONumbersStatus" IsHideTabs="false" file="sqlite\IO\InstanceDBIOStatus.Number.Graph.xsl" icon="doc" showIfEmpty="true" showNumberOfRecords="false">
+							<sql-select id="GetInstanceDatabaseIOStatus" name="GetInstanceDatabaseIOStatus" file="SQLQuery\sqlite\DMV\InstanceDatabaseIOStatus.xml" hierarchy="">
+								<parameter name="@EventDayMin"         />
+								<parameter name="@EventDayMax"         />
+								<parameter name="@strDateTimeModifier" />
+								<parameter name="@DatabaseName"        />
+							</sql-select>
+						</template>
+					</template>
+				</template>
+
+				<template id="3173200" name="InstanceDBIOStallStatus" IsHideTabs="false" file="" icon="doc" showIfEmpty="true" showNumberOfRecords="false">
+					<i18n name="en">
+						Stall
+					</i18n>
+					<i18n name="ru">
+						Задержки
+					</i18n>
+
+					<group-select id="1" name="GetInstanceDatabaseIOStatusMonth" file="SQLQuery\sqlite\DMV\InstanceDatabaseIOStatus.xml">
+						<parameter name="@strDateTimeModifier" value="-12 month" />
+					</group-select>
+
+					<template id="3173210" group-select-id="1" name="GetInstanceDBIOStatusDays" file="" icon="doc" showIfEmpty="true" showNumberOfRecords="false">
+						<group-select id="1" name="GetInstanceDatabaseIOStatusDays" file="SQLQuery\sqlite\DMV\InstanceDatabaseIOStatus.xml">
+							<parameter name="@EventDayMin" />
+							<parameter name="@EventDayMax" />
+						</group-select>
+
+						<template id="3173211" group-select-id="1" name="InstanceDBIOStallStatus" IsHideTabs="false" file="sqlite\IO\InstanceDBIOStatus.Stall.Graph.xsl" icon="doc" showIfEmpty="true" showNumberOfRecords="false">
+							<sql-select id="GetInstanceDatabaseIOStatus" name="GetInstanceDatabaseIOStatus" file="SQLQuery\sqlite\DMV\InstanceDatabaseIOStatus.xml" hierarchy="">
+								<parameter name="@EventDayMin"         />
+								<parameter name="@EventDayMax"         />
+								<parameter name="@strDateTimeModifier" />
+								<parameter name="@DatabaseName"        />
+							</sql-select>
+						</template>
+					</template>
+				</template>
+			</template>
+		</template>
+	</template>
+
+	<template id="3200000" name="QueryExecutionStatistics" file="" icon="folder" showIfEmpty="true" showNumberOfRecords="false">
+		<i18n name="en">
+			Year (by days): Queries
+		</i18n>
+		<i18n name="ru">
+			Год (по дням): Запросы
+		</i18n>
+
+		<template id="3210000" name="QueryExecutionByDay" IsHideTabs="false" file="" icon="doc" showIfEmpty="true" showNumberOfRecords="false">
+			<i18n name="en">
+				Queries
+			</i18n>
+			<i18n name="ru">
+				Запросы
+			</i18n>
+
+			<group-select id="1" name="GetInstanceQueryExecutionMonth" file="SQLQuery\sqlite\mssql\SQLite.MSSQL.Instance.ExecQueries.xml">
+				<parameter name="@strDateTimeModifier" value="-12 month" />
+			</group-select>
+
+			<template id="3211000" group-select-id="1" name="GetInstanceQueryExecutionDays" file="" icon="doc" showIfEmpty="true" showNumberOfRecords="false">
+				<group-select id="1" name="GetInstanceQueryExecutionDays" file="SQLQuery\sqlite\mssql\SQLite.MSSQL.Instance.ExecQueries.xml">
+					<parameter name="@EventDayMin" />
+					<parameter name="@EventDayMax" />
+				</group-select>
+
+				<template id="3211100" group-select-id="1" name="GetInstanceQueryExecution" file="sqlite\mssql\MSSQL.Instance.ExecQueries.xsl" icon="doc" showIfEmpty="true" showNumberOfRecords="false">
+					<sql-select id="1" name="GetInstanceQueryExecution" file="SQLQuery\sqlite\mssql\SQLite.MSSQL.Instance.ExecQueries.xml" hierarchy="">
+						<parameter name="@EventDayMin" />
+						<parameter name="@EventDayMax" />
+					</sql-select>
+				</template>
+			</template>
+		</template>
+
+		<template id="3220000" name="ProceduresExecutionByDay" IsHideTabs="false" file="" icon="doc" showIfEmpty="true" showNumberOfRecords="false">
+			<i18n name="en">
+				Stored procedures
+			</i18n>
+			<i18n name="ru">
+				Хранимые процедуры
+			</i18n>
+
+			<group-select id="1" name="GetInstanceProceduresExecutionMonth" file="SQLQuery\sqlite\mssql\SQLite.MSSQL.Instance.ExecProcedures.xml">
+				<parameter name="@strDateTimeModifier" value="-12 month" />
+			</group-select>
+
+			<template id="3221000" group-select-id="1" name="GetInstanceProceduresExecutionDays" file="" icon="doc" showIfEmpty="true" showNumberOfRecords="false">
+				<group-select id="1" name="GetInstanceProceduresExecutionDays" file="SQLQuery\sqlite\mssql\SQLite.MSSQL.Instance.ExecProcedures.xml">
+					<parameter name="@EventDayMin" />
+					<parameter name="@EventDayMax" />
+				</group-select>
+
+				<template id="3221100" group-select-id="1" name="GetInstanceProceduresExecution" file="sqlite\mssql\MSSQL.Instance.ExecProcedures.xsl" icon="doc" showIfEmpty="true" showNumberOfRecords="false">
+					<sql-select id="1" name="GetInstanceProceduresExecution" file="SQLQuery\sqlite\mssql\SQLite.MSSQL.Instance.ExecProcedures.xml" hierarchy="">
+						<parameter name="@EventDayMin" />
+						<parameter name="@EventDayMax" />
+					</sql-select>
+				</template>
+			</template>
+		</template>
+	</template>
+
+	<template id="3300000" name="Databases Statistics" file="" icon="folder" showIfEmpty="true" showNumberOfRecords="false">
+		<i18n name="en">
+			Year (by days): Statistics
+		</i18n>
+		<i18n name="ru">
+			Год (по дням): Статистика
+		</i18n>
+
+		<template id="3310000" name="InstanceDatabasesSizeByDay" IsHideTabs="false" file="" icon="doc" showIfEmpty="true" showNumberOfRecords="false">
+			<i18n name="en">
+				DB Size by days
+			</i18n>
+			<i18n name="ru">
+				Размер БД по дням
+			</i18n>
+
+			<group-select id="1" name="GetInstanceDatabasesSizeMonth" file="SQLQuery\sqlite\MSSQLQuery.Instance.DatabasesSize.xml">
+				<parameter name="@strDateTimeModifier" value="-12 month" />
+			</group-select>
+
+			<template id="3311000" group-select-id="1" name="GetInstanceDatabasesSizeDays" file="" icon="doc" showIfEmpty="true" showNumberOfRecords="false">
+				<group-select id="1" name="GetInstanceDatabasesSizeDays" file="SQLQuery\sqlite\MSSQLQuery.Instance.DatabasesSize.xml">
+					<parameter name="@EventDayMin" />
+					<parameter name="@EventDayMax" />
+				</group-select>
+
+				<template id="3311100" group-select-id="1" name="GetInstanceDatabasesSize" file="sqlite\Databases\Size\MSSQLServerAuditor.InstanceDatabasesSize.xsl" icon="doc" showIfEmpty="true" showNumberOfRecords="false">
+					<sql-select id="1" name="GetInstanceDatabasesSize" file="SQLQuery\sqlite\MSSQLQuery.Instance.DatabasesSize.xml" hierarchy="">
+						<parameter name="@EventDayMin" />
+						<parameter name="@EventDayMax" />
+					</sql-select>
+				</template>
+			</template>
+		</template>
+
+		<template id="3320000" name="InstanceDatabasesSizeByDatabase" IsHideTabs="false" file="" icon="doc" showIfEmpty="true" showNumberOfRecords="false">
+			<i18n name="en">
+				DB Size by DB
+			</i18n>
+			<i18n name="ru">
+				Индивидуальный размер БД
+			</i18n>
+
+			<group-select id="1" name="GetInstanceDatabasesList" file="SQLQuery\sqlite\MSSQLQuery.Instance.DatabasesSize.xml">
+				<parameter name="@strDateTimeModifier" value="-12 month" />
+			</group-select>
+
+			<template id="3321000" group-select-id="1" name="GetInstanceDatabasesSizeByDatabaseMonth" file="" icon="doc" showIfEmpty="true" showNumberOfRecords="false">
+				<group-select id="1" name="GetInstanceDatabasesSizeByDatabaseMonth" file="SQLQuery\sqlite\MSSQLQuery.Instance.DatabasesSize.xml">
+					<parameter name="@strDateTimeModifier" value="-12 month" />
+					<parameter name="@DatabaseId"                            />
+				</group-select>
+
+				<template id="3321100" group-select-id="1" name="GetInstanceDatabasesSizeByDatabase" file="sqlite\Databases\Size\MSSQLServerAuditor.InstanceDatabasesSizeByDatabase.Graph.xsl" icon="doc" showIfEmpty="true" showNumberOfRecords="false">
+					<sql-select id="1" name="GetInstanceDatabasesSizeByDatabase" file="SQLQuery\sqlite\MSSQLQuery.Instance.DatabasesSize.xml" hierarchy="">
+						<parameter name="@EventDayMin" />
+						<parameter name="@EventDayMax" />
+						<parameter name="@DatabaseId"  />
+					</sql-select>
+				</template>
+			</template>
+		</template>
+
+		<template id="3330000" name="InstanceDatabasesSizeSummary" IsHideTabs="false" file="" icon="doc" showIfEmpty="true" showNumberOfRecords="false">
+			<i18n name="en">
+				DB Size (summary)
+			</i18n>
+			<i18n name="ru">
+				Общий размер БД
+			</i18n>
+
+			<group-select id="1" name="GetInstanceDatabasesSizeMonth" file="SQLQuery\sqlite\MSSQLQuery.Instance.DatabasesSize.xml">
+				<parameter name="@strDateTimeModifier" value="-12 month" />
+			</group-select>
+
+			<template id="3331000" group-select-id="1" name="GetInstanceDatabasesSizeSummary" file="sqlite\Databases\Size\InstanceDatabasesSizeSummary.Graph.xsl" icon="doc" showIfEmpty="true" showNumberOfRecords="false">
+				<sql-select id="1" name="GetInstanceDatabasesSizeSummary" file="SQLQuery\sqlite\MSSQLQuery.Instance.DatabasesSize.xml" hierarchy="">
+					<parameter name="@EventDayMin" />
+					<parameter name="@EventDayMax" />
+				</sql-select>
+			</template>
+		</template>
+	</template>
+
+	<template id="4000000" name="YearActivityByWeeks" IsHideTabs="false" file="" icon="folder" showIfEmpty="true" showNumberOfRecords="false">
+		<i18n name="en">
+			Year (by weeks): Activity
+		</i18n>
+		<i18n name="ru">
+			Год (по неделям): Активность
+		</i18n>
+
+		<template id="4100000" name="InstanceCPUUtilization" IsHideTabs="false" file="" icon="doc" showIfEmpty="true" showNumberOfRecords="false">
+			<i18n name="en">
+				CPU
+			</i18n>
+			<i18n name="ru">
+				Процессор
+			</i18n>
+
+			<group-select id="1" name="GetInstanceCPUUtilizationWeek" file="SQLQuery\sqlite\DMV\InstanceCPUInfo.xml">
+				<parameter name="@strDateTimeModifier" value="-12 month" />
+			</group-select>
+
+			<template id="4110000" group-select-id="1" name="GetInstanceCPUUtilization" file="sqlite\Audit\Processes\CPU\MSSQLServerAuditor.InstanceCPUUtilization.xsl" icon="doc" showIfEmpty="true" showNumberOfRecords="false">
+				<sql-select id="GetInstanceCPUUtilization_History" name="GetInstanceCPUUtilization" file="SQLQuery\sqlite\DMV\InstanceCPUInfo.xml" hierarchy="">
+					<parameter name="@EventDayMin" />
+					<parameter name="@EventDayMax" />
+				</sql-select>
+			</template>
+		</template>
+	</template>
+
+</MSSQLServerAuditorTemplate>

@@ -1,0 +1,779 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<root xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+<sqlquery type="MSSQL">
+	<sql-select name="GetLineGraph">
+		<sql-select-text MinSupportedVersion="*" MaxSupportedVersion="*" signature="">
+			SET NOCOUNT ON;
+			SET DEADLOCK_PRIORITY LOW;
+
+			DECLARE
+				@intIndex [INTEGER]
+			;
+
+			CREATE TABLE #t
+			(
+				 [EventTime]   [DATETIME]       NOT NULL
+				,[PointValue1] [DECIMAL](24, 4) NOT NULL
+				,[PointValue2] [DECIMAL](24, 4) NOT NULL
+				,[PointValue3] [DECIMAL](24, 4) NOT NULL
+				,[PointValue4] [DECIMAL](24, 4) NOT NULL
+			);
+
+			SET @intIndex = 1;
+
+			WHILE (@intIndex &lt;= @intNumberOfPoints)
+			BEGIN
+				INSERT INTO #t
+				(
+					 [EventTime]
+					,[PointValue1]
+					,[PointValue2]
+					,[PointValue3]
+					,[PointValue4]
+				)
+				VALUES
+				(
+					 DATEADD(hh, -1 * RAND() * 100, GETDATE())
+					,-500 + 10.0 * RAND()
+					,-500 + 20.0 * RAND()
+					,-500 + 30.0 * RAND()
+					,-500 + 40.0 * RAND()
+				);
+
+				SET @intIndex = @intIndex + 1;
+			END
+
+			SELECT
+				 t.[EventTime]   AS [EventTime]
+				,t.[PointValue1] AS [PointValue1]
+				,t.[PointValue2] AS [PointValue2]
+				,t.[PointValue3] AS [PointValue3]
+				,t.[PointValue4] AS [PointValue4]
+			FROM
+				#t t
+			ORDER BY
+				t.[EventTime] ASC
+			;
+		</sql-select-text>
+		<sql-select-parameters>
+			<sql-select-parameter name="@intNumberOfPoints" type="Int" default="1" />
+		</sql-select-parameters>
+	</sql-select>
+
+	<sql-select name="GetNameDateLineGraph">
+		<sql-select-text MinSupportedVersion="*" MaxSupportedVersion="*" signature="">
+			SET NOCOUNT ON;
+			SET DEADLOCK_PRIORITY LOW;
+
+			DECLARE
+				 @intIndex  [INTEGER]
+				,@EventTime [DATETIME]
+			;
+
+			CREATE TABLE #t
+			(
+				 [EventTime]  [DATETIME]      NOT NULL
+				,[LineName]   [NVARCHAR](128) NOT NULL
+				,[PointValue] [DECIMAL](24,4) NOT NULL
+			);
+
+			SET @intIndex = 1;
+
+			WHILE (@intIndex &lt;= @intNumberOfPoints)
+			BEGIN
+				SET @EventTime = DATEADD(mi, -1 * RAND() * 500, GETDATE());
+				-- SET @EventTime = DATEADD(dd, -1 * RAND() * 500, GETDATE());
+
+				INSERT INTO #t
+				(
+					 [EventTime]
+					,[LineName]
+					,[PointValue]
+				)
+				VALUES
+				(
+					 DATEADD(ss, -1 * RAND() * 60, DATEADD(mi, -1 * RAND() * 600, GETDATE()))
+					,N'A'
+					,100.0 * RAND()
+				);
+
+				INSERT INTO #t
+				(
+					 [EventTime]
+					,[LineName]
+					,[PointValue]
+				)
+				VALUES
+				(
+					 DATEADD(ss, -1 * RAND() * 60, DATEADD(mi, -1 * RAND() * 600, GETDATE()))
+					,N'B'
+					,200.0 * RAND()
+				);
+
+				INSERT INTO #t
+				(
+					 [EventTime]
+					,[LineName]
+					,[PointValue]
+				)
+				VALUES
+				(
+					 DATEADD(ss, -1 * RAND() * 60, DATEADD(mi, -1 * RAND() * 600, GETDATE()))
+					,N'C'
+					,300.0 * RAND()
+				);
+
+				SET @intIndex = @intIndex + 1;
+			END
+
+			SET @intIndex = 1;
+
+			WHILE (@intIndex &lt;= @intNumberOfPoints / 2)
+			BEGIN
+				SET @EventTime = DATEADD(mi, -1 * RAND() * 500, GETDATE());
+
+				INSERT INTO #t
+				(
+					 [EventTime]
+					,[LineName]
+					,[PointValue]
+				)
+				VALUES
+				(
+					 DATEADD(ss, -1 * RAND() * 60, DATEADD(mi, -1 * RAND() * 600, GETDATE()))
+					,N'D'
+					,50.0 * RAND()
+				);
+
+				SET @intIndex = @intIndex + 1;
+			END
+
+			SELECT
+				 t.[EventTime]  AS [EventTime]
+				,t.[LineName]   AS [LineName]
+				,t.[PointValue] AS [PointValue]
+			FROM
+				#t t
+			ORDER BY
+				t.[EventTime] ASC
+			;
+		</sql-select-text>
+		<sql-select-parameters>
+			<sql-select-parameter name="@intNumberOfPoints" type="Int" default="1" />
+		</sql-select-parameters>
+	</sql-select>
+
+	<sql-select name="GetPieGraph">
+		<sql-select-text MinSupportedVersion="*" MaxSupportedVersion="*" signature="">
+			SET NOCOUNT ON;
+			SET DEADLOCK_PRIORITY LOW;
+
+			DECLARE
+				@intIndex [INTEGER]
+			;
+
+			CREATE TABLE #t
+			(
+				 [LineName] [NVARCHAR](128)  NOT NULL
+				,[PieValue] [DECIMAL](24, 4) NOT NULL
+			);
+
+			SET @intIndex = 1;
+
+			WHILE (@intIndex &lt;= @intNumberOfPoints)
+			BEGIN
+				INSERT INTO #t
+				(
+					 [LineName]
+					,[PieValue]
+				)
+				VALUES
+				(
+					 CONVERT([NVARCHAR](128), DATEADD(dd, -1 * RAND() * 60, GETDATE()), 112)
+					,100.0 * RAND()
+				);
+
+				SET @intIndex = @intIndex + 1;
+			END
+
+			SELECT
+				 t.[LineName]      AS [LineName]
+				,SUM(t.[PieValue]) AS [PieValue]
+			FROM
+				#t t
+			GROUP BY
+				t.[LineName]
+			ORDER BY
+				t.[LineName] ASC
+			;
+		</sql-select-text>
+		<sql-select-parameters>
+			<sql-select-parameter name="@intNumberOfPoints" type="Int" default="1" />
+		</sql-select-parameters>
+	</sql-select>
+
+	<sql-select name="GetStackedColumnGraph">
+		<sql-select-text MinSupportedVersion="*" MaxSupportedVersion="*" signature="">
+			SET NOCOUNT ON;
+			SET DEADLOCK_PRIORITY LOW;
+
+			DECLARE
+				@intIndex [INTEGER]
+			;
+
+			CREATE TABLE #t
+			(
+				 [LineName]    [NVARCHAR](128) NOT NULL
+				,[PointValue1] [DECIMAL](24,4) NOT NULL
+				,[PointValue2] [DECIMAL](24,4) NOT NULL
+				,[PointValue3] [DECIMAL](24,4) NOT NULL
+				,[PointValue4] [DECIMAL](24,4) NOT NULL
+			);
+
+			SET @intIndex = 1;
+
+			WHILE (@intIndex &lt;= @intNumberOfPoints)
+			BEGIN
+				INSERT INTO #t
+				(
+					 [LineName]
+					,[PointValue1]
+					,[PointValue2]
+					,[PointValue3]
+					,[PointValue4]
+				)
+				VALUES
+				(
+					 CONVERT([NVARCHAR](128), @intIndex)
+					,100.0 * RAND()
+					,200.0 * RAND()
+					,300.0 * RAND()
+					,400.0 * RAND()
+				);
+
+				SET @intIndex = @intIndex + 1;
+			END
+
+			SELECT
+				 t.[LineName]    AS [LineName]
+				,t.[PointValue1] AS [PointValue1]
+				,t.[PointValue2] AS [PointValue2]
+				,t.[PointValue3] AS [PointValue3]
+				,t.[PointValue4] AS [PointValue4]
+			FROM
+				#t t
+			ORDER BY
+				t.[LineName] ASC
+			;
+		</sql-select-text>
+		<sql-select-parameters>
+			<sql-select-parameter name="@intNumberOfPoints" type="Int" default="1" />
+		</sql-select-parameters>
+	</sql-select>
+
+	<sql-select name="GetNameDateStackedColumnGraph">
+		<sql-select-text MinSupportedVersion="*" MaxSupportedVersion="*" signature="">
+			SET NOCOUNT ON;
+			SET DEADLOCK_PRIORITY LOW;
+
+			DECLARE
+				@intIndex [INTEGER]
+			;
+
+			CREATE TABLE #t
+			(
+				 [EventTime]   [DATETIME]      NOT NULL
+				,[Name]        [NVARCHAR](128) NOT NULL
+				,[PointValue1] [DECIMAL](24,4) NOT NULL
+				,[PointValue2] [DECIMAL](24,4) NOT NULL
+				,[PointValue3] [DECIMAL](24,4) NOT NULL
+			);
+
+			SET @intIndex = 1;
+
+			WHILE (@intIndex &lt;= @intNumberOfPoints)
+			BEGIN
+				INSERT INTO #t
+				(
+					 [EventTime]
+					,[Name]
+					,[PointValue1]
+					,[PointValue2]
+					,[PointValue3]
+				)
+				VALUES
+				(
+					 DATEADD(ss, -1 * RAND() * 60, DATEADD(mi, -1 * RAND() * 600, GETDATE()))
+					,CONVERT([NVARCHAR](128), @intIndex)
+					,100.0 * RAND()
+					,100.0 * RAND()
+					,100.0 * RAND()
+				);
+
+				SET @intIndex = @intIndex + 1;
+			END
+
+			SELECT
+				 t.[EventTime]   AS [EventTime]
+				,t.[Name]        AS [Name]
+				,t.[PointValue1] AS [PointValue1]
+				,t.[PointValue2] AS [PointValue2]
+				,t.[PointValue3] AS [PointValue3]
+			FROM
+				#t t
+			ORDER BY
+				t.[EventTime] ASC
+			;
+		</sql-select-text>
+		<sql-select-parameters>
+			<sql-select-parameter name="@intNumberOfPoints" type="Int" default="1" />
+		</sql-select-parameters>
+	</sql-select>
+
+	<sql-select name="GetNameDateLineGraph2">
+		<sql-select-text MinSupportedVersion="*" MaxSupportedVersion="*" signature="">
+			SET NOCOUNT ON;
+			SET DEADLOCK_PRIORITY LOW;
+
+			DECLARE
+				 @intIndex      [INTEGER]
+				,@StartDateTime [DATETIME]
+				,@EventTime     [DATETIME]
+			;
+
+			CREATE TABLE #t
+			(
+				 [EventTime]  [DATETIME]      NOT NULL
+				,[LineName]   [NVARCHAR](128) NOT NULL
+				,[PointValue] [DECIMAL](24,4) NOT NULL
+			);
+
+			SET @StartDateTime = CONVERT([DATETIME], N'19000101 00:00:00');
+			SET @intIndex      = 1;
+
+			WHILE (@intIndex &lt;= @intNumberOfPoints)
+			BEGIN
+				SET @EventTime = DATEADD(mi, @intIndex, @StartDateTime);
+
+				IF (@intIndex &gt; 10)
+				BEGIN
+					INSERT INTO #t
+					(
+						 [EventTime]
+						,[LineName]
+						,[PointValue]
+					)
+					VALUES
+					(
+						 @EventTime
+						,N'A'
+						,50 + 100.0 * RAND()
+					);
+				END
+
+				IF (@intIndex &gt; 5)
+				BEGIN
+					INSERT INTO #t
+					(
+						 [EventTime]
+						,[LineName]
+						,[PointValue]
+					)
+					VALUES
+					(
+						 @EventTime
+						,N'B'
+						,60 + 200.0 * RAND()
+					);
+				END
+
+				INSERT INTO #t
+				(
+					 [EventTime]
+					,[LineName]
+					,[PointValue]
+				)
+				VALUES
+				(
+					 @EventTime
+					,N'C'
+					,70 + 300.0 * RAND()
+				);
+
+				SET @intIndex = @intIndex + 1;
+			END
+
+			SELECT
+				 t.[EventTime]  AS [EventTime]
+				,t.[LineName]   AS [LineName]
+				,t.[PointValue] AS [PointValue]
+			FROM
+				#t t
+			ORDER BY
+				t.[EventTime] ASC
+			;
+		</sql-select-text>
+		<sql-select-parameters>
+			<sql-select-parameter name="@intNumberOfPoints" type="Int" default="1" />
+		</sql-select-parameters>
+	</sql-select>
+
+	<sql-select name="GetNamedLineGraph3">
+		<sql-select-text MinSupportedVersion="*" MaxSupportedVersion="*" signature="">
+			SET NOCOUNT ON;
+			SET DEADLOCK_PRIORITY LOW;
+
+			DECLARE
+				 @intIndex      [INTEGER]
+				,@StartDateTime [DATETIME]
+				,@EventTime     [DATETIME]
+			;
+
+			CREATE TABLE #t
+			(
+				 [EventTime]  [DATETIME]      NOT NULL
+				,[LineName]   [NVARCHAR](128) NOT NULL
+				,[PointValue] [DECIMAL](24,4) NOT NULL
+			);
+
+			SET @StartDateTime = CONVERT([DATETIME], N'19000101 00:00:00');
+			SET @intIndex      = 1;
+
+			WHILE (@intIndex &lt;= @intNumberOfPoints)
+			BEGIN
+				SET @EventTime = DATEADD(hh, @intIndex, @StartDateTime);
+
+				IF (@intIndex &gt; 10)
+				BEGIN
+					INSERT INTO #t
+					(
+						 [EventTime]
+						,[LineName]
+						,[PointValue]
+					)
+					VALUES
+					(
+						 @EventTime
+						,N'A'
+						,100.0 * RAND()
+					);
+				END
+
+				IF (@intIndex &gt; 5)
+				BEGIN
+					INSERT INTO #t
+					(
+						 [EventTime]
+						,[LineName]
+						,[PointValue]
+					)
+					VALUES
+					(
+						 @EventTime
+						,N'B'
+						,200.0 * RAND()
+					);
+				END
+
+				INSERT INTO #t
+				(
+					 [EventTime]
+					,[LineName]
+					,[PointValue]
+				)
+				VALUES
+				(
+					 @EventTime
+					,N'C'
+					,300.0 * RAND()
+				);
+
+				SET @intIndex = @intIndex + 1;
+			END
+
+			SELECT
+				 t.[EventTime]  AS [EventTime]
+				,t.[LineName]   AS [LineName]
+				,t.[PointValue] AS [PointValue]
+			FROM
+				#t t
+			ORDER BY
+				t.[EventTime] ASC
+			;
+		</sql-select-text>
+		<sql-select-parameters>
+			<sql-select-parameter name="@intNumberOfPoints" type="Int" default="1" />
+		</sql-select-parameters>
+	</sql-select>
+
+	<sql-select name="GetNamedLineGraph4">
+		<sql-select-text MinSupportedVersion="*" MaxSupportedVersion="*" signature="">
+			SET NOCOUNT ON;
+			SET DEADLOCK_PRIORITY LOW;
+
+			DECLARE
+				 @intIndex      [INTEGER]
+				,@StartDateTime [DATETIME]
+				,@EventTime     [DATETIME]
+			;
+
+			CREATE TABLE #t
+			(
+				 [EventTime]  [DATETIME]      NOT NULL
+				,[LineName]   [NVARCHAR](128) NOT NULL
+				,[PointValue] [DECIMAL](24,4) NOT NULL
+			);
+
+			SET @StartDateTime = CONVERT([DATETIME], N'19000101 00:00:00');
+			SET @intIndex      = 1;
+
+			WHILE (@intIndex &lt;= @intNumberOfPoints)
+			BEGIN
+				SET @EventTime = DATEADD(dd, @intIndex, @StartDateTime);
+
+				IF (@intIndex &gt; 10)
+				BEGIN
+					INSERT INTO #t
+					(
+						 [EventTime]
+						,[LineName]
+						,[PointValue]
+					)
+					VALUES
+					(
+						 @EventTime
+						,N'A'
+						,100.0 * RAND()
+					);
+				END
+
+				IF (@intIndex &gt; 5)
+				BEGIN
+					INSERT INTO #t
+					(
+						 [EventTime]
+						,[LineName]
+						,[PointValue]
+					)
+					VALUES
+					(
+						 @EventTime
+						,N'B'
+						,200.0 * RAND()
+					);
+				END
+
+				INSERT INTO #t
+				(
+					 [EventTime]
+					,[LineName]
+					,[PointValue]
+				)
+				VALUES
+				(
+					 @EventTime
+					,N'C'
+					,300.0 * RAND()
+				);
+
+				SET @intIndex = @intIndex + 1;
+			END
+
+			SELECT
+				 t.[EventTime]  AS [EventTime]
+				,t.[LineName]   AS [LineName]
+				,t.[PointValue] AS [PointValue]
+			FROM
+				#t t
+			ORDER BY
+				t.[EventTime] ASC
+			;
+		</sql-select-text>
+		<sql-select-parameters>
+			<sql-select-parameter name="@intNumberOfPoints" type="Int" default="1" />
+		</sql-select-parameters>
+	</sql-select>
+
+	<sql-select name="GetXYLineGraph">
+		<sql-select-text MinSupportedVersion="*" MaxSupportedVersion="*" signature="">
+			SET NOCOUNT ON;
+			SET DEADLOCK_PRIORITY LOW;
+
+			DECLARE
+				@intIndex [INTEGER]
+			;
+
+			CREATE TABLE #t
+			(
+				 [LineName]    [NVARCHAR](128) NOT NULL
+				,[XPointValue] [DECIMAL](24,4) NOT NULL
+				,[YPointValue] [DECIMAL](24,4) NOT NULL
+			);
+
+			SET @intIndex = 1;
+
+			WHILE (@intIndex &lt;= @intNumberOfPoints)
+			BEGIN
+				INSERT INTO #t
+				(
+					 [LineName]
+					,[XPointValue]
+					,[YPointValue]
+				)
+				VALUES
+				(
+					 N'A'
+					,100.0 + 10.0 * RAND()
+					,100.0 + 10.0 * RAND()
+				);
+
+				INSERT INTO #t
+				(
+					 [LineName]
+					,[XPointValue]
+					,[YPointValue]
+				)
+				VALUES
+				(
+					 N'B'
+					,200.0 + 20.0 * RAND()
+					,200.0 + 20.0 * RAND()
+				);
+
+				INSERT INTO #t
+				(
+					 [LineName]
+					,[XPointValue]
+					,[YPointValue]
+				)
+				VALUES
+				(
+					 N'C'
+					,300.0 + 200.0 * RAND()
+					,300.0 + 200.0 * RAND()
+				);
+
+				SET @intIndex = @intIndex + 1;
+			END
+
+			SELECT
+				 t.[LineName]    AS [LineName]
+				,t.[XPointValue] AS [XPointValue]
+				,t.[YPointValue] AS [YPointValue]
+			FROM
+				#t t
+			ORDER BY
+				t.[LineName] ASC
+			;
+		</sql-select-text>
+		<sql-select-parameters>
+			<sql-select-parameter name="@intNumberOfPoints" type="Int" default="1" />
+		</sql-select-parameters>
+	</sql-select>
+
+	<sql-select name="GetGanttGraph">
+		<sql-select-text MinSupportedVersion="*" MaxSupportedVersion="*" signature="">
+			SET NOCOUNT ON;
+			SET DEADLOCK_PRIORITY LOW;
+
+			DECLARE
+				 @intIndex      [INTEGER]
+				,@StartDateTime [DATETIME]
+				,@EndDateTime   [DATETIME]
+			;
+
+			CREATE TABLE #t
+			(
+				 [LineName]      [NVARCHAR](128) NOT NULL
+				,[StartDateTime] [DATETIME]      NOT NULL
+				,[EndDateTime]   [DATETIME]      NOT NULL
+			);
+
+			SET @intIndex = 1;
+
+			WHILE (@intIndex &lt;= @intNumberOfPoints)
+			BEGIN
+				SET @StartDateTime = DATEADD(dd, @intIndex, DATEADD(hh, -1 * 24 * RAND(), GETDATE()));
+				SET @EndDateTime   = DATEADD(hh, +1 * 24 * RAND(), @StartDateTime);
+
+				INSERT INTO #t
+				(
+					 [LineName]
+					,[StartDateTime]
+					,[EndDateTime]
+				)
+				VALUES
+				(
+					 N'A'
+					,@StartDateTime
+					,@EndDateTime
+				);
+
+				SET @StartDateTime = DATEADD(dd, @intIndex, DATEADD(hh, -1 * 24 * RAND(), GETDATE()));
+				SET @EndDateTime   = DATEADD(hh, +1 * 24 * RAND(), @StartDateTime);
+
+				INSERT INTO #t
+				(
+					 [LineName]
+					,[StartDateTime]
+					,[EndDateTime]
+				)
+				VALUES
+				(
+					 N'B'
+					,@StartDateTime
+					,@EndDateTime
+				);
+
+				SET @StartDateTime = DATEADD(dd, @intIndex, DATEADD(hh, -1 * 24 * RAND(), GETDATE()));
+				SET @EndDateTime   = DATEADD(hh, +1 * 24 * RAND(), @StartDateTime);
+
+				INSERT INTO #t
+				(
+					 [LineName]
+					,[StartDateTime]
+					,[EndDateTime]
+				)
+				VALUES
+				(
+					 N'C'
+					,@StartDateTime
+					,@EndDateTime
+				);
+
+				SET @StartDateTime = DATEADD(dd, @intIndex, DATEADD(hh, -1 * 24 * RAND(), GETDATE()));
+				SET @EndDateTime   = DATEADD(hh, +1 * 24 * RAND(), @StartDateTime);
+
+				INSERT INTO #t
+				(
+					 [LineName]
+					,[StartDateTime]
+					,[EndDateTime]
+				)
+				VALUES
+				(
+					 N'D'
+					,@StartDateTime
+					,@EndDateTime
+				);
+
+				SET @intIndex = @intIndex + 1;
+			END
+
+			SELECT
+				 t.[LineName]      AS [LineName]
+				,t.[StartDateTime] AS [StartDateTime]
+				,t.[EndDateTime]   AS [EndDateTime]
+			FROM
+				#t t
+			ORDER BY
+				 t.[LineName] ASC
+				,t.[StartDateTime] ASC
+			;
+		</sql-select-text>
+		<sql-select-parameters>
+			<sql-select-parameter name="@intNumberOfPoints" type="Int" default="1" />
+		</sql-select-parameters>
+	</sql-select>
+</sqlquery>
+</root>

@@ -1,0 +1,102 @@
+﻿<?xml version="1.0" encoding="UTF-8"?>
+<root xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+<sqlquery type="MSSQL">
+	<sql-select name="GetTablesWithCollationColumns">
+		<name>
+			Collation Mismatch
+		</name>
+		<description>
+			Find all columns where the collation does not match the database default.
+		</description>
+		<reference>
+			http://blogs.lessthandot.com/index.php/DataMgmt/DBProgramming/sql-server-collation-conflicts
+		</reference>
+		<sql-select-text MinSupportedVersion="8.*" MaxSupportedVersion="8.*" signature="">
+			SET NOCOUNT ON;
+			SET DEADLOCK_PRIORITY LOW;
+
+			DECLARE
+				@strDefaultDatabaseCollation [NVARCHAR](128)
+			;
+
+			SET @strDefaultDatabaseCollation = CONVERT([NVARCHAR](128), DATABASEPROPERTYEX(db_name(), N'Collation'));
+
+			SELECT
+				 tSU.[name]                   AS [SchemaName]
+				,tSO.[name]                   AS [ObjectName]
+				,tSO.[xtype]                  AS [ObjectType]
+				,tSO.[crdate]                 AS [ObjectCreateDate]
+				,tSC.[name]                   AS [ColumnName]
+				,tSC.[collation]              AS [ColumnCollation]
+				,@strDefaultDatabaseCollation AS [DefaultDatabaseCollation]
+			FROM
+				[dbo].[sysobjects] tSO
+				INNER JOIN [dbo].[sysusers] tSU ON
+					tSU.[uid] = tSO.[uid]
+				INNER JOIN [dbo].[syscolumns] AS tSC ON
+					tSC.[id] = tSO.[id]
+					AND tSC.[collation] &lt;&gt; @strDefaultDatabaseCollation
+			WHERE
+				tSO.[xtype] IN (
+					N'U'
+				)
+				AND OBJECTPROPERTY(tSO.[id], N'IsMSShipped') = 0
+			GROUP BY
+				 tSU.[name]
+				,tSO.[name]
+				,tSO.[xtype]
+				,tSO.[crdate]
+				,tSC.[name]
+				,tSC.[collation]
+			ORDER BY
+				 tSU.[name]
+				,tSO.[name]
+				,tSC.[name]
+			;
+		</sql-select-text>
+		<sql-select-text MinSupportedVersion="9.*" MaxSupportedVersion="*" signature="">
+			SET NOCOUNT ON;
+			SET DEADLOCK_PRIORITY LOW;
+
+			DECLARE
+				@strDefaultDatabaseCollation [NVARCHAR](128)
+			;
+
+			SET @strDefaultDatabaseCollation = CONVERT([NVARCHAR](128), DATABASEPROPERTYEX(db_name(), N'Collation'));
+
+			SELECT
+				 tSS.[name]                   AS [SchemaName]
+				,tSO.[name]                   AS [ObjectName]
+				,tSO.[type_desc]              AS [ObjectType]
+				,tSO.[create_date]            AS [ObjectCreateDate]
+				,tSC.[name]                   AS [ColumnName]
+				,tSC.[collation_name]         AS [ColumnCollation]
+				,@strDefaultDatabaseCollation AS [DefaultDatabaseCollation]
+			FROM
+				[sys].[objects] tSO
+				INNER JOIN [sys].[schemas] tSS ON
+					tSS.[schema_id] = tSO.[schema_id]
+				INNER JOIN [sys].[columns] AS tSC ON
+					tSC.[object_id] = tSO.[object_id]
+					AND tSC.[collation_name] &lt;&gt; @strDefaultDatabaseCollation
+			WHERE
+				tSO.[type_desc] IN (
+					N'USER_TABLE'
+				)
+				AND OBJECTPROPERTY(tSO.[object_id], N'IsMSShipped') = 0
+			GROUP BY
+				 tSS.[name]
+				,tSO.[name]
+				,tSO.[type_desc]
+				,tSO.[create_date]
+				,tSC.[name]
+				,tSC.[collation_name]
+			ORDER BY
+				 tSS.[name]
+				,tSO.[name]
+				,tSC.[name]
+			;
+		</sql-select-text>
+	</sql-select>
+</sqlquery>
+</root>

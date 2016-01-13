@@ -1,0 +1,43 @@
+﻿<?xml version="1.0" encoding="UTF-8"?>
+<root xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+<sqlquery type="MSSQL">
+	<sql-select name="GetDatabaseUserObjectsCount">
+		<sql-select-text MinSupportedVersion="8.*" MaxSupportedVersion="8.*" signature="">
+			SET NOCOUNT ON;
+			SET DEADLOCK_PRIORITY LOW;
+
+			SELECT
+				 tSO.[xtype]       AS [TypeDesc]
+				,COUNT(*)          AS [TypeCount]
+				,MIN(tSO.[crdate]) AS [CreateDateMin]
+				,MAX(tSO.[crdate]) AS [CreateDateMax]
+			FROM
+				[dbo].[sysobjects] tSO
+			WHERE
+				OBJECTPROPERTY(tSO.[id], N'IsMSShipped') = 0
+			GROUP BY
+				tSO.[xtype]
+			ORDER BY
+				tSO.[xtype];
+		</sql-select-text>
+		<sql-select-text MinSupportedVersion="9.*" MaxSupportedVersion="*" signature="">
+			SET NOCOUNT ON;
+			SET DEADLOCK_PRIORITY LOW;
+
+			SELECT
+				 tSO.[type_desc]        AS [TypeDesc]
+				,COUNT(*)               AS [TypeCount]
+				,MIN(tSO.[create_date]) AS [CreateDateMin]
+				,MAX(tSO.[create_date]) AS [CreateDateMax]
+			FROM
+				[sys].[objects] tSO
+			WHERE
+				OBJECTPROPERTY(tSO.[object_id], N'IsMSShipped') = 0
+			GROUP BY
+				tSO.[type_desc]
+			ORDER BY
+				tSO.[type_desc];
+		</sql-select-text>
+	</sql-select>
+</sqlquery>
+</root>

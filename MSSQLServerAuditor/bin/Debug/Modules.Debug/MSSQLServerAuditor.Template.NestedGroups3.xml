@@ -1,0 +1,55 @@
+﻿<?xml version="1.0" encoding="UTF-8"?>
+<MSSQLServerAuditorTemplate id="ng3" type="MSSQL" xmlns:xi="http://www.w3.org/2003/XInclude" version="1.0">
+	<i18n name="en">
+		Nested Groups 3
+	</i18n>
+	<i18n name="ru">
+		Вложенные группы 3
+	</i18n>
+
+	<MainWindowTitle>
+		<i18n name="en">
+			{$ApplicationProductVersion$} : $ConnectionName$ $ModuleName$ $ApplicationProductName$ $ApplicationProductVersion$
+		</i18n>
+		<i18n name="ru">
+			$ApplicationProductName$: Версия:"$ApplicationProductVersion$";Модуль:"$ModuleName$";Соединение:"$ConnectionName$"; $ApplicationProductVersion$
+		</i18n>
+	</MainWindowTitle>
+
+	<TreeTitle>
+		<i18n name="en">
+			$ConnectionName$ - $ModuleName$
+		</i18n>
+		<i18n name="ru">
+			$ConnectionName$ - $ModuleName$
+		</i18n>
+	</TreeTitle>
+
+	<template id="01000000" name="Level1Groups" file="" icon="doc" showIfEmpty="true" showNumberOfRecords="true">
+		<group-select id="1" name="GetLevelGroups" file="SQLQuery\mssql\ng3\MSSQLQuery.LevelGroups.xml">
+			<parameter name="@NumberOfItems" value="10"/>
+			<parameter name="@ParentGroupId" value="1" />
+		</group-select>
+	</template>
+
+	<template id="02000000" group-template-id="01000000" group-select-id="1" name="Level2Groups" file="" icon="doc" showIfEmpty="true" showNumberOfRecords="true">
+		<group-select id="1" name="GetLevelGroups" file="SQLQuery\mssql\ng3\MSSQLQuery.LevelGroups.xml">
+			<parameter name="@NumberOfItems" value="10"/>
+			<parameter name="@ParentGroupId"           />
+		</group-select>
+	</template>
+
+	<template id="03000000" group-template-id="02000000" group-select-id="1" name="Groups" file="" icon="folder" showIfEmpty="true" showNumberOfRecords="true">
+			<i18n name="en">
+				Groups
+			</i18n>
+			<i18n name="ru">
+				Группы
+			</i18n>
+
+			<group-select id="1" name="GetLevelGroups" file="SQLQuery\mssql\ng3\MSSQLQuery.LevelGroups.xml">
+				<parameter name="@NumberOfItems" value="10"/>
+				<parameter name="@ParentGroupId"           />
+			</group-select>
+	</template>
+</MSSQLServerAuditorTemplate>

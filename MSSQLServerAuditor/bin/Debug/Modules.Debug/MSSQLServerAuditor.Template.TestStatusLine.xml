@@ -1,0 +1,251 @@
+﻿<?xml version="1.0" encoding="UTF-8"?>
+<MSSQLServerAuditorTemplate id="StatusLine" type="MSSQL" xmlns:xi="http://www.w3.org/2003/XInclude" version="1.0">
+	<i18n name="en">
+		Test Status Line
+	</i18n>
+	<i18n name="ru">
+		Проверка строки статуса
+	</i18n>
+
+	<template id="1000000" name="LongExecutionQuery" file="mssql\Instance\MSSQLServerAuditor.LongExecutionQuery.xsl" icon="doc" showIfEmpty="true" showNumberOfRecords="true">
+		<i18n name="en">
+			5 Seconds
+		</i18n>
+		<i18n name="ru">
+			5 Cекунд
+		</i18n>
+
+		<sql-select id="0" file="SQLQuery\mssql\MSSQLServerAuditor.MSSQLQuery.LongExecutionQuery.xml" name="GetLongExecutionQuery" hierarchy="">
+			<parameter name="@WaitForDelay" value="00:00:05.000"/>
+			<parameter name="@NumberOfExecutions" value="1"/>
+		</sql-select>
+
+		<RefreshSchedules>
+			<RefreshSchedule>
+				<Enabled>false</Enabled>
+				<Id>001</Id>
+				<Name>Update Every Minute</Name>
+				<Action>Update</Action>
+				<Address />
+				<OccursOnceDateTime>1900-01-01T00:00:00</OccursOnceDateTime>
+				<OccursOnceDateTimeEnabled>false</OccursOnceDateTimeEnabled>
+				<ReccurPeriod>
+					<TimeUnit>Daily</TimeUnit>
+					<TimeUnitCount>1</TimeUnitCount>
+				</ReccurPeriod>
+				<DailyFrequency>
+					<OccursOnce>false</OccursOnce>
+					<OccursOnceTime>PT0S</OccursOnceTime>
+					<PeriodTimeUnit>Minute</PeriodTimeUnit>
+					<PeriodTimeUnitCount>1</PeriodTimeUnitCount>
+					<StartingAt>PT00H00M05S</StartingAt>
+					<EndingAt>PT23H59M59S</EndingAt>
+				</DailyFrequency>
+				<ActiveWeekDays />
+				<DayOfMonth>
+					<DayNumber>1</DayNumber>
+				</DayOfMonth>
+				<StartDate>1900-01-01T00:00:00</StartDate>
+				<EndDate>1900-01-01T00:00:00</EndDate>
+				<HasEndDate>false</HasEndDate>
+			</RefreshSchedule>
+			<RefreshSchedule>
+				<Enabled>false</Enabled>
+				<Id>002</Id>
+				<Name>Send Email Notification One Time Daily</Name>
+				<Action>SendNotification</Action>
+				<Address>Support</Address>
+				<OccursOnceDateTime>1900-01-01T00:00:00</OccursOnceDateTime>
+				<OccursOnceDateTimeEnabled>false</OccursOnceDateTimeEnabled>
+				<ReccurPeriod>
+					<TimeUnit>Daily</TimeUnit>
+					<TimeUnitCount>1</TimeUnitCount>
+				</ReccurPeriod>
+				<DailyFrequency>
+					<OccursOnce>true</OccursOnce>
+					<OccursOnceTime>PT00H30M00S</OccursOnceTime>
+					<PeriodTimeUnit>Minute</PeriodTimeUnit>
+					<PeriodTimeUnitCount>1</PeriodTimeUnitCount>
+					<StartingAt>PT00H00M05S</StartingAt>
+					<EndingAt>PT23H59M59S</EndingAt>
+				</DailyFrequency>
+				<ActiveWeekDays />
+				<DayOfMonth>
+					<DayNumber>1</DayNumber>
+				</DayOfMonth>
+				<StartDate>1900-01-01T00:00:00</StartDate>
+				<EndDate>1900-01-01T00:00:00</EndDate>
+				<HasEndDate>false</HasEndDate>
+			</RefreshSchedule>
+		</RefreshSchedules>
+	</template>
+
+	<template id="2000000" name="LongExecutionQuery" file="mssql\Instance\MSSQLServerAuditor.LongExecutionQuery.xsl" icon="doc" showIfEmpty="true" showNumberOfRecords="true">
+		<i18n name="en">
+			0.5 Minute
+		</i18n>
+		<i18n name="ru">
+			0.5 Минуты
+		</i18n>
+
+		<sql-select id="0" name="GetLongExecutionQuery" file="SQLQuery\mssql\MSSQLServerAuditor.MSSQLQuery.LongExecutionQuery.xml" hierarchy="">
+			<parameter name="@WaitForDelay" value="00:00:30.000"/>
+			<parameter name="@NumberOfExecutions" value="1"/>
+		</sql-select>
+
+		<RefreshSchedules>
+			<RefreshSchedule>
+				<Enabled>false</Enabled>
+				<Id>001</Id>
+				<Name>GetLongExecutionQuery</Name>
+				<OccursOnceDateTime>1900-01-01T00:00:00</OccursOnceDateTime>
+				<OccursOnceDateTimeEnabled>false</OccursOnceDateTimeEnabled>
+				<ReccurPeriod>
+					<TimeUnit>Daily</TimeUnit>
+					<TimeUnitCount>1</TimeUnitCount>
+				</ReccurPeriod>
+				<DailyFrequency>
+					<OccursOnce>false</OccursOnce>
+					<OccursOnceTime>PT0S</OccursOnceTime>
+					<PeriodTimeUnit>Minute</PeriodTimeUnit>
+					<PeriodTimeUnitCount>1</PeriodTimeUnitCount>
+					<StartingAt>PT00H00M05S</StartingAt>
+					<EndingAt>PT23H59M59S</EndingAt>
+				</DailyFrequency>
+				<ActiveWeekDays />
+				<DayOfMonth>
+					<DayNumber>1</DayNumber>
+				</DayOfMonth>
+				<StartDate>1900-01-01T00:00:00</StartDate>
+				<EndDate>1900-01-01T00:00:00</EndDate>
+				<HasEndDate>false</HasEndDate>
+			</RefreshSchedule>
+		</RefreshSchedules>
+	</template>
+
+	<template id="3000000" name="LongExecutionQuery" file="mssql\Instance\MSSQLServerAuditor.LongExecutionQuery.xsl" icon="doc" showIfEmpty="true" showNumberOfRecords="true">
+		<i18n name="en">
+			1 Minute
+		</i18n>
+		<i18n name="ru">
+			1 Минута
+		</i18n>
+
+		<sql-select id="0" file="SQLQuery\mssql\MSSQLServerAuditor.MSSQLQuery.LongExecutionQuery.xml" name="GetLongExecutionQuery" hierarchy="">
+			<parameter name="@WaitForDelay" value="00:01:00.000"/>
+		</sql-select>
+
+		<RefreshSchedules>
+			<RefreshSchedule>
+				<Enabled>false</Enabled>
+				<Id>001</Id>
+				<Name>GetLongExecutionQuery</Name>
+				<OccursOnceDateTime>1900-01-01T00:00:00</OccursOnceDateTime>
+				<OccursOnceDateTimeEnabled>false</OccursOnceDateTimeEnabled>
+				<ReccurPeriod>
+					<TimeUnit>Daily</TimeUnit>
+					<TimeUnitCount>1</TimeUnitCount>
+				</ReccurPeriod>
+				<DailyFrequency>
+					<OccursOnce>false</OccursOnce>
+					<OccursOnceTime>PT0S</OccursOnceTime>
+					<PeriodTimeUnit>Minute</PeriodTimeUnit>
+					<PeriodTimeUnitCount>1</PeriodTimeUnitCount>
+					<StartingAt>PT00H00M15S</StartingAt>
+					<EndingAt>PT23H59M59S</EndingAt>
+				</DailyFrequency>
+				<ActiveWeekDays />
+				<DayOfMonth>
+					<DayNumber>1</DayNumber>
+				</DayOfMonth>
+				<StartDate>1900-01-01T00:00:00</StartDate>
+				<EndDate>1900-01-01T00:00:00</EndDate>
+				<HasEndDate>false</HasEndDate>
+			</RefreshSchedule>
+		</RefreshSchedules>
+	</template>
+
+	<template id="4000000" name="LongExecutionQuery" file="mssql\Instance\MSSQLServerAuditor.LongExecutionQuery.xsl" icon="doc" showIfEmpty="true" showNumberOfRecords="true">
+		<i18n name="en">
+			1.5 Minute
+		</i18n>
+		<i18n name="ru">
+			1.5 Минуты
+		</i18n>
+
+		<sql-select id="0" file="SQLQuery\mssql\MSSQLServerAuditor.MSSQLQuery.LongExecutionQuery.xml" name="GetLongExecutionQuery" hierarchy="">
+			<parameter name="@WaitForDelay" value="00:01:30.000"/>
+		</sql-select>
+
+		<RefreshSchedules>
+			<RefreshSchedule>
+				<Enabled>false</Enabled>
+				<Id>001</Id>
+				<Name>GetLongExecutionQuery</Name>
+				<OccursOnceDateTime>1900-01-01T00:00:00</OccursOnceDateTime>
+				<OccursOnceDateTimeEnabled>false</OccursOnceDateTimeEnabled>
+				<ReccurPeriod>
+					<TimeUnit>Daily</TimeUnit>
+					<TimeUnitCount>1</TimeUnitCount>
+				</ReccurPeriod>
+				<DailyFrequency>
+					<OccursOnce>false</OccursOnce>
+					<OccursOnceTime>PT0S</OccursOnceTime>
+					<PeriodTimeUnit>Minute</PeriodTimeUnit>
+					<PeriodTimeUnitCount>1</PeriodTimeUnitCount>
+					<StartingAt>PT00H00M25S</StartingAt>
+					<EndingAt>PT23H59M59S</EndingAt>
+				</DailyFrequency>
+				<ActiveWeekDays />
+				<DayOfMonth>
+					<DayNumber>1</DayNumber>
+				</DayOfMonth>
+				<StartDate>1900-01-01T00:00:00</StartDate>
+				<EndDate>1900-01-01T00:00:00</EndDate>
+				<HasEndDate>false</HasEndDate>
+			</RefreshSchedule>
+		</RefreshSchedules>
+	</template>
+
+	<template id="5000000" name="LongExecutionQuery" file="mssql\Instance\MSSQLServerAuditor.LongExecutionQuery.xsl" icon="doc" showIfEmpty="true" showNumberOfRecords="true">
+		<i18n name="en">
+			2 Minutes
+		</i18n>
+		<i18n name="ru">
+			2 Минуты
+		</i18n>
+
+		<sql-select id="0" file="SQLQuery\mssql\MSSQLServerAuditor.MSSQLQuery.LongExecutionQuery.xml" name="GetLongExecutionQuery" hierarchy="">
+			<parameter name="@WaitForDelay" value="00:02:00.000"/>
+		</sql-select>
+
+		<RefreshSchedules>
+			<RefreshSchedule>
+				<Enabled>false</Enabled>
+				<Id>001</Id>
+				<Name>GetLongExecutionQuery</Name>
+				<OccursOnceDateTime>1900-01-01T00:00:00</OccursOnceDateTime>
+				<OccursOnceDateTimeEnabled>false</OccursOnceDateTimeEnabled>
+				<ReccurPeriod>
+					<TimeUnit>Daily</TimeUnit>
+					<TimeUnitCount>1</TimeUnitCount>
+				</ReccurPeriod>
+				<DailyFrequency>
+					<OccursOnce>false</OccursOnce>
+					<OccursOnceTime>PT0S</OccursOnceTime>
+					<PeriodTimeUnit>Minute</PeriodTimeUnit>
+					<PeriodTimeUnitCount>2</PeriodTimeUnitCount>
+					<StartingAt>PT00H00M35S</StartingAt>
+					<EndingAt>PT23H59M59S</EndingAt>
+				</DailyFrequency>
+				<ActiveWeekDays />
+				<DayOfMonth>
+					<DayNumber>1</DayNumber>
+				</DayOfMonth>
+				<StartDate>1900-01-01T00:00:00</StartDate>
+				<EndDate>1900-01-01T00:00:00</EndDate>
+				<HasEndDate>false</HasEndDate>
+			</RefreshSchedule>
+		</RefreshSchedules>
+	</template>
+</MSSQLServerAuditorTemplate>

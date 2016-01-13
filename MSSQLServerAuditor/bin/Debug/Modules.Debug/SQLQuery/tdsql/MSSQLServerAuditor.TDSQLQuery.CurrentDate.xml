@@ -1,0 +1,15 @@
+﻿<?xml version="1.0" encoding="UTF-8"?>
+<root xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+<sqlquery type="TDSQL">
+	<sql-select name="GetCurrentDate">
+		<sql-select-text MinSupportedVersion="*" MaxSupportedVersion="*" signature="">
+				SELECT
+				 CURRENT_DATE      AS CurrentDate
+				,CURRENT_TIMESTAMP AS CurrentTimestamp
+			;
+
+		</sql-select-text>
+	</sql-select>
+</sqlquery>
+</root>
+

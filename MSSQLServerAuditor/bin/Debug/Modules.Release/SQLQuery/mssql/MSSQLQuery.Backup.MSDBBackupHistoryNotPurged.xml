@@ -1,0 +1,54 @@
+﻿<?xml version="1.0" encoding="UTF-8"?>
+<root xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+<sqlquery type="MSSQL">
+	<sql-select name="IsMSDBBackupHistoryNotPurged">
+		<name>
+			MSDB Backup History Not Purged
+		</name>
+		<description>
+			Database backup history retained.
+		</description>
+		<reference>
+			http://BrentOzar.com/go/history
+		</reference>
+		<sql-select-text MinSupportedVersion="8.*" MaxSupportedVersion="*" signature="">
+			SET NOCOUNT ON;
+			SET DEADLOCK_PRIORITY LOW;
+
+			DECLARE
+				@ServerName [NVARCHAR](128)
+			;
+
+			SET @ServerName = CONVERT([NVARCHAR](128), SERVERPROPERTY(N'Servername'));
+
+			SELECT
+				 tBS.[database_name]          AS [DatabaseName]
+				,tBS.[type]                   AS [DatabaseBackupType]
+				,MIN(tBS.[backup_start_date]) AS [FirstDatabaseBackupDate]
+				,CASE
+					WHEN MIN(tBS.[backup_start_date]) &lt;= (DATEADD(dd, -1 * ISNULL(@intDaysMSDBBackupHistoryRetentionThreshold, 60), GETDATE())) THEN
+						1
+					ELSE
+						0
+				END                           AS [IsIssue]
+			FROM
+				[msdb].[dbo].[backupmediafamily] bmf
+				INNER JOIN [msdb].[dbo].[backupset] tBS ON
+					bmf.[media_set_id] = tBS.[media_set_id]
+			WHERE
+				tBS.[server_name] = @ServerName
+			GROUP BY
+				 tBS.[database_name]
+				,tBS.[type]
+			ORDER BY
+				 tBS.[database_name]
+				,tBS.[type]
+			;
+		</sql-select-text>
+		<sql-select-parameters>
+			<sql-select-parameter name="@intDaysMSDBBackupHistoryRetentionThreshold" type="Int" />
+		</sql-select-parameters>
+	</sql-select>
+</sqlquery>
+</root>
+

@@ -1,0 +1,83 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<root xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+<sqlquery type="SQLiteExternal">
+	<sql-select name="GetSQLiteVersion" group="" scope="instance">
+		<name>
+			GetSQLiteVersion
+		</name>
+		<description>
+			The sqlite_version() function returns a text value consisting of the version number of
+			the SQLite library. A typical string would be something like '3.7.2'. This SQL function
+			is a wrapper around the C function sqlite3_libversion(), and has all of the same
+			limitations and conditions.
+		</description>
+		<reference>
+			https://www.safaribooksonline.com/library/view/using-sqlite/9781449394592/re151.html
+		</reference>
+		<sql-select-text MinSupportedVersion="*" MaxSupportedVersion="*" signature="">
+			SELECT
+				sqlite_version() AS [SQLiteVersion];
+		</sql-select-text>
+	</sql-select>
+
+	<sql-select name="GetTotalChanges" group="" scope="instance">
+		<name>
+			GetTotalChanges
+		</name>
+		<description>
+			The total_changes() function returns the number of row changes caused by INSERT, UPDATE,
+			or DELETE statements since the current database connection was opened.
+		</description>
+		<reference>
+			http://zetcode.com/db/sqlite/sqlitefunctions/
+		</reference>
+		<sql-select-text MinSupportedVersion="*" MaxSupportedVersion="*" signature="">
+			SELECT
+				total_changes() AS [SQLiteTotalChanges];
+		</sql-select-text>
+	</sql-select>
+
+	<sql-select name="GetSQLiteSourceId" group="" scope="instance">
+		<name>
+			GetSQLiteSourceId
+		</name>
+		<description>
+			The sqlite_source_id() function returns a text value consisting of the check-in
+			identifier of the source code used to build the SQLite library. The identifier consists
+			of a date, timestamp, and an SHA1 hash of the source from the source repository. This
+			SQL function is a wrapper around the C function sqlite3_sourceid(), and has all of the
+			same limitations and conditions.
+		</description>
+		<reference>
+			https://www.safaribooksonline.com/library/view/Using+SQLite/9781449394592/re150.html
+		</reference>
+		<sql-select-text MinSupportedVersion="*" MaxSupportedVersion="*" signature="">
+			SELECT
+				sqlite_source_id() () AS [SQLiteSourceId];
+		</sql-select-text>
+	</sql-select>
+
+	<sql-select name="GetSQLite3SourceId" group="" scope="instance">
+		<name>
+			GetSQLite3SourceId
+		</name>
+		<description>
+			This function returns the source-identifier of the SQLite library. The source-identifier
+			consists of the date, time, and hash code from the final source control check-in used to
+			build the SQLite library. The source-identifier for SQLite 3.6.23.1 is: 2010-03-26
+			22:28:06 b078b588d617e07886ad156e9f54ade6d823568e. This value is also available at
+			compile time as the SQLITE_SOURCE_ID macro. By comparing the macro used at compile time
+			to the value returned at runtime, an application can verify that it is linking against
+			the correct version of the library. This function is exposed to the SQL environment as
+			the SQL function sqlite_source_id().
+		</description>
+		<reference>
+			https://www.safaribooksonline.com/library/view/Using+SQLite/9781449394592/re150.html
+		</reference>
+		<sql-select-text MinSupportedVersion="*" MaxSupportedVersion="*" signature="">
+			SELECT
+				sqlite3_sourceid() () AS [SQLite3SourceId];
+		</sql-select-text>
+	</sql-select>
+</sqlquery>
+</root>

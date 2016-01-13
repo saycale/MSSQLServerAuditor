@@ -1,0 +1,41 @@
+﻿<?xml version="1.0" encoding="UTF-8"?>
+<root xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+<sqlquery type="MSSQL">
+	<sql-select name="GetReplicationSubscriptions">
+		<description>
+			Get the replication subscriptions
+		</description>
+		<sql-select-text MinSupportedVersion="9.*" MaxSupportedVersion="*" signature="">
+			<executeIf-select>
+				SET NOCOUNT ON;
+				SET DEADLOCK_PRIORITY LOW;
+
+				SELECT
+					COUNT(*)
+				FROM
+					[sys].[objects] tSO
+					INNER JOIN [sys].[schemas] tSS ON
+						tSS.[schema_id] = tSO.[schema_id]
+				WHERE
+					tSO.[name] = N'MSreplication_subscriptions'
+					AND tSS.[name] = N'dbo'
+				;
+			</executeIf-select>
+			SET NOCOUNT ON;
+			SET DEADLOCK_PRIORITY LOW;
+
+			SELECT
+				 tRS.[publisher]    AS [PublisherName]
+				,tRS.[publisher_db] AS [PublisherDatabaseName]
+				,tRS.[publication]  AS [PublisherPublication]
+			FROM
+				[dbo].[MSreplication_subscriptions] tRS
+			ORDER BY
+				 tRS.[publisher]
+				,tRS.[publisher_db]
+				,tRS.[publication]
+			;
+		</sql-select-text>
+	</sql-select>
+</sqlquery>
+</root>

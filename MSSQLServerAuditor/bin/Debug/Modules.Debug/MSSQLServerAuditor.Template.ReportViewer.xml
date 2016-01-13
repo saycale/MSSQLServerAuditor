@@ -1,0 +1,18 @@
+﻿<?xml version="1.0" encoding="UTF-8"?>
+<MSSQLServerAuditorTemplate id="rv" type="MSSQL" xmlns:xi="http://www.w3.org/2003/XInclude" version="1.0">
+	<i18n name="en">
+		RDLC reports
+	</i18n>
+	<i18n name="ru">
+		Отчёты типа RDLC
+	</i18n>
+
+	<template id="1" name="RDLC" file="mssql\Instance\Databases\Size\MSSQLServerAuditor.RDLC.xsl" icon="doc" showIfEmpty="true" showNumberOfRecords="false">
+		<i18n name="ru">
+			RDLC
+		</i18n>
+
+		<sql-select id="0" file="SQLQuery\mssql\MSSQLServerAuditor.MSSQLQuery.DatabaseSize.xml" name="GetDatabaseSize" hierarchy="">
+		</sql-select>
+	</template>
+</MSSQLServerAuditorTemplate>

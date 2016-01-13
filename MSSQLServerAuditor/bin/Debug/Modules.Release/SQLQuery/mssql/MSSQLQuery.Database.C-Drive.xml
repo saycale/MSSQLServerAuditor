@@ -1,0 +1,57 @@
+﻿<?xml version="1.0" encoding="UTF-8"?>
+<root xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+<sqlquery type="MSSQL">
+	<sql-select name="GetDatabasesOnCDrive">
+		<name>
+			Databases on C Drive
+		</name>
+		<description>
+			Get list of databases with files on C: Drive
+		</description>
+		<reference>
+			http://BrentOzar.com/go/cdrive
+		</reference>
+		<sql-select-text MinSupportedVersion="9.*" MaxSupportedVersion="*" signature="">
+			SET NOCOUNT ON;
+			SET DEADLOCK_PRIORITY LOW;
+
+			SET NOCOUNT ON;
+			SET DEADLOCK_PRIORITY LOW;
+
+			DECLARE
+				@intPageSize [INTEGER]
+			;
+
+			SELECT
+				@intPageSize = tSV.[low]
+			FROM
+				[master].[dbo].[spt_values] tSV
+			WHERE
+				tSV.[number] = 1
+				AND tSV.[type] = N'E';
+
+			SELECT
+				 tMF.[name]                          AS [DatabaseName]
+				,UPPER(LEFT(tMF.[physical_name], 1)) AS [DatabaseDiskDrive]
+				,tMF.[physical_name]                 AS [DatabasePhysicalFileName]
+				,tMF.[state_desc]                    AS [DatabasePhysicalFileState]
+				,CONVERT([NUMERIC](20, 2), (
+					  CONVERT([NUMERIC](20, 2), tMF.[size])
+					* CONVERT([NUMERIC](20, 2), @intPageSize)
+					) / CONVERT([NUMERIC](20, 2), 1024.0 * 1024.0)
+				)                                    AS [DatabasePhysicalFileSize]
+			FROM
+				[master].[sys].[master_files] tMF
+			WHERE
+				UPPER(LEFT(tMF.[physical_name], 1)) = N'C'
+			ORDER BY
+				 tMF.[name]
+				,tMF.[physical_name]
+			;
+		</sql-select-text>
+		<sql-select-parameters>
+		</sql-select-parameters>
+	</sql-select>
+</sqlquery>
+</root>
+

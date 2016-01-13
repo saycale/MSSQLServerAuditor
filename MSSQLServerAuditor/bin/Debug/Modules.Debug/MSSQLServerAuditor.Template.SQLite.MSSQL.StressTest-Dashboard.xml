@@ -1,0 +1,72 @@
+﻿<?xml version="1.0" encoding="UTF-8"?>
+<MSSQLServerAuditorTemplate id="sqlite_mssql_stresstest_dashboard" type="SQLite-MSSQL" xmlns:xi="http://www.w3.org/2003/XInclude" version="1.0">
+	<i18n name="en">
+		SQLite: MSSQL: StessTest Dashboard
+	</i18n>
+	<i18n name="ru">
+		SQLite: MSSQL: Стресс-тест Презентация
+	</i18n>
+
+	<MainWindowTitle>
+		<i18n name="en">
+			$ConnectionName$ $ModuleName$ $ApplicationProductName$ $ApplicationProductVersion$
+		</i18n>
+		<i18n name="ru">
+			$ConnectionName$ $ModuleName$ $ApplicationProductName$ $ApplicationProductVersion$
+		</i18n>
+	</MainWindowTitle>
+
+	<TreeTitle>
+		<i18n name="en">
+			$ConnectionName$ : $ModuleName$
+		</i18n>
+		<i18n name="ru">
+			$ConnectionName$ : $ModuleName$
+		</i18n>
+	</TreeTitle>
+
+	<template id="1000000" name="StressTest_1" IsHideTabs="true" file="sqlite\MSSQLServerAuditor.InstanceCPUUtilization4StressTest.xsl" icon="doc" showIfEmpty="true" showNumberOfRecords="false">
+		<i18n name="en">
+			SQLite: MSSQL: StessTest
+		</i18n>
+		<i18n name="ru">
+			SQLite: MSSQL: Стресс-тест
+		</i18n>
+
+		<sql-select id="1" name="GetInstanceCPUUtilization4StressTest_1" file="SQLQuery\sqlite\MSSQLServerAuditor.SqLite.InstanceCPUInfo4StressTest.xml">
+		</sql-select>
+		<sql-select id="2" name="GetInstanceCPUUtilization4StressTest_2" file="SQLQuery\sqlite\MSSQLServerAuditor.SqLite.InstanceCPUInfo4StressTest.xml">
+		</sql-select>
+		<sql-select id="3" name="GetInstanceCPUUtilization4StressTest_3" file="SQLQuery\sqlite\MSSQLServerAuditor.SqLite.InstanceCPUInfo4StressTest.xml">
+		</sql-select>
+
+		<RefreshSchedules>
+			<RefreshSchedule>
+				<Enabled>false</Enabled>
+				<Id>001</Id>
+				<Name>GetInstanceCPUUtilization</Name>
+				<OccursOnceDateTime>1900-01-01T00:00:00</OccursOnceDateTime>
+				<OccursOnceDateTimeEnabled>false</OccursOnceDateTimeEnabled>
+				<ReccurPeriod>
+					<TimeUnit>Daily</TimeUnit>
+					<TimeUnitCount>1</TimeUnitCount>
+				</ReccurPeriod>
+				<DailyFrequency>
+					<OccursOnce>false</OccursOnce>
+					<OccursOnceTime>PT0S</OccursOnceTime>
+					<PeriodTimeUnit>Minute</PeriodTimeUnit>
+					<PeriodTimeUnitCount>1</PeriodTimeUnitCount>
+					<StartingAt>PT00H00M05S</StartingAt>
+					<EndingAt>PT23H59M59S</EndingAt>
+				</DailyFrequency>
+				<ActiveWeekDays />
+				<DayOfMonth>
+					<DayNumber>1</DayNumber>
+				</DayOfMonth>
+				<StartDate>1900-01-01T00:00:00</StartDate>
+				<EndDate>1900-01-01T00:00:00</EndDate>
+				<HasEndDate>false</HasEndDate>
+			</RefreshSchedule>
+		</RefreshSchedules>
+	</template>
+</MSSQLServerAuditorTemplate>

@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<root xmlns:xi="http://www.w3.org/2003/XInclude">
+<sqlquery type="NetworkInformation">
+	<sql-select name="GetNetworkInformationInfo">
+		<name>
+			GetNetworkInformationInfo
+		</name>
+		<description>
+			gets network status of the server
+		</description>
+		<sql-select-text MinSupportedVersion="*" MaxSupportedVersion="*" signature="">
+			*
+		</sql-select-text>
+	</sql-select>
+</sqlquery>
+</root>

@@ -1,0 +1,181 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<root xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+<sqlquery type="SQLite">
+	<sql-select name="GetInstanceQueryExecutionMonth">
+		<sql-select-text MinSupportedVersion="*" MaxSupportedVersion="*" signature="">
+			SELECT
+				 strftime('%Y%m', h.[EventDay])                               AS [NodeUName]
+				,strftime('%Y%m', h.[EventDay])                               AS [NodeUId]
+				,1                                                            AS [NodeEnabled]
+				,'NodeIcon'                                                   AS [NodeUIcon]
+				,'#080808'                                                    AS [NodeFontColor]
+				,'normal'                                                     AS [NodeFontStyle]
+				,date(MIN(h.[EventDay]),'start of month')                     AS [EventDayMin]
+				,date(MIN(h.[EventDay]),'start of month','+1 month','-1 day') AS [EventDayMax]
+			FROM
+				[hist].[h_InstanceExecQuery] h
+				INNER JOIN [hist].[h_ServerInstance] hSI ON
+					hSI.[rowid] = h.[h_ServerInstance_id]
+					AND hSI.[d_ServerInstance_id] = @d_ServerInstance_id
+			WHERE
+				h.[EventTime] &gt; (
+					SELECT
+						DATETIME(MAX(h.[EventTime]), @strDateTimeModifier)
+					FROM
+						[hist].[h_InstanceExecQuery] h
+						INNER JOIN [hist].[h_ServerInstance] hSI ON
+							hSI.[rowid] = h.[h_ServerInstance_id]
+							AND hSI.[d_ServerInstance_id] = @d_ServerInstance_id
+				)
+			GROUP BY
+				strftime('%Y%m', h.[EventDay])
+			ORDER BY
+				strftime('%Y%m', h.[EventDay]) DESC
+			;
+		</sql-select-text>
+		<sql-select-parameters>
+			<sql-select-parameter name="@strDateTimeModifier" type="NVarChar" />
+		</sql-select-parameters>
+	</sql-select>
+
+	<sql-select name="GetInstanceQueryExecutionDays">
+		<sql-select-text MinSupportedVersion="*" MaxSupportedVersion="*" signature="">
+			SELECT
+				 strftime('%Y%m%d', h.[EventDay]) AS [NodeUName]
+				,strftime('%Y%m%d', h.[EventDay]) AS [NodeUId]
+				,1                                AS [NodeEnabled]
+				,'NodeIcon'                       AS [NodeUIcon]
+				,CASE
+					WHEN (strftime('%w', h.[EventDay]) = '0') THEN
+						'#CC0000'
+					ELSE
+						'#080808'
+				END                               AS [NodeFontColor]
+				,'normal'                         AS [NodeFontStyle]
+				,MIN(h.[EventDay])                AS [EventDayMin]
+				,MAX(h.[EventDay])                AS [EventDayMax]
+			FROM
+				[hist].[h_InstanceExecQuery] h
+				INNER JOIN [hist].[h_ServerInstance] hSI ON
+					hSI.[rowid] = h.[h_ServerInstance_id]
+					AND hSI.[d_ServerInstance_id] = @d_ServerInstance_id
+			WHERE
+				h.[EventDay] BETWEEN date(@EventDayMin) AND date(@EventDayMax)
+			GROUP BY
+				strftime('%Y%m%d', h.[EventDay])
+			ORDER BY
+				strftime('%Y%m%d', h.[EventDay]) DESC
+			;
+		</sql-select-text>
+		<sql-select-parameters>
+			<sql-select-parameter name="@EventDayMin" type="Date" />
+			<sql-select-parameter name="@EventDayMax" type="Date" />
+		</sql-select-parameters>
+	</sql-select>
+
+	<sql-select name="GetInstanceQueryExecution">
+		<sql-select-text MinSupportedVersion="*" MaxSupportedVersion="*" signature="">
+			SELECT
+				CASE
+					WHEN ((MAX(hIEQBase.[execution_count]) IS NOT NULL) AND (MAX(hIEQBase.[execution_count]) &lt;= MAX(hIEQ.[execution_count]))) THEN
+						MAX(hIEQ.[execution_count]) - MAX(hIEQBase.[execution_count])
+					ELSE
+						MAX(hIEQ.[execution_count])
+				END                               AS [execution_count]
+				,CASE
+					WHEN ((MAX(hIEQBase.[total_worker_time]) IS NOT NULL) AND (MAX(hIEQBase.[total_worker_time]) &lt;= MAX(hIEQ.[total_worker_time]))) THEN
+						MAX(hIEQ.[total_worker_time]) - MAX(hIEQBase.[total_worker_time])
+					ELSE
+						MAX(hIEQ.[total_worker_time])
+				END                               AS [total_worker_time]
+				,CASE
+					WHEN ((MAX(hIEQBase.[total_elapsed_time]) IS NOT NULL) AND (MAX(hIEQBase.[total_elapsed_time]) &lt;= MAX(hIEQ.[total_elapsed_time]))) THEN
+						MAX(hIEQ.[total_elapsed_time]) - MAX(hIEQBase.[total_elapsed_time])
+					ELSE
+						MAX(hIEQ.[total_elapsed_time])
+				END                               AS [total_elapsed_time]
+				,CASE
+					WHEN ((MAX(hIEQBase.[total_logical_reads]) IS NOT NULL) AND (MAX(hIEQBase.[total_logical_reads]) &lt;= MAX(hIEQ.[total_logical_reads]))) THEN
+						MAX(hIEQ.[total_logical_reads]) - MAX(hIEQBase.[total_logical_reads])
+					ELSE
+						MAX(hIEQ.[total_logical_reads])
+				END                               AS [total_logical_reads]
+				,CASE
+					WHEN ((MAX(hIEQBase.[total_logical_writes]) IS NOT NULL) AND (MAX(hIEQBase.[total_logical_writes]) &lt;= MAX(hIEQ.[total_logical_writes]))) THEN
+						MAX(hIEQ.[total_logical_writes]) - MAX(hIEQBase.[total_logical_writes])
+					ELSE
+						MAX(hIEQ.[total_logical_writes])
+				END                               AS [total_logical_writes]
+				,hSID.[DatabaseName]              AS [DatabaseName]
+				,hIEQT.[ExecQueryText]            AS [ExecQueryText]
+				,MIN(hIEQ.[EventTime])            AS [EventTimeMin]
+				,MAX(hIEQ.[EventTime])            AS [EventTimeMax]
+				,@d_ServerInstance_id             AS [d_ServerInstance_id]
+			FROM
+				[hist].[h_InstanceExecQuery] hIEQ
+				LEFT OUTER JOIN [hist].[h_InstanceExecQuery] hIEQBase ON
+					hIEQBase.[h_ServerInstance_id] = hIEQ.[h_ServerInstance_id]
+					AND hIEQBase.[DatabaseID] = hIEQ.[DatabaseID]
+					AND hIEQBase.[ExecQueryId] = hIEQ.[ExecQueryId]
+					AND hIEQBase.[EventDay] = CASE
+						WHEN (@EventDayMin IS NOT NULL) THEN
+							date(@EventDayMin, '-1 day')
+						ELSE
+							date('1900-01-01')
+					END
+				LEFT OUTER JOIN [hist].[h_ServerInstanceDatabase] hSID ON
+					hSID.[h_ServerInstance_id] = hIEQ.[h_ServerInstance_id]
+					AND hSID.[DatabaseId] = hIEQ.[DatabaseID]
+				INNER JOIN [hist].[h_InstanceExecQueryText] hIEQT ON
+					hIEQT.[h_ServerInstance_id] = hIEQ.[h_ServerInstance_id]
+					AND hIEQT.[ExecQueryId] = hIEQ.[ExecQueryId]
+				INNER JOIN [hist].[h_ServerInstance] hSI ON
+					hSI.[rowid] = hIEQ.[h_ServerInstance_id]
+					AND hSI.[d_ServerInstance_id] = @d_ServerInstance_id
+			WHERE
+				CASE
+					WHEN ((@EventDayMin IS NOT NULL) AND (@EventDayMax IS NOT NULL)) THEN
+						hIEQ.[EventDay] BETWEEN date(@EventDayMin) AND date(@EventDayMax)
+					WHEN (@strDateTimeModifier IS NOT NULL) THEN
+						hIEQ.[EventTime] &gt; (
+							SELECT
+								DATETIME(MAX(hIEQ.[EventTime]), @strDateTimeModifier)
+							FROM
+								[hist].[h_InstanceExecQuery] hIEQ
+								LEFT OUTER JOIN [hist].[h_ServerInstanceDatabase] hSID ON
+									hSID.[h_ServerInstance_id] = hIEQ.[h_ServerInstance_id]
+									AND hSID.[rowid] = hIEQ.[DatabaseID]
+								INNER JOIN [hist].[h_InstanceExecQueryText] hIEQT ON
+									hIEQT.[h_ServerInstance_id] = hIEQ.[h_ServerInstance_id]
+									AND hIEQT.[ExecQueryId] = hIEQ.[ExecQueryId]
+								INNER JOIN [hist].[h_ServerInstance] hSI ON
+									hSI.[rowid] = hIEQ.[h_ServerInstance_id]
+									AND hSI.[d_ServerInstance_id] = @d_ServerInstance_id
+						)
+					ELSE
+						hIEQ.[EventDay] = date('1900-01-01')
+				END
+			GROUP BY
+				 hSID.[DatabaseName]
+				,hIEQT.[ExecQueryText]
+			HAVING
+				CASE
+					WHEN ((MAX(hIEQBase.[execution_count]) IS NOT NULL) AND (MAX(hIEQBase.[execution_count]) &lt;= MAX(hIEQ.[execution_count]))) THEN
+						MAX(hIEQ.[execution_count]) - MAX(hIEQBase.[execution_count])
+					ELSE
+						MAX(hIEQ.[execution_count])
+				END &gt; 0
+			ORDER BY
+				1 DESC
+			LIMIT
+				1000
+			;
+		</sql-select-text>
+		<sql-select-parameters>
+			<sql-select-parameter name="@EventDayMin"         type="Date"     />
+			<sql-select-parameter name="@EventDayMax"         type="Date"     />
+			<sql-select-parameter name="@strDateTimeModifier" type="NVarChar" />
+		</sql-select-parameters>
+	</sql-select>
+</sqlquery>
+</root>

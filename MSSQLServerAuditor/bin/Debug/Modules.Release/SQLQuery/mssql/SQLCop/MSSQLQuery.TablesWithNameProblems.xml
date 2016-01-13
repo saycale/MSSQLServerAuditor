@@ -1,0 +1,76 @@
+﻿<?xml version="1.0" encoding="UTF-8"?>
+<root xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+<sqlquery type="MSSQL">
+	<sql-select name="GetTablesWithNameProblems">
+		<name>
+			Table Name Problems
+		</name>
+		<description>
+			Find all tables poorly named
+		</description>
+		<reference>
+			http://blogs.lessthandot.com/index.php/DataMgmt/DBProgramming/do-not-use-spaces-or-other-invalid-chara
+		</reference>
+		<sql-select-text MinSupportedVersion="8.*" MaxSupportedVersion="8.*" signature="">
+			SET NOCOUNT ON;
+			SET DEADLOCK_PRIORITY LOW;
+
+			DECLARE
+				@strAcceptableSymbols [NVARCHAR](256);
+
+			SET @strAcceptableSymbols = N'_$';
+
+			SELECT
+				 tSU.[name]   AS [SchemaName]
+				,tSO.[name]   AS [ObjectName]
+				,tSO.[xtype]  AS [ObjectType]
+				,tSO.[crdate] AS [ObjectCreateDate]
+			FROM
+				[dbo].[sysobjects] tSO
+				INNER JOIN [dbo].[sysusers] tSU ON
+					tSU.[uid] = tSO.[uid]
+			WHERE
+				tSO.[xtype] IN (
+					 N'U'
+					,N'V'
+				)
+				AND OBJECTPROPERTY(tSO.[id], N'IsMSShipped') = 0
+				AND tSO.[name] LIKE N'%[^a-z' + @strAcceptableSymbols + N']%'
+			ORDER BY
+				 tSU.[name]
+				,tSO.[name]
+			;
+		</sql-select-text>
+		<sql-select-text MinSupportedVersion="9.*" MaxSupportedVersion="*" signature="">
+			SET NOCOUNT ON;
+			SET DEADLOCK_PRIORITY LOW;
+
+			DECLARE
+				@strAcceptableSymbols [NVARCHAR](256);
+
+			SET @strAcceptableSymbols = N'_$';
+
+			SELECT
+				 tSS.[name]        AS [SchemaName]
+				,tSO.[name]        AS [ObjectName]
+				,tSO.[type_desc]   AS [ObjectType]
+				,tSO.[create_date] AS [ObjectCreateDate]
+			FROM
+				[sys].[objects] tSO
+				INNER JOIN [sys].[schemas] tSS ON
+					tSS.[schema_id] = tSO.[schema_id]
+			WHERE
+				tSO.[type_desc] IN (
+					 N'USER_TABLE'
+					,N'VIEW'
+				)
+				AND OBJECTPROPERTY(tSO.[object_id], N'IsMSShipped') = 0
+				AND tSO.[name] LIKE N'%[^a-z' + @strAcceptableSymbols + N']%'
+			ORDER BY
+				 tSS.[name]
+				,tSO.[name]
+			;
+		</sql-select-text>
+	</sql-select>
+</sqlquery>
+</root>

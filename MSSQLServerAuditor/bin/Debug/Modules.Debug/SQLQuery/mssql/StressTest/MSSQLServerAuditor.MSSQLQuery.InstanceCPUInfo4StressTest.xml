@@ -1,0 +1,765 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<root xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+<sqlquery type="MSSQL">
+	<sql-select name="GetInstanceCPUUtilization4StressTest_01">
+		<description>
+			The query is used as the stress tests for MSSQLServerAuditor. It will display CPU usage
+			on the server. The data comes from dm_os_ring_buffers which only stored data for the
+			past 4 HOURS. Within the ring buffers, data is averaged at the minute level. There are
+			variables limit the results to a smaller time window and for hiding the details.
+		</description>
+		<sql-select-text MinSupportedVersion="10.*" MaxSupportedVersion="*" signature="">
+			DECLARE
+				 @dateReportTime     [DATETIME]
+				,@intReportId        [INTEGER]
+				,@NumberOfExecutions [INTEGER]
+			;
+
+			DECLARE
+				@tbl TABLE
+				(
+					 [ReportTime]                   [DATETIME]      NOT NULL
+					,[ReportId]                     [INTEGER]       NOT NULL
+					,[EventTime]                    [DATETIME]      NOT NULL
+					,[RecordTimeStamp]              [BIGINT]        NOT NULL
+					,[RecordRingBufferType]         [NVARCHAR](128) NOT NULL
+					,[MemoryUtilization]            [INTEGER]       NULL
+					,[SystemIdle]                   [INTEGER]       NULL
+					,[SQLProcessCPUUtilization]     [INTEGER]       NULL
+					,[OtherProcessesCPUUtilization] [INTEGER]       NULL
+				);
+
+			SET @dateReportTime     = GETDATE();
+			SET @intReportId        = 1;
+			SET @NumberOfExecutions = @NumberOfExecutionsMin + CONVERT([INTEGER], (RAND() * CONVERT([FLOAT], @NumberOfExecutionsMax - @NumberOfExecutionsMin)))
+
+			WHILE (@intReportId &lt;= ISNULL(@NumberOfExecutions, 1))
+			BEGIN
+				INSERT INTO @tbl
+				(
+					 [ReportTime]
+					,[ReportId]
+					,[EventTime]
+					,[RecordTimeStamp]
+					,[RecordRingBufferType]
+					,[MemoryUtilization]
+					,[SystemIdle]
+					,[SQLProcessCPUUtilization]
+					,[OtherProcessesCPUUtilization]
+				)
+				SELECT
+					 @dateReportTime
+					,@intReportId
+					,y.RecordEventTime
+					,y.[RecordTimeStamp]
+					,y.[RingBufferType]
+					,y.[MemoryUtilization]
+					,y.[SystemIdle]
+					,y.[ProcessUtilization] + 2 * @intReportId
+					,100 - y.[SystemIdle] - y.[ProcessUtilization] - 2 * @intReportId
+				FROM
+					(
+						SELECT
+							 x.[RecordEventTime]                                                                             AS [RecordEventTime]
+							,x.[RecordTimeStamp]                                                                             AS [RecordTimeStamp]
+							,x.[RingBufferType]                                                                              AS [RingBufferType]
+							,XMLRecord.value('(//Record/@id)[1]', 'int')                                                     AS [RecordId]
+							,XMLRecord.value('(//Record/@type)[1]', 'VARCHAR(128)')                                          AS [RecordType]
+							,XMLRecord.value('(//Record/@time)[1]', 'bigint')                                                AS [RecordTime]
+							,XMLRecord.value('(./Record/SchedulerMonitorEvent/SystemHealth/SystemIdle)[1]', 'int')           AS [SystemIdle]
+							,XMLRecord.value('(./Record/SchedulerMonitorEvent/SystemHealth/ProcessUtilization)[1]', 'int')   AS [ProcessUtilization]
+							,XMLRecord.value('(./Record/SchedulerMonitorEvent/SystemHealth/MemoryUtilization)[1]', 'bigint') AS [MemoryUtilization]
+						FROM (
+							SELECT
+								 DATEADD(ms, t.[timestamp] - tSDOSI.[ms_ticks], GETDATE()) AS [RecordEventTime]
+								,t.[timestamp]                                             AS [RecordTimeStamp]
+								,t.[ring_buffer_type]                                      AS [RingBufferType]
+								,CONVERT(XML, t.[record])                                  AS [XMLRecord]
+							FROM
+								[sys].[dm_os_ring_buffers] t
+								CROSS JOIN [sys].[dm_os_sys_info] AS tSDOSI
+							WHERE
+								t.[ring_buffer_type] = N'RING_BUFFER_SCHEDULER_MONITOR'
+								AND t.[record] LIKE '% %'
+								AND (tSDOSI.[ms_ticks] - t.[timestamp]) &lt; 2147483647
+						) AS x
+					) AS y
+				;
+
+				WAITFOR DELAY @WaitForDelay;
+
+				SET @intReportId = @intReportId + 1;
+			END
+
+			SELECT
+				 t.[ReportTime]                   AS [ReportTime]
+				,t.[ReportId]                     AS [ReportId]
+				,t.[EventTime]                    AS [EventTime]
+				,t.[RecordTimeStamp]              AS [RecordTimeStamp]
+				,t.[RecordRingBufferType]         AS [RecordRingBufferType]
+				,t.[MemoryUtilization]            AS [MemoryUtilization]
+				,t.[SystemIdle]                   AS [SystemIdle]
+				,t.[SQLProcessCPUUtilization]     AS [SQLProcessCPUUtilization]
+				,t.[OtherProcessesCPUUtilization] AS [OtherProcessesCPUUtilization]
+			FROM
+				@tbl t
+			ORDER BY
+				t.[EventTime] ASC
+			;
+		</sql-select-text>
+		<sqlite_statements>
+			<sqlite_statement id="13">
+				INSERT INTO [hist].[h_ServerInstance]
+				(
+					 [d_Query_id]
+					,[d_ServerInstance_id]
+					,[ServerInstanceName]
+					,[ConnectionName]
+				)
+				SELECT
+					 MIN(dQ.[rowid])
+					,MIN(dQ.[d_ServerInstance_id])
+					,dSI.[ServerInstanceName]
+					,MIN(IFNULL(dSI.[ConnectionName], ''))
+				FROM
+					[d_Query] dQ
+					INNER JOIN [d_ServerInstance] dSI ON
+						dSI.[rowid] = dQ.[d_ServerInstance_id]
+					LEFT OUTER JOIN [hist].[h_ServerInstance] hSI ON
+						hSI.[ServerInstanceName] = dSI.[ServerInstanceName]
+				WHERE
+					dQ.[rowid] = @d_Query_id
+					AND dSI.[ServerInstanceName] IS NOT NULL
+					AND hSI.[rowid] IS NULL
+				GROUP BY
+					dSI.[ServerInstanceName]
+				;
+			</sqlite_statement>
+			<sqlite_statement id="14">
+				UPDATE [hist].[h_ServerInstance] SET
+					 [d_Query_id] = @d_Query_id
+					,[d_ServerInstance_id] = (
+						SELECT
+							MIN(dQ.[d_ServerInstance_id])
+						FROM
+							[d_Query] dQ
+						WHERE
+							dQ.[rowid] = @d_Query_id
+							AND dQ.[d_ServerInstance_id] IS NOT NULL
+					)
+				WHERE
+					[ServerInstanceName] = (
+						SELECT
+							MIN(dSI.[ServerInstanceName])
+						FROM
+							[d_Query] dQ
+							INNER JOIN [d_ServerInstance] dSI ON
+								dSI.[rowid] = dQ.[d_ServerInstance_id]
+						WHERE
+							dQ.[rowid] = @d_Query_id
+							AND dSI.[ServerInstanceName] IS NOT NULL
+					) AND [d_ServerInstance_id] != (
+						SELECT
+							MIN(dQ.[d_ServerInstance_id])
+						FROM
+							[d_Query] dQ
+						WHERE
+							dQ.[rowid] = @d_Query_id
+							AND dQ.[d_ServerInstance_id] IS NOT NULL
+					)
+				;
+			</sqlite_statement>
+			<sqlite_statement id="31">
+				INSERT INTO [hist].[h_InstanceCPUUtilization4StressTest_01]
+				(
+					 [d_Query_id]
+					,[h_ServerInstance_id]
+					,[ReportId]
+					,[EventDay]
+					,[EventTime]
+					,[RecordTimeStamp]
+					,[RecordRingBufferType]
+					,[MemoryUtilization]
+					,[SystemIdle]
+					,[SQLProcessCPUUtilization]
+					,[OtherProcessesCPUUtilization]
+				)
+				SELECT
+					 dQ.[rowid]
+					,hSI.[rowid]
+					,t.[ReportId]
+					,date(t.[EventTime])
+					,t.[EventTime]
+					,t.[RecordTimeStamp]
+					,t.[RecordRingBufferType]
+					,t.[MemoryUtilization]
+					,t.[SystemIdle]
+					,t.[SQLProcessCPUUtilization]
+					,t.[OtherProcessesCPUUtilization]
+				FROM
+					[d_Query] dQ
+					INNER JOIN [hist].[h_ServerInstance] hSI ON
+						hSI.[d_ServerInstance_id] = dQ.[d_ServerInstance_id]
+					INNER JOIN [report].[${GetInstanceCPUUtilization4StressTest_01}$_${1}$] t ON
+						t.[d_Query_id] = dQ.[rowid]
+						AND t.[session_id] = 1
+					LEFT OUTER JOIN [hist].[h_InstanceCPUUtilization4StressTest_01] hGICU ON
+						hGICU.[h_ServerInstance_id] = hSI.[rowid]
+						AND hGICU.[ReportId] = t.[ReportId]
+						AND hGICU.[RecordTimeStamp] = t.[RecordTimeStamp]
+						AND hGICU.[RecordRingBufferType] = t.[RecordRingBufferType]
+				WHERE
+					dQ.[rowid] = @d_Query_id
+					AND hGICU.[rowid] IS NULL;
+			</sqlite_statement>
+			<sqlite_statement id="32">
+				UPDATE [hist].[h_InstanceCPUUtilization4StressTest_01] SET
+					[DateUpdated] = (
+						SELECT
+							DATETIME('now')
+						FROM
+							[d_Query] dQ
+							INNER JOIN [hist].[h_ServerInstance] hSI ON
+								hSI.[d_ServerInstance_id] = dQ.[d_ServerInstance_id]
+							INNER JOIN [report].[${GetInstanceCPUUtilization4StressTest_01}$_${1}$] t ON
+								t.[d_Query_id] = dQ.[rowid]
+								AND t.[session_id] = 1
+						WHERE
+							dQ.[rowid] = @d_Query_id
+							AND t.[ReportId] = [hist].[h_InstanceCPUUtilization4StressTest_01].[ReportId]
+							AND t.[RecordTimeStamp] = [hist].[h_InstanceCPUUtilization4StressTest_01].[RecordTimeStamp]
+							AND t.[RecordRingBufferType] = [hist].[h_InstanceCPUUtilization4StressTest_01].[RecordRingBufferType]
+					)
+				WHERE
+					EXISTS (
+						SELECT
+							1
+						FROM
+							[d_Query] dQ
+							INNER JOIN [hist].[h_ServerInstance] hSI ON
+								hSI.[d_ServerInstance_id] = dQ.[d_ServerInstance_id]
+							INNER JOIN [report].[${GetInstanceCPUUtilization4StressTest_01}$_${1}$] t ON
+								t.[d_Query_id] = dQ.[rowid]
+								AND t.[session_id] = 1
+						WHERE
+							dQ.[rowid] = @d_Query_id
+							AND t.[ReportId] = [hist].[h_InstanceCPUUtilization4StressTest_01].[ReportId]
+							AND t.[RecordTimeStamp] = [hist].[h_InstanceCPUUtilization4StressTest_01].[RecordTimeStamp]
+							AND t.[RecordRingBufferType] = [hist].[h_InstanceCPUUtilization4StressTest_01].[RecordRingBufferType]
+					);
+			</sqlite_statement>
+		</sqlite_statements>
+		<sql-select-parameters>
+			<sql-select-parameter name="@WaitForDelay"          type="NVarChar" />
+			<sql-select-parameter name="@NumberOfExecutionsMin" type="Int"      />
+			<sql-select-parameter name="@NumberOfExecutionsMax" type="Int"      />
+		</sql-select-parameters>
+	</sql-select>
+
+	<sql-select name="GetInstanceCPUUtilization4StressTest_02">
+		<description>
+			The query is used as the stress tests for MSSQLServerAuditor. It will display CPU usage
+			on the server. The data comes from dm_os_ring_buffers which only stored data for the
+			past 4 HOURS. Within the ring buffers, data is averaged at the minute level. There are
+			variables limit the results to a smaller time window and for hiding the details.
+		</description>
+		<sql-select-text MinSupportedVersion="10.*" MaxSupportedVersion="*" signature="">
+			DECLARE
+				 @dateReportTime     [DATETIME]
+				,@intReportId        [INTEGER]
+				,@NumberOfExecutions [INTEGER]
+			;
+
+			DECLARE
+				@tbl TABLE
+				(
+					 [ReportTime]                   [DATETIME]      NOT NULL
+					,[ReportId]                     [INTEGER]       NOT NULL
+					,[EventTime]                    [DATETIME]      NOT NULL
+					,[RecordTimeStamp]              [BIGINT]        NOT NULL
+					,[RecordRingBufferType]         [NVARCHAR](128) NOT NULL
+					,[MemoryUtilization]            [INTEGER]       NULL
+					,[SystemIdle]                   [INTEGER]       NULL
+					,[SQLProcessCPUUtilization]     [INTEGER]       NULL
+					,[OtherProcessesCPUUtilization] [INTEGER]       NULL
+				);
+
+			SET @dateReportTime     = GETDATE();
+			SET @intReportId        = 1;
+			SET @NumberOfExecutions = @NumberOfExecutionsMin + CONVERT([INTEGER], (RAND() * CONVERT([FLOAT], @NumberOfExecutionsMax - @NumberOfExecutionsMin)))
+
+			WHILE (@intReportId &lt;= ISNULL(@NumberOfExecutions, 1))
+			BEGIN
+				INSERT INTO @tbl
+				(
+					 [ReportTime]
+					,[ReportId]
+					,[EventTime]
+					,[RecordTimeStamp]
+					,[RecordRingBufferType]
+					,[MemoryUtilization]
+					,[SystemIdle]
+					,[SQLProcessCPUUtilization]
+					,[OtherProcessesCPUUtilization]
+				)
+				SELECT
+					 @dateReportTime
+					,@intReportId
+					,y.RecordEventTime
+					,y.[RecordTimeStamp]
+					,y.[RingBufferType]
+					,y.[MemoryUtilization]
+					,y.[SystemIdle]
+					,y.[ProcessUtilization] + 2 * @intReportId
+					,100 - y.[SystemIdle] - y.[ProcessUtilization] - 2 * @intReportId
+				FROM
+					(
+						SELECT
+							 x.[RecordEventTime]                                                                             AS [RecordEventTime]
+							,x.[RecordTimeStamp]                                                                             AS [RecordTimeStamp]
+							,x.[RingBufferType]                                                                              AS [RingBufferType]
+							,XMLRecord.value('(//Record/@id)[1]', 'int')                                                     AS [RecordId]
+							,XMLRecord.value('(//Record/@type)[1]', 'VARCHAR(128)')                                          AS [RecordType]
+							,XMLRecord.value('(//Record/@time)[1]', 'bigint')                                                AS [RecordTime]
+							,XMLRecord.value('(./Record/SchedulerMonitorEvent/SystemHealth/SystemIdle)[1]', 'int')           AS [SystemIdle]
+							,XMLRecord.value('(./Record/SchedulerMonitorEvent/SystemHealth/ProcessUtilization)[1]', 'int')   AS [ProcessUtilization]
+							,XMLRecord.value('(./Record/SchedulerMonitorEvent/SystemHealth/MemoryUtilization)[1]', 'bigint') AS [MemoryUtilization]
+						FROM (
+							SELECT
+								 DATEADD(ms, t.[timestamp] - tSDOSI.[ms_ticks], GETDATE()) AS [RecordEventTime]
+								,t.[timestamp]                                             AS [RecordTimeStamp]
+								,t.[ring_buffer_type]                                      AS [RingBufferType]
+								,CONVERT(XML, t.[record])                                  AS [XMLRecord]
+							FROM
+								[sys].[dm_os_ring_buffers] t
+								CROSS JOIN [sys].[dm_os_sys_info] AS tSDOSI
+							WHERE
+								t.[ring_buffer_type] = N'RING_BUFFER_SCHEDULER_MONITOR'
+								AND t.[record] LIKE '% %'
+								AND (tSDOSI.[ms_ticks] - t.[timestamp]) &lt; 2147483647
+						) AS x
+					) AS y
+				;
+
+				WAITFOR DELAY @WaitForDelay;
+
+				SET @intReportId = @intReportId + 1;
+			END
+
+			SELECT
+				 t.[ReportTime]                   AS [ReportTime]
+				,t.[ReportId]                     AS [ReportId]
+				,t.[EventTime]                    AS [EventTime]
+				,t.[RecordTimeStamp]              AS [RecordTimeStamp]
+				,t.[RecordRingBufferType]         AS [RecordRingBufferType]
+				,t.[MemoryUtilization]            AS [MemoryUtilization]
+				,t.[SystemIdle]                   AS [SystemIdle]
+				,t.[SQLProcessCPUUtilization]     AS [SQLProcessCPUUtilization]
+				,t.[OtherProcessesCPUUtilization] AS [OtherProcessesCPUUtilization]
+			FROM
+				@tbl t
+			ORDER BY
+				t.[EventTime] ASC
+			;
+		</sql-select-text>
+		<sqlite_statements>
+			<sqlite_statement id="13">
+				INSERT INTO [hist].[h_ServerInstance]
+				(
+					 [d_Query_id]
+					,[d_ServerInstance_id]
+					,[ServerInstanceName]
+					,[ConnectionName]
+				)
+				SELECT
+					 MIN(dQ.[rowid])
+					,MIN(dQ.[d_ServerInstance_id])
+					,dSI.[ServerInstanceName]
+					,MIN(IFNULL(dSI.[ConnectionName], ''))
+				FROM
+					[d_Query] dQ
+					INNER JOIN [d_ServerInstance] dSI ON
+						dSI.[rowid] = dQ.[d_ServerInstance_id]
+					LEFT OUTER JOIN [hist].[h_ServerInstance] hSI ON
+						hSI.[ServerInstanceName] = dSI.[ServerInstanceName]
+				WHERE
+					dQ.[rowid] = @d_Query_id
+					AND dSI.[ServerInstanceName] IS NOT NULL
+					AND hSI.[rowid] IS NULL
+				GROUP BY
+					dSI.[ServerInstanceName]
+				;
+			</sqlite_statement>
+			<sqlite_statement id="14">
+				UPDATE [hist].[h_ServerInstance] SET
+					 [d_Query_id] = @d_Query_id
+					,[d_ServerInstance_id] = (
+						SELECT
+							MIN(dQ.[d_ServerInstance_id])
+						FROM
+							[d_Query] dQ
+						WHERE
+							dQ.[rowid] = @d_Query_id
+							AND dQ.[d_ServerInstance_id] IS NOT NULL
+					)
+				WHERE
+					[ServerInstanceName] = (
+						SELECT
+							MIN(dSI.[ServerInstanceName])
+						FROM
+							[d_Query] dQ
+							INNER JOIN [d_ServerInstance] dSI ON
+								dSI.[rowid] = dQ.[d_ServerInstance_id]
+						WHERE
+							dQ.[rowid] = @d_Query_id
+							AND dSI.[ServerInstanceName] IS NOT NULL
+					) AND [d_ServerInstance_id] != (
+						SELECT
+							MIN(dQ.[d_ServerInstance_id])
+						FROM
+							[d_Query] dQ
+						WHERE
+							dQ.[rowid] = @d_Query_id
+							AND dQ.[d_ServerInstance_id] IS NOT NULL
+					)
+				;
+			</sqlite_statement>
+			<sqlite_statement id="31">
+				INSERT INTO [hist].[h_InstanceCPUUtilization4StressTest_02]
+				(
+					 [d_Query_id]
+					,[h_ServerInstance_id]
+					,[ReportId]
+					,[EventDay]
+					,[EventTime]
+					,[RecordTimeStamp]
+					,[RecordRingBufferType]
+					,[MemoryUtilization]
+					,[SystemIdle]
+					,[SQLProcessCPUUtilization]
+					,[OtherProcessesCPUUtilization]
+				)
+				SELECT
+					 dQ.[rowid]
+					,hSI.[rowid]
+					,t.[ReportId]
+					,date(t.[EventTime])
+					,t.[EventTime]
+					,t.[RecordTimeStamp]
+					,t.[RecordRingBufferType]
+					,t.[MemoryUtilization]
+					,t.[SystemIdle]
+					,t.[SQLProcessCPUUtilization]
+					,t.[OtherProcessesCPUUtilization]
+				FROM
+					[d_Query] dQ
+					INNER JOIN [d_ServerInstance] dSI ON
+						dSI.[rowid] = dQ.[d_ServerInstance_id]
+					INNER JOIN [hist].[h_ServerInstance] hSI ON
+						hSI.[ServerInstanceName] = dSI.[ServerInstanceName]
+					INNER JOIN [report].[${GetInstanceCPUUtilization4StressTest_02}$_${1}$] t ON
+						t.[d_Query_id] = dQ.[rowid]
+					LEFT OUTER JOIN [hist].[h_InstanceCPUUtilization4StressTest_02] hGICU ON
+						hGICU.[h_ServerInstance_id] = hSI.[rowid]
+						AND hGICU.[ReportId] = t.[ReportId]
+						AND hGICU.[RecordTimeStamp] = t.[RecordTimeStamp]
+						AND hGICU.[RecordRingBufferType] = t.[RecordRingBufferType]
+				WHERE
+					dQ.[rowid] = @d_Query_id
+					AND hGICU.[rowid] IS NULL;
+			</sqlite_statement>
+			<sqlite_statement id="32">
+				UPDATE [hist].[h_InstanceCPUUtilization4StressTest_02] SET
+					[DateUpdated] = (
+						SELECT
+							DATETIME('now')
+						FROM
+							[d_Query] dQ
+							INNER JOIN [hist].[h_ServerInstance] hSI ON
+								hSI.[d_ServerInstance_id] = dQ.[d_ServerInstance_id]
+							INNER JOIN [report].[${GetInstanceCPUUtilization4StressTest_02}$_${1}$] t ON
+								t.[d_Query_id] = dQ.[rowid]
+						WHERE
+							dQ.[rowid] = @d_Query_id
+							AND t.[ReportId] = [hist].[h_InstanceCPUUtilization4StressTest_02].[ReportId]
+							AND t.[RecordTimeStamp] = [hist].[h_InstanceCPUUtilization4StressTest_02].[RecordTimeStamp]
+							AND t.[RecordRingBufferType] = [hist].[h_InstanceCPUUtilization4StressTest_02].[RecordRingBufferType]
+					)
+				WHERE
+					EXISTS (
+						SELECT
+							1
+						FROM
+							[d_Query] dQ
+							INNER JOIN [hist].[h_ServerInstance] hSI ON
+								hSI.[d_ServerInstance_id] = dQ.[d_ServerInstance_id]
+							INNER JOIN [report].[${GetInstanceCPUUtilization4StressTest_02}$_${1}$] t ON
+								t.[d_Query_id] = dQ.[rowid]
+						WHERE
+							dQ.[rowid] = @d_Query_id
+							AND t.[ReportId] = [hist].[h_InstanceCPUUtilization4StressTest_02].[ReportId]
+							AND t.[RecordTimeStamp] = [hist].[h_InstanceCPUUtilization4StressTest_02].[RecordTimeStamp]
+							AND t.[RecordRingBufferType] = [hist].[h_InstanceCPUUtilization4StressTest_02].[RecordRingBufferType]
+					);
+			</sqlite_statement>
+		</sqlite_statements>
+		<sql-select-parameters>
+			<sql-select-parameter name="@WaitForDelay"          type="NVarChar" />
+			<sql-select-parameter name="@NumberOfExecutionsMin" type="Int"      />
+			<sql-select-parameter name="@NumberOfExecutionsMax" type="Int"      />
+		</sql-select-parameters>
+	</sql-select>
+
+	<sql-select name="GetInstanceCPUUtilization4StressTest_03">
+		<description>
+			The query is used as the stress tests for MSSQLServerAuditor. It will display CPU usage
+			on the server. The data comes from dm_os_ring_buffers which only stored data for the
+			past 4 HOURS. Within the ring buffers, data is averaged at the minute level. There are
+			variables limit the results to a smaller time window and for hiding the details.
+		</description>
+		<sql-select-text MinSupportedVersion="10.*" MaxSupportedVersion="*" signature="">
+			DECLARE
+				 @dateReportTime     [DATETIME]
+				,@intReportId        [INTEGER]
+				,@NumberOfExecutions [INTEGER]
+			;
+
+			DECLARE
+				@tbl TABLE
+				(
+					 [ReportTime]                   [DATETIME]      NOT NULL
+					,[ReportId]                     [INTEGER]       NOT NULL
+					,[EventTime]                    [DATETIME]      NOT NULL
+					,[RecordTimeStamp]              [BIGINT]        NOT NULL
+					,[RecordRingBufferType]         [NVARCHAR](128) NOT NULL
+					,[MemoryUtilization]            [INTEGER]       NULL
+					,[SystemIdle]                   [INTEGER]       NULL
+					,[SQLProcessCPUUtilization]     [INTEGER]       NULL
+					,[OtherProcessesCPUUtilization] [INTEGER]       NULL
+				);
+
+			SET @dateReportTime     = GETDATE();
+			SET @intReportId        = 1;
+			SET @NumberOfExecutions = @NumberOfExecutionsMin + CONVERT([INTEGER], (RAND() * CONVERT([FLOAT], @NumberOfExecutionsMax - @NumberOfExecutionsMin)))
+
+			WHILE (@intReportId &lt;= ISNULL(@NumberOfExecutions, 1))
+			BEGIN
+				INSERT INTO @tbl
+				(
+					 [ReportTime]
+					,[ReportId]
+					,[EventTime]
+					,[RecordTimeStamp]
+					,[RecordRingBufferType]
+					,[MemoryUtilization]
+					,[SystemIdle]
+					,[SQLProcessCPUUtilization]
+					,[OtherProcessesCPUUtilization]
+				)
+				SELECT
+					 @dateReportTime
+					,@intReportId
+					,y.RecordEventTime
+					,y.[RecordTimeStamp]
+					,y.[RingBufferType]
+					,y.[MemoryUtilization]
+					,y.[SystemIdle]
+					,y.[ProcessUtilization] + 2 * @intReportId
+					,100 - y.[SystemIdle] - y.[ProcessUtilization] - 2 * @intReportId
+				FROM
+					(
+						SELECT
+							 x.[RecordEventTime]                                                                             AS [RecordEventTime]
+							,x.[RecordTimeStamp]                                                                             AS [RecordTimeStamp]
+							,x.[RingBufferType]                                                                              AS [RingBufferType]
+							,XMLRecord.value('(//Record/@id)[1]', 'int')                                                     AS [RecordId]
+							,XMLRecord.value('(//Record/@type)[1]', 'VARCHAR(128)')                                          AS [RecordType]
+							,XMLRecord.value('(//Record/@time)[1]', 'bigint')                                                AS [RecordTime]
+							,XMLRecord.value('(./Record/SchedulerMonitorEvent/SystemHealth/SystemIdle)[1]', 'int')           AS [SystemIdle]
+							,XMLRecord.value('(./Record/SchedulerMonitorEvent/SystemHealth/ProcessUtilization)[1]', 'int')   AS [ProcessUtilization]
+							,XMLRecord.value('(./Record/SchedulerMonitorEvent/SystemHealth/MemoryUtilization)[1]', 'bigint') AS [MemoryUtilization]
+						FROM (
+							SELECT
+								 DATEADD(ms, t.[timestamp] - tSDOSI.[ms_ticks], GETDATE()) AS [RecordEventTime]
+								,t.[timestamp]                                             AS [RecordTimeStamp]
+								,t.[ring_buffer_type]                                      AS [RingBufferType]
+								,CONVERT(XML, t.[record])                                  AS [XMLRecord]
+							FROM
+								[sys].[dm_os_ring_buffers] t
+								CROSS JOIN [sys].[dm_os_sys_info] AS tSDOSI
+							WHERE
+								t.[ring_buffer_type] = N'RING_BUFFER_SCHEDULER_MONITOR'
+								AND t.[record] LIKE '% %'
+								AND (tSDOSI.[ms_ticks] - t.[timestamp]) &lt; 2147483647
+						) AS x
+					) AS y
+				;
+
+				WAITFOR DELAY @WaitForDelay;
+
+				SET @intReportId = @intReportId + 1;
+			END
+
+			SELECT
+				 t.[ReportTime]                   AS [ReportTime]
+				,t.[ReportId]                     AS [ReportId]
+				,t.[EventTime]                    AS [EventTime]
+				,t.[RecordTimeStamp]              AS [RecordTimeStamp]
+				,t.[RecordRingBufferType]         AS [RecordRingBufferType]
+				,t.[MemoryUtilization]            AS [MemoryUtilization]
+				,t.[SystemIdle]                   AS [SystemIdle]
+				,t.[SQLProcessCPUUtilization]     AS [SQLProcessCPUUtilization]
+				,t.[OtherProcessesCPUUtilization] AS [OtherProcessesCPUUtilization]
+			FROM
+				@tbl t
+			ORDER BY
+				t.[EventTime] ASC
+			;
+		</sql-select-text>
+		<sqlite_statements>
+			<sqlite_statement id="13">
+				INSERT INTO [hist].[h_ServerInstance]
+				(
+					 [d_Query_id]
+					,[d_ServerInstance_id]
+					,[ServerInstanceName]
+					,[ConnectionName]
+				)
+				SELECT
+					 MIN(dQ.[rowid])
+					,MIN(dQ.[d_ServerInstance_id])
+					,dSI.[ServerInstanceName]
+					,MIN(IFNULL(dSI.[ConnectionName], ''))
+				FROM
+					[d_Query] dQ
+					INNER JOIN [d_ServerInstance] dSI ON
+						dSI.[rowid] = dQ.[d_ServerInstance_id]
+					LEFT OUTER JOIN [hist].[h_ServerInstance] hSI ON
+						hSI.[ServerInstanceName] = dSI.[ServerInstanceName]
+				WHERE
+					dQ.[rowid] = @d_Query_id
+					AND dSI.[ServerInstanceName] IS NOT NULL
+					AND hSI.[rowid] IS NULL
+				GROUP BY
+					dSI.[ServerInstanceName]
+				;
+			</sqlite_statement>
+			<sqlite_statement id="14">
+				UPDATE [hist].[h_ServerInstance] SET
+					 [d_Query_id] = @d_Query_id
+					,[d_ServerInstance_id] = (
+						SELECT
+							MIN(dQ.[d_ServerInstance_id])
+						FROM
+							[d_Query] dQ
+						WHERE
+							dQ.[rowid] = @d_Query_id
+							AND dQ.[d_ServerInstance_id] IS NOT NULL
+					)
+				WHERE
+					[ServerInstanceName] = (
+						SELECT
+							MIN(dSI.[ServerInstanceName])
+						FROM
+							[d_Query] dQ
+							INNER JOIN [d_ServerInstance] dSI ON
+								dSI.[rowid] = dQ.[d_ServerInstance_id]
+						WHERE
+							dQ.[rowid] = @d_Query_id
+							AND dSI.[ServerInstanceName] IS NOT NULL
+					) AND [d_ServerInstance_id] != (
+						SELECT
+							MIN(dQ.[d_ServerInstance_id])
+						FROM
+							[d_Query] dQ
+						WHERE
+							dQ.[rowid] = @d_Query_id
+							AND dQ.[d_ServerInstance_id] IS NOT NULL
+					)
+				;
+			</sqlite_statement>
+			<sqlite_statement id="31">
+				INSERT INTO [hist].[h_InstanceCPUUtilization4StressTest_03]
+				(
+					 [d_Query_id]
+					,[h_ServerInstance_id]
+					,[ReportId]
+					,[EventDay]
+					,[EventTime]
+					,[RecordTimeStamp]
+					,[RecordRingBufferType]
+					,[MemoryUtilization]
+					,[SystemIdle]
+					,[SQLProcessCPUUtilization]
+					,[OtherProcessesCPUUtilization]
+				)
+				SELECT
+					 dQ.[rowid]
+					,hSI.[rowid]
+					,t.[ReportId]
+					,date(t.[EventTime])
+					,t.[EventTime]
+					,t.[RecordTimeStamp]
+					,t.[RecordRingBufferType]
+					,t.[MemoryUtilization]
+					,t.[SystemIdle]
+					,t.[SQLProcessCPUUtilization]
+					,t.[OtherProcessesCPUUtilization]
+				FROM
+					[d_Query] dQ
+					INNER JOIN [hist].[h_ServerInstance] hSI ON
+						hSI.[d_ServerInstance_id] = dQ.[d_ServerInstance_id]
+					INNER JOIN [report].[${GetInstanceCPUUtilization4StressTest_03}$_${1}$] t ON
+						t.[d_Query_id] = dQ.[rowid]
+					LEFT OUTER JOIN [hist].[h_InstanceCPUUtilization4StressTest_03] hGICU ON
+						hGICU.[h_ServerInstance_id] = hSI.[rowid]
+						AND hGICU.[ReportId] = t.[ReportId]
+						AND hGICU.[RecordTimeStamp] = t.[RecordTimeStamp]
+						AND hGICU.[RecordRingBufferType] = t.[RecordRingBufferType]
+				WHERE
+					dQ.[rowid] = @d_Query_id
+					AND hGICU.[rowid] IS NULL;
+			</sqlite_statement>
+			<sqlite_statement id="32">
+				UPDATE [hist].[h_InstanceCPUUtilization4StressTest_03] SET
+					[DateUpdated] = (
+						SELECT
+							DATETIME('now')
+						FROM
+							[d_Query] dQ
+							INNER JOIN [hist].[h_ServerInstance] hSI ON
+								hSI.[d_ServerInstance_id] = dQ.[d_ServerInstance_id]
+							INNER JOIN [report].[${GetInstanceCPUUtilization4StressTest_03}$_${1}$] t ON
+								t.[d_Query_id] = dQ.[rowid]
+						WHERE
+							dQ.[rowid] = @d_Query_id
+							AND t.[ReportId] = [hist].[h_InstanceCPUUtilization4StressTest_03].[ReportId]
+							AND t.[RecordTimeStamp] = [hist].[h_InstanceCPUUtilization4StressTest_03].[RecordTimeStamp]
+							AND t.[RecordRingBufferType] = [hist].[h_InstanceCPUUtilization4StressTest_03].[RecordRingBufferType]
+					)
+				WHERE
+					EXISTS (
+						SELECT
+							1
+						FROM
+							[d_Query] dQ
+							INNER JOIN [hist].[h_ServerInstance] hSI ON
+								hSI.[d_ServerInstance_id] = dQ.[d_ServerInstance_id]
+							INNER JOIN [report].[${GetInstanceCPUUtilization4StressTest_03}$_${1}$] t ON
+								t.[d_Query_id] = dQ.[rowid]
+						WHERE
+							dQ.[rowid] = @d_Query_id
+							AND t.[ReportId] = [hist].[h_InstanceCPUUtilization4StressTest_03].[ReportId]
+							AND t.[RecordTimeStamp] = [hist].[h_InstanceCPUUtilization4StressTest_03].[RecordTimeStamp]
+							AND t.[RecordRingBufferType] = [hist].[h_InstanceCPUUtilization4StressTest_03].[RecordRingBufferType]
+					);
+			</sqlite_statement>
+		</sqlite_statements>
+		<sql-select-parameters>
+			<sql-select-parameter name="@WaitForDelay"          type="NVarChar" />
+			<sql-select-parameter name="@NumberOfExecutionsMin" type="Int"      />
+			<sql-select-parameter name="@NumberOfExecutionsMax" type="Int"      />
+		</sql-select-parameters>
+	</sql-select>
+</sqlquery>
+</root>

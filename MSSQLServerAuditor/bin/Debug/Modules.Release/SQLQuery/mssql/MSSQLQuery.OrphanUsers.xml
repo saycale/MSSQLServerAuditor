@@ -1,0 +1,240 @@
+﻿<?xml version="1.0" encoding="UTF-8"?>
+<root xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+<sqlquery type="MSSQL">
+	<sql-select name="GetOrphanUsers">
+		<sql-select-text MinSupportedVersion="8.*" MaxSupportedVersion="8.*" signature="">
+			SET NOCOUNT ON;
+			SET DEADLOCK_PRIORITY LOW;
+
+			DECLARE
+				 @DatabaseName [NVARCHAR](128)
+				,@strSQL       [NVARCHAR](4000);
+
+			CREATE TABLE #tblOrphanUsers
+			(
+				 [UserName]   [NVARCHAR](128)  NULL
+				,[UserID]     [VARBINARY](255) NULL
+				,[CreateDate] [DATETIME]       NULL
+				,[UpdateDate] [DATETIME]       NULL
+			);
+
+			DECLARE
+				@tblDatabaseOrphanUsers TABLE
+				(
+					 [DatabaseName] [NVARCHAR](128)  NULL
+					,[UserName]     [NVARCHAR](128)  NULL
+					,[UserID]       [VARBINARY](255) NULL
+					,[CreateDate]   [DATETIME]       NULL
+					,[UpdateDate]   [DATETIME]       NULL
+				);
+
+			SELECT
+				@DatabaseName = MIN(tSD.[name])
+			FROM
+				[master].[dbo].[sysdatabases] tSD
+			WHERE
+				tSD.[name] NOT IN (
+					N'tempdb'
+				)
+				AND DatabasePropertyEx(tSD.[name], N'Status') IN (
+					N'ONLINE'
+				);
+
+			WHILE (@DatabaseName IS NOT NULL)
+			BEGIN
+				SET @strSQL = N'USE ' + QuoteName(@DatabaseName, N']')
+					+ N';SELECT'
+					+ N'	 tSU.[name]'
+					+ N'	,tSU.[sid]'
+					+ N'	,tSU.[createdate]'
+					+ N'	,tSU.[updatedate]'
+					+ N'FROM'
+					+ N'	[dbo].[sysusers] tSU'
+					+ N'	LEFT OUTER JOIN [master].[dbo].[syslogins] tSL ON'
+					+ N'		tSL.[sid] = tSU.[sid]'
+					+ N'WHERE'
+					+ N'	tSU.[sid] NOT IN (0x0)'
+					+ N'	AND tSU.[issqluser] = 1'
+					+ N'	AND tSL.[sid] IS NULL;';
+
+				DELETE FROM #tblOrphanUsers;
+
+				INSERT #tblOrphanUsers
+				(
+					 [UserName]
+					,[UserID]
+					,[CreateDate]
+					,[UpdateDate]
+				)
+					EXECUTE [sp_executesql] @strSQL;
+
+				INSERT @tblDatabaseOrphanUsers
+				(
+					 [DatabaseName]
+					,[UserName]
+					,[UserID]
+					,[CreateDate]
+					,[UpdateDate]
+				)
+				SELECT
+					 @DatabaseName
+					,t.[UserName]
+					,t.[UserID]
+					,t.[CreateDate]
+					,t.[UpdateDate]
+				FROM
+					#tblOrphanUsers t;
+
+				SELECT
+					@DatabaseName = MIN(tSD.[name])
+				FROM
+					[master].[dbo].[sysdatabases] tSD
+				WHERE
+					tSD.[name] NOT IN (
+						N'tempdb'
+					)
+					AND DatabasePropertyEx(tSD.[name], N'Status') IN (
+						N'ONLINE'
+					)
+					AND tSD.[name] &gt; @DatabaseName;
+			END
+
+			SELECT
+				 t.[DatabaseName]
+				,t.[UserName]
+				,t.[UserID]
+				,t.[CreateDate]
+				,t.[UpdateDate]
+			FROM
+				@tblDatabaseOrphanUsers t;
+		</sql-select-text>
+		<sql-select-text MinSupportedVersion="9.*" MaxSupportedVersion="*" signature="">
+			SET NOCOUNT ON;
+			SET DEADLOCK_PRIORITY LOW;
+
+			DECLARE
+				 @DatabaseName [NVARCHAR](128)
+				,@strSQL       [NVARCHAR](4000);
+
+			CREATE TABLE #tblOrphanUsers
+			(
+				 [UserName]   [NVARCHAR](128)  NULL
+				,[UserID]     [VARBINARY](255) NULL
+				,[CreateDate] [DATETIME]       NULL
+				,[UpdateDate] [DATETIME]       NULL
+			);
+
+			DECLARE
+				@tblDatabaseOrphanUsers TABLE
+				(
+					 [DatabaseName] [NVARCHAR](128)  NULL
+					,[UserName]     [NVARCHAR](128)  NULL
+					,[UserID]       [VARBINARY](255) NULL
+					,[CreateDate]   [DATETIME]       NULL
+					,[UpdateDate]   [DATETIME]       NULL
+				);
+
+			SELECT
+				@DatabaseName = MIN(tSD.[name])
+			FROM
+				[master].[sys].[sysdatabases] tSD
+			WHERE
+				tSD.[name] NOT IN (
+					N'tempdb'
+				)
+				AND DatabasePropertyEx(tSD.[name], N'Status') IN (
+					N'ONLINE'
+				);
+
+			WHILE (@DatabaseName IS NOT NULL)
+			BEGIN
+				SET @strSQL = N'USE ' + QuoteName(@DatabaseName, N']') + N';
+					SELECT
+						 tSU.[name]
+						,tSU.[sid]
+						,tSU.[createdate]
+						,tSU.[updatedate]
+					FROM
+						[sys].[sysusers] tSU
+						LEFT OUTER JOIN [master].[sys].[syslogins] tSL ON
+							tSL.[sid] = tSU.[sid]
+					WHERE
+						tSU.[sid] NOT IN (0x0)
+						AND tSU.[issqluser] = 1
+						AND tSL.[sid] IS NULL;
+				';
+
+				DELETE FROM #tblOrphanUsers;
+
+				BEGIN TRY
+					INSERT #tblOrphanUsers
+					(
+						 [UserName]
+						,[UserID]
+						,[CreateDate]
+						,[UpdateDate]
+					)
+						EXECUTE [sp_executesql]
+							@strSQL;
+				END TRY
+				BEGIN CATCH
+					INSERT #tblOrphanUsers
+					(
+						 [UserName]
+						,[UserID]
+						,[CreateDate]
+						,[UpdateDate]
+					)
+					VALUES
+					(
+						 N'?'
+						,-1
+						,N'19000101'
+						,N'19000101'
+					);
+				END CATCH
+
+				INSERT @tblDatabaseOrphanUsers
+				(
+					 [DatabaseName]
+					,[UserName]
+					,[UserID]
+					,[CreateDate]
+					,[UpdateDate]
+				)
+				SELECT
+					 @DatabaseName
+					,t.[UserName]
+					,t.[UserID]
+					,t.[CreateDate]
+					,t.[UpdateDate]
+				FROM
+					#tblOrphanUsers t;
+
+				SELECT
+					@DatabaseName = MIN(tSD.[name])
+				FROM
+					[master].[sys].[sysdatabases] tSD
+				WHERE
+					tSD.[name] NOT IN (
+						N'tempdb'
+					)
+					AND DatabasePropertyEx(tSD.[name], N'Status') IN (
+						N'ONLINE'
+					)
+					AND tSD.[name] &gt; @DatabaseName;
+			END
+
+			SELECT
+				 t.[DatabaseName]
+				,t.[UserName]
+				,t.[UserID]
+				,t.[CreateDate]
+				,t.[UpdateDate]
+			FROM
+				@tblDatabaseOrphanUsers t;
+		</sql-select-text>
+	</sql-select>
+</sqlquery>
+</root>
+

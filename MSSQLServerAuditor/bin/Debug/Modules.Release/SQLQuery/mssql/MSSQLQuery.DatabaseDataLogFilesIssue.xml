@@ -1,0 +1,118 @@
+﻿<?xml version="1.0" encoding="UTF-8"?>
+<root xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+<sqlquery type="MSSQL">
+	<sql-select name="GetDatabaseDataLogFilesIssue">
+		<name>
+			Database and Log files on the same physical disk
+		</name>
+		<description>
+			Database and Log files on the same physical disk
+		</description>
+		<reference>
+			http://www.brentozar.com/archive/2009/02/when-should-you-put-data-and-logs-on-the-same-drive/
+		</reference>
+		<sql-select-text MinSupportedVersion="8.*" MaxSupportedVersion="8.*" signature="">
+			SET NOCOUNT ON;
+			SET DEADLOCK_PRIORITY LOW;
+
+			DECLARE
+				@intPageSize [INTEGER]
+			;
+
+			SELECT
+				@intPageSize = tSV.[low]
+			FROM
+				[master].[dbo].[spt_values] tSV
+			WHERE
+				tSV.[number] = 1
+				AND tSV.[type] = N'E';
+
+			SELECT
+				 LEFT(tSF.[filename], 3)      AS [DiskDrive]
+				,RTRIM(LTRIM(tSF.[filename])) AS [FileName]
+				,tSF.[status]                 AS [FileStatus]
+				,CONVERT([NUMERIC](20, 2), (
+					  CONVERT([NUMERIC](20, 2), tSF.[size])
+					* CONVERT([NUMERIC](20, 2), @intPageSize)
+					) / CONVERT([NUMERIC](20, 2), 1024.0 * 1024.0)
+				)                             AS [FileSizeMB]
+			FROM
+				[dbo].[sysfiles] tSF
+				INNER JOIN (
+					SELECT
+						tT.[FileDiskDrive] AS [FileDiskDrive]
+					FROM (
+						SELECT
+							 (tDSF.[status] &amp; 0x40) AS [DatabaseFileStatus]
+							,LEFT(tDSF.[filename], 3)   AS [FileDiskDrive]
+						FROM
+							[dbo].[sysfiles] tDSF
+						GROUP BY
+							 (tDSF.[status] &amp; 0x40)
+							,LEFT(tDSF.[filename], 3)
+					) tT
+					GROUP BY
+						tT.[FileDiskDrive]
+					HAVING
+						COUNT(*) &gt; 1
+			) t ON
+				t.[FileDiskDrive] = LEFT(tSF.[filename], 3)
+			ORDER BY
+				 LEFT(tSF.[filename], 3)
+				,tSF.[filename]
+			;
+		</sql-select-text>
+		<sql-select-text MinSupportedVersion="9.*" MaxSupportedVersion="*" signature="">
+			SET NOCOUNT ON;
+			SET DEADLOCK_PRIORITY LOW;
+
+			DECLARE
+				@intPageSize [INTEGER]
+			;
+
+			SELECT
+				@intPageSize = tSV.[low]
+			FROM
+				[master].[dbo].[spt_values] tSV
+			WHERE
+				tSV.[number] = 1
+				AND tSV.[type] = N'E';
+
+			SELECT
+				 LEFT(tSF.[filename], 3)      AS [DiskDrive]
+				,RTRIM(LTRIM(tSF.[filename])) AS [FileName]
+				,tSF.[status]                 AS [FileStatus]
+				,CONVERT([NUMERIC](20, 2), (
+					  CONVERT([NUMERIC](20, 2), tSF.[size])
+					* CONVERT([NUMERIC](20, 2), @intPageSize)
+					) / CONVERT([NUMERIC](20, 2), 1024.0 * 1024.0)
+				)                             AS [FileSizeMB]
+			FROM
+				[sys].[sysfiles] tSF
+				INNER JOIN (
+					SELECT
+						tT.[FileDiskDrive] AS [FileDiskDrive]
+					FROM (
+						SELECT
+							 (tDSF.[status] &amp; 0x40) AS [DatabaseFileStatus]
+							,LEFT(tDSF.[filename], 3)   AS [FileDiskDrive]
+						FROM
+							[sys].[sysfiles] tDSF
+						GROUP BY
+							 (tDSF.[status] &amp; 0x40)
+							,LEFT(tDSF.[filename], 3)
+					) tT
+					GROUP BY
+						tT.[FileDiskDrive]
+					HAVING
+						COUNT(*) &gt; 1
+			) t ON
+				t.[FileDiskDrive] = LEFT(tSF.[filename], 3)
+			ORDER BY
+				 LEFT(tSF.[filename], 3)
+				,tSF.[filename]
+			;
+		</sql-select-text>
+	</sql-select>
+</sqlquery>
+</root>

@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<root xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+<sqlquery type="MSSQL">
+	<sql-select name="sys.dm_os_buffer_descriptors">
+		<name>
+			sys.dm_os_buffer_descriptors
+		</name>
+		<description>
+			Returns information about all the data pages that are currently in the SQL Server buffer pool.
+		</description>
+		<reference>
+			http://technet.microsoft.com/en-us/library/ms173442.aspx
+		</reference>
+		<sql-select-text MinSupportedVersion="9.*" MaxSupportedVersion="*" signature="">
+			SET NOCOUNT ON;
+			SET DEADLOCK_PRIORITY LOW;
+
+			SELECT
+				*
+			FROM
+				[sys].[dm_os_buffer_descriptors]
+			;
+		</sql-select-text>
+	</sql-select>
+</sqlquery>
+</root>
+

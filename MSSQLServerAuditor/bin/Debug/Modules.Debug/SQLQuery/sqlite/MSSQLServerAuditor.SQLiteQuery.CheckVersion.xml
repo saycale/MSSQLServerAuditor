@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<root xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+<sqlquery type="SQLite">
+	<sql-select name="GetSQLiteVersion" group="" scope="instance">
+		<sql-select-text MinSupportedVersion="*" MaxSupportedVersion="*" signature="">
+			SELECT sqlite_version() AS SQLiteVersion;
+		</sql-select-text>
+	</sql-select>
+</sqlquery>
+</root>
+

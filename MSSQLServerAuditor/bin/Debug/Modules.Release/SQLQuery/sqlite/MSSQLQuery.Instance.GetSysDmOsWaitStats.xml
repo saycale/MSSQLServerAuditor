@@ -1,0 +1,120 @@
+﻿<?xml version="1.0" encoding="UTF-8"?>
+<root xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+<sqlquery type="SQLite">
+	<sql-select name="GetSysDmOsWaitStatsMonth">
+		<sql-select-text MinSupportedVersion="*" MaxSupportedVersion="*" signature="">
+			SELECT
+				 strftime('%Y%m', t.[EventDay])                               AS [NodeUName]
+				,strftime('%Y%m', t.[EventDay])                               AS [NodeUId]
+				,1                                                            AS [NodeEnabled]
+				,'NodeIcon'                                                   AS [NodeUIcon]
+				,'#080808'                                                    AS [NodeFontColor]
+				,'normal'                                                     AS [NodeFontStyle]
+				,date(MIN(t.[EventDay]),'start of month')                     AS [EventDayMin]
+				,date(MIN(t.[EventDay]),'start of month','+1 month','-1 day') AS [EventDayMax]
+			FROM
+				[hist].[h_SysDmOsWaitStats] t
+				INNER JOIN [hist].[h_ServerInstance] hSI ON
+					hSI.[rowid] = t.[h_ServerInstance_id]
+					AND hSI.[d_ServerInstance_id] = @d_ServerInstance_id
+			WHERE
+				t.[EventTime] &gt; (
+					SELECT
+						DATETIME(MAX(t.[EventTime]), @strDateTimeModifier)
+					FROM
+						[hist].[h_SysDmOsWaitStats] t
+						INNER JOIN [hist].[h_ServerInstance] hSI ON
+							hSI.[rowid] = t.[h_ServerInstance_id]
+							AND hSI.[d_ServerInstance_id] = @d_ServerInstance_id
+				)
+			GROUP BY
+				strftime('%Y%m', t.[EventDay])
+			ORDER BY
+				strftime('%Y%m', t.[EventDay]) DESC
+			;
+		</sql-select-text>
+		<sql-select-parameters>
+			<sql-select-parameter name="@strDateTimeModifier" type="NVarChar" />
+		</sql-select-parameters>
+	</sql-select>
+
+	<sql-select name="GetSysDmOsWaitStatsDays">
+		<sql-select-text MinSupportedVersion="*" MaxSupportedVersion="*" signature="">
+			SELECT
+				 strftime('%Y%m%d', t.[EventDay]) AS [NodeUName]
+				,strftime('%Y%m%d', t.[EventDay]) AS [NodeUId]
+				,1                                AS [NodeEnabled]
+				,'NodeIcon'                       AS [NodeUIcon]
+				,CASE
+					WHEN (strftime('%w', t.[EventDay]) = '0') THEN
+						'#CC0000'
+					ELSE
+						'#080808'
+				END                               AS [NodeFontColor]
+				,'normal'                         AS [NodeFontStyle]
+				,MIN(t.[EventDay])                AS [EventDayMin]
+				,MAX(t.[EventDay])                AS [EventDayMax]
+			FROM
+				[hist].[h_SysDmOsWaitStats] t
+				INNER JOIN [hist].[h_ServerInstance] hSI ON
+					hSI.[rowid] = t.[h_ServerInstance_id]
+					AND hSI.[d_ServerInstance_id] = @d_ServerInstance_id
+			WHERE
+				t.[EventDay] BETWEEN date(@EventDayMin) AND date(@EventDayMax)
+			GROUP BY
+				strftime('%Y%m%d', t.[EventDay])
+			ORDER BY
+				strftime('%Y%m%d', t.[EventDay]) DESC
+			;
+		</sql-select-text>
+		<sql-select-parameters>
+			<sql-select-parameter name="@EventDayMin" type="Date" />
+			<sql-select-parameter name="@EventDayMax" type="Date" />
+		</sql-select-parameters>
+	</sql-select>
+
+	<sql-select name="GetInstanceSysDmOsWaitStats">
+		<sql-select-text MinSupportedVersion="*" MaxSupportedVersion="*" signature="">
+			SELECT
+				 t.[EventTime]  AS [EventTime]
+				,t.[WaitType]   AS [WaitType]
+				,CASE
+					WHEN ((t.[WaitTimeMs] &gt; t.[WaitTimeMsLast]) AND (t.[EventTime] &gt; t.[EventTimeLast])) THEN
+						CAST((t.[WaitTimeMs] - t.[WaitTimeMsLast]) AS [REAL]) / CAST((strftime('%s', t.[EventTime]) - strftime('%s', t.[EventTimeLast])) AS [REAL])
+					ELSE
+						0.0
+				END             AS [WaitTimeMs]
+			FROM
+				[hist].[h_SysDmOsWaitStats] t
+				INNER JOIN [hist].[h_ServerInstance] hSI ON
+					hSI.[rowid] = t.[h_ServerInstance_id]
+					AND hSI.[d_ServerInstance_id] = @d_ServerInstance_id
+			WHERE
+				CASE
+					WHEN ((@EventDayMin IS NOT NULL) AND (@EventDayMax IS NOT NULL)) THEN
+						t.[EventDay] BETWEEN date(@EventDayMin) AND date(@EventDayMax)
+					WHEN (@strDateTimeModifier IS NOT NULL) THEN
+						t.[EventTime] &gt; (
+							SELECT
+								DATETIME(MAX(t.[EventTime]), @strDateTimeModifier)
+							FROM
+								[hist].[h_SysDmOsWaitStats] t
+								INNER JOIN [hist].[h_ServerInstance] hSI ON
+									hSI.[rowid] = t.[h_ServerInstance_id]
+									AND hSI.[d_ServerInstance_id] = @d_ServerInstance_id
+						)
+					ELSE
+						t.[EventDay] = date('1900-01-01')
+				END
+			ORDER BY
+				t.[EventTime] ASC
+			;
+		</sql-select-text>
+		<sql-select-parameters>
+			<sql-select-parameter name="@EventDayMin"         type="Date"     />
+			<sql-select-parameter name="@EventDayMax"         type="Date"     />
+			<sql-select-parameter name="@strDateTimeModifier" type="NVarChar" />
+		</sql-select-parameters>
+	</sql-select>
+</sqlquery>
+</root>

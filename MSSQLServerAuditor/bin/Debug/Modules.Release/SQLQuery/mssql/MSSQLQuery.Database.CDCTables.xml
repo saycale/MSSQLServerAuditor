@@ -1,0 +1,106 @@
+﻿<?xml version="1.0" encoding="UTF-8"?>
+<root xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+<sqlquery type="MSSQL">
+	<sql-select name="GetListOfDatabaseCDCTables">
+		<sql-select-text MinSupportedVersion="9.*" MaxSupportedVersion="*" signature="">
+			SET NOCOUNT ON;
+			SET DEADLOCK_PRIORITY LOW;
+
+			DECLARE
+				 @CDCObjectName [NVARCHAR](128)
+				,@CDCSchemaName [NVARCHAR](128)
+				,@MaxLsn        [BINARY](10)
+				,@MinLsn        [BINARY](10)
+				,@ObjectId      [INTEGER]
+				,@ObjectName    [NVARCHAR](128)
+				,@strSQL        [NVARCHAR](MAX)
+			;
+
+			DECLARE
+				@tblCDCTables TABLE
+				(
+					 [ObjectId] [INTEGER]
+					,[MinLsn]   [BINARY](10)
+					,[MaxLsn]   [BINARY](10)
+				);
+
+			SET @ObjectId = NULL;
+
+			SELECT
+				@ObjectId = MIN(tST.[object_id])
+			FROM
+				[sys].[tables] tST
+			WHERE
+				tST.[is_tracked_by_cdc] = 1;
+
+			WHILE (@ObjectId IS NOT NULL)
+			BEGIN
+				SET @CDCObjectName = NULL;
+
+				SELECT
+					 @CDCSchemaName = tSS.[name]
+					,@CDCObjectName = tST.[name]
+				FROM
+					[cdc].[change_tables] tCCT
+					INNER JOIN [sys].[tables] tST ON
+						tST.[object_id] = tCCT.[object_id]
+					INNER JOIN [sys].[schemas] tSS ON
+						tSS.[schema_id] = tST.[schema_id]
+				WHERE
+					tCCT.[source_object_id] = @ObjectId;
+
+				IF (@CDCObjectName IS NOT NULL)
+				BEGIN
+					SET @strSQL = N'SELECT @MinLsn = MIN([__$start_lsn]), @MaxLsn = MAX([__$start_lsn]) FROM ' + Quotename(@CDCSchemaName, N']') + N'.' + Quotename(@CDCObjectName, N']') + N';';
+
+					EXECUTE [dbo].[sp_executesql]
+						 @stmt = @strSQL
+						,@parms = N'@MinLsn [BINARY](10) OUTPUT, @MaxLsn [BINARY](10) OUTPUT'
+						,@MinLsn = @MinLsn OUTPUT
+						,@MaxLsn = @MaxLsn OUTPUT;
+
+					INSERT @tblCDCTables
+					(
+						 [ObjectId]
+						,[MinLsn]
+						,[MaxLsn]
+					)
+					VALUES
+					(
+						 @ObjectId
+						,@MinLsn
+						,@MaxLsn
+					);
+				END
+
+				SELECT
+					@ObjectId = MIN(tST.[object_id])
+				FROM
+					[sys].[tables] tST
+				WHERE
+					tST.[is_tracked_by_cdc] = 1
+					AND tST.[object_id] &gt; @ObjectId;
+			END
+
+			SELECT
+				 db_name()                              AS [DatabaseName]
+				,tSS.[name]                             AS [SchemaName]
+				,tST.[name]                             AS [ObjectName]
+				,tST.[type_desc]                        AS [ObjectType]
+				,tST.[create_date]                      AS [ObjectCreateDate]
+				,tST.[is_tracked_by_cdc]                AS [IsTrackedByCdc]
+				,t.[MinLsn]                             AS [MinLsn]
+				,sys.fn_cdc_map_lsn_to_time(t.[MinLsn]) AS [MinLsnTime]
+				,t.[MaxLsn]                             AS [MaxLsn]
+				,sys.fn_cdc_map_lsn_to_time(t.[MaxLsn]) AS [MaxLsnTime]
+			FROM
+				[sys].[tables] tST
+				INNER JOIN [sys].[schemas] tSS ON
+					tSS.[schema_id] = tST.[schema_id]
+				INNER JOIN @tblCDCTables t ON
+					t.[ObjectId] = tST.[object_id]
+			;
+		</sql-select-text>
+	</sql-select>
+</sqlquery>
+</root>

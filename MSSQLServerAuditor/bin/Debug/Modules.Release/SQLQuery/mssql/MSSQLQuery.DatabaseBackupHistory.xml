@@ -1,0 +1,72 @@
+﻿<?xml version="1.0" encoding="UTF-8"?>
+<root xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+<sqlquery type="MSSQL">
+	<sql-select name="GetDatabaseBackupHistory">
+		<sql-select-text MinSupportedVersion="8.*" MaxSupportedVersion="8.*" signature="">
+			SET NOCOUNT ON;
+			SET DEADLOCK_PRIORITY LOW;
+
+			DECLARE
+				@ServerName [NVARCHAR](128)
+			;
+
+			SET @ServerName = CONVERT([NVARCHAR](128), SERVERPROPERTY(N'Servername'));
+
+			SELECT TOP 1000
+				 tBS.[database_name]                                                                         AS [DatabaseName]
+				,tBS.[type]                                                                                  AS [BackupType]
+				,tBS.[name]                                                                                  AS [BackupName]
+				,tBS.[user_name]                                                                             AS [BackupUserName]
+				,tBS.[backup_finish_date]                                                                    AS [BackupFinishDate]
+				,CONVERT([NUMERIC](20, 2), tBS.[backup_size] / (CONVERT([NUMERIC](20, 0), 1024.0 * 1024.0))) AS [DatabaseBackupSizeMB]
+			FROM
+				[msdb].[dbo].[backupset] tBS
+			WHERE
+				tBS.[server_name] = @ServerName
+				AND tBS.[backup_finish_date] IS NOT NULL
+				AND tBS.[type] = ISNULL(@chBackupType, tBS.[type])
+				AND tBS.[backup_finish_date] &gt; DATEADD(mm, -1, GETDATE())
+				AND tBS.[database_name] = ISNULL(@DatabaseName, tBS.[database_name])
+			ORDER BY
+				tBS.[backup_finish_date] DESC
+			;
+		</sql-select-text>
+		<sql-select-text MinSupportedVersion="9.*" MaxSupportedVersion="*" signature="">
+			SET NOCOUNT ON;
+			SET DEADLOCK_PRIORITY LOW;
+
+			DECLARE
+				@ServerName [NVARCHAR](128)
+			;
+
+			SET @ServerName = CONVERT([NVARCHAR](128), SERVERPROPERTY(N'Servername'));
+
+			SELECT TOP 1000
+				 tBS.[database_name]                                                                         AS [DatabaseName]
+				,tBS.[type]                                                                                  AS [BackupType]
+				,tBS.[name]                                                                                  AS [BackupName]
+				,tBS.[user_name]                                                                             AS [BackupUserName]
+				,tBS.[backup_finish_date]                                                                    AS [BackupFinishDate]
+				,CONVERT([NUMERIC](20, 2), tBS.[backup_size] / (CONVERT([NUMERIC](20, 2), 1024.0 * 1024.0))) AS [DatabaseBackupSizeMB]
+			FROM
+				[msdb].[dbo].[backupset] tBS
+			WHERE
+				tBS.[server_name] = @ServerName
+				AND tBS.[backup_finish_date] IS NOT NULL
+				AND tBS.[type] = ISNULL(@chBackupType, tBS.[type])
+				AND tBS.[is_snapshot] = ISNULL(@IsSnapshot, tBS.[is_snapshot])
+				AND tBS.[backup_finish_date] &gt; DATEADD(mm, -1, GETDATE())
+				AND tBS.[database_name] = ISNULL(@DatabaseName, tBS.[database_name])
+			ORDER BY
+				tBS.[backup_finish_date] DESC
+			;
+		</sql-select-text>
+		<sql-select-parameters>
+			<sql-select-parameter name="@chBackupType" type="NChar" />
+			<sql-select-parameter name="@IsSnapshot"   type="Int"   />
+			<sql-select-parameter name="@DatabaseName" type="NChar" />
+		</sql-select-parameters>
+	</sql-select>
+</sqlquery>
+</root>
+

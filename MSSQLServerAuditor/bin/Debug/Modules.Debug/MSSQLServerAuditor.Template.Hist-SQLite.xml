@@ -1,0 +1,39 @@
+﻿<?xml version="1.0" encoding="UTF-8"?>
+<MSSQLServerAuditorTemplate id="hist_sqlite_test" type="MSSQL" startuptemplateid="" xmlns:xi="http://www.w3.org/2003/XInclude" version="1.0">
+	<i18n name="en">
+		Test SQLite Hist database
+	</i18n>
+	<i18n name="ru">
+		Тестирование записи в hist SQLite
+	</i18n>
+
+	<template id="1000000" name="InstanceProcesses" IsHideTabs="true" file="hist_sqlite_test\MSSQLServerAuditor.InstanceSummaryProcesses.xsl" icon="doc" showIfEmpty="true" showNumberOfRecords="false">
+		<i18n name="en">
+			Processes
+		</i18n>
+		<i18n name="ru">
+			Процессы
+		</i18n>
+
+		<sql-select id="0" name="GetInstanceSummaryProcesses" file="SQLQuery\mssql\Monitoring\MSSQLQuery.Instance.SummaryProcesses.xml" hierarchy="">
+		</sql-select>
+
+		<sql-select id="1" name="hist.GetInstanceSummaryProcessesToday" file="SQLQuery\sqlite\Monitoring\MSSQLServerAuditor.SQLite.GetInstanceSummaryProcesses.xml" hierarchy="">
+			<parameter name="@EventDayMin"         value=""      />
+			<parameter name="@EventDayMax"         value=""      />
+			<parameter name="@strDateTimeModifier" value="-1 day"/>
+		</sql-select>
+	</template>
+
+	<template id="2000000" name="InstanceCurrentDateTime" IsHideTabs="true" file="hist_sqlite_test\MSSQLServerAuditor.InstanceCurrentDateTime.xsl" icon="doc" showIfEmpty="true" showNumberOfRecords="false">
+		<i18n name="en">
+			Current DateTime
+		</i18n>
+		<i18n name="ru">
+			Текущее время
+		</i18n>
+
+		<sql-select id="0" name="GetInstanceCurrentDateTime" file="SQLQuery\mssql\Monitoring\MSSQLQuery.Instance.CurrentDateTime.xml" hierarchy="">
+		</sql-select>
+	</template>
+</MSSQLServerAuditorTemplate>

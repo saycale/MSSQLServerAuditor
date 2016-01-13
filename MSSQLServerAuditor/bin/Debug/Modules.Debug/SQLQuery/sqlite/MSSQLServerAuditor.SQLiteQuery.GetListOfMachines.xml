@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<root xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+<sqlquery type="SQLite">
+	<sql-select name="GetListOfMachines" group="" scope="instance">
+		<sql-select-text MinSupportedVersion="*" MaxSupportedVersion="*" signature="">
+			SELECT
+				 '192.168.1.102'      AS [ConnectionName]
+				,'NetworkInformation' AS [ConnectionType]
+				,'false'              AS [IsOdbcConnection]
+
+			UNION ALL
+
+			SELECT
+				 '192.168.1.103'      AS [ConnectionName]
+				,'NetworkInformation' AS [ConnectionType]
+				,'false'              AS [IsOdbcConnection]
+
+			UNION ALL
+
+			SELECT
+				 '192.168.1.104'      AS [ConnectionName]
+				,'NetworkInformation' AS [ConnectionType]
+				,'false'              AS [IsOdbcConnection]
+
+			UNION ALL
+
+			SELECT
+				 '192.168.1.105'      AS [ConnectionName]
+				,'NetworkInformation' AS [ConnectionType]
+				,'false'              AS [IsOdbcConnection]
+
+			UNION ALL
+
+			SELECT
+				 '10.1.101.4'         AS [ConnectionName]
+				,'NetworkInformation' AS [ConnectionType]
+				,'false'              AS [IsOdbcConnection]
+			;
+		</sql-select-text>
+	</sql-select>
+</sqlquery>
+</root>
+

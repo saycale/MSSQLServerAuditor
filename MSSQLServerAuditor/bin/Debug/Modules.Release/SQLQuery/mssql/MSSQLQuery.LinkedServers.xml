@@ -1,0 +1,65 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<root xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+<sqlquery type="MSSQL">
+	<sql-select name="GetLinkedServers">
+		<sql-select-text MinSupportedVersion="8.*" MaxSupportedVersion="8.*" signature="">
+			SET NOCOUNT ON;
+			SET DEADLOCK_PRIORITY LOW;
+
+			SELECT
+				 tSS.[srvname]      AS [SrvName]
+				,tSS.[srvproduct]   AS [SrvProduct]
+				,tSS.[providername] AS [ProviderName]
+				,tSS.[datasource]   AS [DataSource]
+				,tSS.[catalog]      AS [Catalog]
+				,tSS.[srvnetname]   AS [SrvNetName]
+				,tSS.[isremote]     AS [IsRemote]
+				,tSS.[system]       AS [System]
+				,tSS.[rpc]          AS [Rpc]
+				,tSS.[rpcout]       AS [RpcOut]
+				,tSXL.[name]        AS [RemoteName]
+				,CASE
+					WHEN (tSXL.[name] IS NULL) THEN
+						CONVERT([BIT], 1)
+					ELSE
+						CONVERT([BIT], 0)
+				END                 AS [UsesSelfCredential]
+				,NULL               AS [LoginRemoteName]
+			FROM
+				[master].[dbo].[sysservers] tSS
+				LEFT OUTER JOIN [master].[dbo].[sysxlogins] tSXL ON
+					tSXL.[srvid] = tSS.[srvid]
+			ORDER BY
+				tSS.[srvname] ASC;
+		</sql-select-text>
+		<sql-select-text MinSupportedVersion="9.*" MaxSupportedVersion="*" signature="">
+			SET NOCOUNT ON;
+			SET DEADLOCK_PRIORITY LOW;
+
+			SELECT
+				 tSS.[srvname]              AS [SrvName]
+				,tSS.[srvproduct]           AS [SrvProduct]
+				,tSS.[providername]         AS [ProviderName]
+				,tSS.[datasource]           AS [DataSource]
+				,tSS.[catalog]              AS [Catalog]
+				,tSS.[srvnetname]           AS [SrvNetName]
+				,tSS.[isremote]             AS [IsRemote]
+				,tSS.[system]               AS [System]
+				,tSS.[rpc]                  AS [Rpc]
+				,tSS.[rpcout]               AS [RpcOut]
+				,tSSP.[name]                AS [RemoteName]
+				,tLL.[uses_self_credential] AS [UsesSelfCredential]
+				,tLL.[remote_name]          AS [LoginRemoteName]
+			FROM
+				[master].[sys].[sysservers] tSS
+				LEFT OUTER JOIN [master].[sys].[linked_logins] tLL ON
+					tLL.[server_id] = tSS.[srvid]
+				LEFT OUTER JOIN [master].[sys].[server_principals] tSSP ON
+					tSSP.[principal_id] = tLL.[local_principal_id]
+			ORDER BY
+				tSS.[srvname] ASC;
+		</sql-select-text>
+	</sql-select>
+</sqlquery>
+</root>
+

@@ -1,0 +1,21 @@
+﻿<?xml version="1.0" encoding="UTF-8"?>
+<MSSQLServerAuditorTemplate id="TemplateNodeTest" type="MSSQL" xmlns:xi="http://www.w3.org/2003/XInclude" version="1.0">
+	<i18n name="en">
+		TemplateNodeTest
+	</i18n>
+	<i18n name="ru">
+		Модуль для проверки таблицы TemplateNode
+	</i18n>
+
+	<template id="123456" name="Template1" file="mssql\Instance\Audit\MSSQLServerAuditor.xsl" icon="folder" showIfEmpty="true" showNumberOfRecords="true">
+		<i18n name="en">
+			Instance properties
+		</i18n>
+		<i18n name="ru">
+			Параметры сервера
+		</i18n>
+
+		<sql-select id="0" file="SQLQuery\mssql\MSSQLServerAuditor.MSSQLQuery.InstanceInfo.xml" name="GetServerInfo" hierarchy="">
+		</sql-select>
+	</template>
+</MSSQLServerAuditorTemplate>

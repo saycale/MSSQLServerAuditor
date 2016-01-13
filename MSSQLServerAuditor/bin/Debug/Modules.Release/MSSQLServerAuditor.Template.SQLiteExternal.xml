@@ -1,0 +1,108 @@
+﻿<?xml version="1.0" encoding="UTF-8"?>
+<MSSQLServerAuditorTemplate id="SQLiteExternal" type="SQLiteExternal" xmlns:xi="http://www.w3.org/2003/XInclude" version="1.0">
+	<i18n name="en">
+		SQLite: External
+	</i18n>
+	<i18n name="ru">
+		SQLite: Внешняя
+	</i18n>
+
+	<template id="1000000" name="SQLiteFunctions" file="" icon="folder" showIfEmpty="true" showNumberOfRecords="true" hideEmptyResultDatabases="false">
+		<i18n name="en">
+			SQLite Functions
+		</i18n>
+		<i18n name="ru">
+			Функции SQLite
+		</i18n>
+
+		<template id="1100000" name="SQLiteVersion" file="sqlite\MSSQLServerAuditor.SQLiteVersion.xsl" icon="doc" showIfEmpty="true" showNumberOfRecords="true" hideEmptyResultDatabases="false">
+			<i18n name="en">
+				SQLite Version
+			</i18n>
+			<i18n name="ru">
+				Версия SQLite
+			</i18n>
+
+			<sql-select id="1" name="GetSQLiteVersion" file="SQLQuery\sqliteexternal\SQLiteQuery.External.Functions.xml" hierarchy="">
+			</sql-select>
+		</template>
+
+		<template id="1200000" name="TotalChanges" file="sqlite\MSSQLServerAuditor.SQLiteTotalChanges.xsl" icon="doc" showIfEmpty="true" showNumberOfRecords="true" hideEmptyResultDatabases="false">
+			<i18n name="en">
+				SQLite TotalChanges
+			</i18n>
+			<i18n name="ru">
+				Изменений на SQLite
+			</i18n>
+
+			<sql-select id="1" name="GetTotalChanges" file="SQLQuery\sqliteexternal\SQLiteQuery.External.Functions.xml" hierarchy="">
+			</sql-select>
+		</template>
+	</template>
+
+	<template id="2000000" name="SQLiteObjects" file="" icon="folder" showIfEmpty="true" showNumberOfRecords="true" hideEmptyResultDatabases="false">
+		<i18n name="en">
+			SQLite objects
+		</i18n>
+		<i18n name="ru">
+			SQLite объекты
+		</i18n>
+
+		<template id="2200000" name="SQLiteDatabases" file="sqlite\MSSQLServerAuditor.SQLiteDatabases.xsl" icon="doc" showIfEmpty="true" showNumberOfRecords="true" hideEmptyResultDatabases="false">
+			<i18n name="en">
+				SQLite databases
+			</i18n>
+			<i18n name="ru">
+				Базы данных SQLite
+			</i18n>
+
+			<sql-select id="1" name="GetSQLiteDatabases" file="SQLQuery\sqliteexternal\SQLiteQuery.External.Tables.xml" hierarchy="">
+			</sql-select>
+		</template>
+
+		<template id="2100000" name="SQLiteTables" file="sqlite\MSSQLServerAuditor.SQLiteTables.xsl" icon="doc" showIfEmpty="true" showNumberOfRecords="true" hideEmptyResultDatabases="false">
+			<i18n name="en">
+				SQLite tables
+			</i18n>
+			<i18n name="ru">
+				SQLite tables
+			</i18n>
+
+			<sql-select id="1" name="GetSQLiteTables" file="SQLQuery\sqliteexternal\SQLiteQuery.External.Tables.xml" hierarchy="">
+			</sql-select>
+		</template>
+	</template>
+
+	<template id="3000000" name="Transactions" file="" icon="folder" showIfEmpty="true" showNumberOfRecords="true" hideEmptyResultDatabases="false">
+		<i18n name="en">
+			SQLite Transactions
+		</i18n>
+		<i18n name="ru">
+			Транзакции на SQLite
+		</i18n>
+
+		<template id="3100000" name="Transactions_OpenCommit" file="sqlite\MSSQLServerAuditor.SQLiteTransaction.xsl" icon="doc" showIfEmpty="true" showNumberOfRecords="true" hideEmptyResultDatabases="false">
+			<i18n name="en">
+				Open / Commit
+			</i18n>
+			<i18n name="ru">
+				Open / Commit
+			</i18n>
+
+			<sql-select id="1" name="SQLiteOpenCommitTransaction" file="SQLQuery\sqliteexternal\SQLiteQuery.External.Transactions.xml" hierarchy="">
+			</sql-select>
+		</template>
+
+		<template id="3200000" name="Transactions_OpenRollback" file="sqlite\MSSQLServerAuditor.SQLiteTransaction.xsl" icon="doc" showIfEmpty="true" showNumberOfRecords="true" hideEmptyResultDatabases="false">
+			<i18n name="en">
+				Open / Rollback
+			</i18n>
+			<i18n name="ru">
+				Open / Rollback
+			</i18n>
+
+			<sql-select id="1" name="SQLiteOpenRollbackTransaction" file="SQLQuery\sqliteexternal\SQLiteQuery.External.Transactions.xml" hierarchy="">
+			</sql-select>
+		</template>
+	</template>
+</MSSQLServerAuditorTemplate>

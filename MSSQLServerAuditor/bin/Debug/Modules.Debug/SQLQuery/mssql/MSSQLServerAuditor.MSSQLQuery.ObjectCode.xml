@@ -1,0 +1,51 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<root xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+<sqlquery type="MSSQL">
+	<sql-select name="GetObjectCode" group="" scope="database">
+		<sql-select-text MinSupportedVersion="9.*" MaxSupportedVersion="*" signature="">
+			SET NOCOUNT ON;
+			SET DEADLOCK_PRIORITY LOW;
+
+			DECLARE
+				 @definition [NVARCHAR](MAX)
+				,@ch         [NVARCHAR](1)
+			;
+
+			SELECT
+				@definition = LTRIM(RTRIM(tSM.[definition]))
+			FROM
+				[sys].[sql_modules] tSM
+			WHERE
+				tSM.[object_id] = @ObjectId;
+
+			SET @ch = SUBSTRING(@definition, 1, 1);
+
+			WHILE (@ch IS NOT NULL) AND (@ch IN (CHAR(10), CHAR(13), ' '))
+			BEGIN
+				SET @definition = STUFF(@definition, 1, 1, N'');
+
+				SET @ch = SUBSTRING(@definition, 1, 1);
+			END;
+
+			SELECT
+				 tSS.[name]  AS [SchemaName]
+				,tSO.[name]  AS [ObjectName]
+				,@definition AS [ObjectCode]
+			FROM
+				[sys].[objects] tSO
+				INNER JOIN [sys].[schemas] tSS ON
+					tSS.[schema_id] = tSO.[schema_id]
+			WHERE
+				tSO.[object_id] = @ObjectId
+			ORDER BY
+				 tSS.[name]
+				,tSO.[name]
+			;
+		</sql-select-text>
+		<sql-select-parameters>
+			<sql-select-parameter name="@ObjectId" type="Int" />
+		</sql-select-parameters>
+	</sql-select>
+</sqlquery>
+</root>
+

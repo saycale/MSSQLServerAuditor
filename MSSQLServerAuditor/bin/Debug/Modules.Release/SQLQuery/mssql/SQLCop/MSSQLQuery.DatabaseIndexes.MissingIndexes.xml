@@ -1,0 +1,93 @@
+﻿<?xml version="1.0" encoding="UTF-8"?>
+<root xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+<sqlquery type="MSSQL">
+	<sql-select name="GetMissingIndexes">
+		<name>
+			Missing Indexes
+		</name>
+		<description>
+			Find missing indexes using SQL Servers index related DMVs
+		</description>
+		<reference>
+			http://basitaalishan.com/2013/03/13/find-missing-indexes-using-sql-servers-index-related-dmvs/
+		</reference>
+		<sql-select-text MinSupportedVersion="9.*" MaxSupportedVersion="*" signature="">
+			SET NOCOUNT ON;
+			SET DEADLOCK_PRIORITY LOW;
+
+			DECLARE
+				@dbid [INTEGER]
+			;
+
+			SET @dbid = db_id();
+
+			SELECT
+				 tSS.[name]                                                                 AS [SchemaName]
+				,tSO.[name]                                                                 AS [ObjectName]
+				,tSO.[type_desc]                                                            AS [ObjectType]
+				,tSO.[create_date]                                                          AS [ObjectCreateDate]
+				,id.[equality_columns]                                                      AS [EqualityColumns]
+				,id.[inequality_columns]                                                    AS [InEqualityColumns]
+				,id.[included_columns]                                                      AS [IncludedColumns]
+				,gs.[unique_compiles]                                                       AS [UniqueCompiles]
+				,gs.[user_seeks]                                                            AS [UserSeeks]
+				,gs.[user_scans]                                                            AS [UserScans]
+				,gs.[last_user_seek]                                                        AS [LastUserSeekTime]
+				,gs.[last_user_scan]                                                        AS [LastUserScanTime]
+				,gs.[avg_total_user_cost]                                                   AS [AvgTotalUserCost]
+				,gs.[avg_user_impact]                                                       AS [AvgUserImpact]
+				,gs.[system_seeks]                                                          AS [SystemSeeks]
+				,gs.[system_scans]                                                          AS [SystemScans]
+				,gs.[last_system_seek]                                                      AS [LastSystemSeekTime]
+				,gs.[last_system_scan]                                                      AS [LastSystemScanTime]
+				,gs.[avg_total_system_cost]                                                 AS [AvgTotalSystemCost]
+				,gs.[avg_system_impact]                                                     AS [AvgSystemImpact]
+				,gs.[user_seeks] * gs.[avg_total_user_cost] * (gs.[avg_user_impact] * 0.01) AS [IndexAdvantage]
+				,N'CREATE INDEX [Missing_IXNC_'
+					+ tSS.[name]
+					+ N'_'
+					+ tSO.[name]
+					+ N'_'
+					+ REPLACE(REPLACE(REPLACE(ISNULL(id.[equality_columns], N''), N', ', N'_'), N'[', N''), N']', N'') COLLATE DATABASE_DEFAULT
+					+ CASE
+						WHEN (id.[equality_columns] IS NOT NULL AND id.[inequality_columns] IS NOT NULL) THEN
+							N'_'
+						ELSE
+							N''
+					END
+					+ REPLACE(REPLACE(REPLACE(ISNULL(id.[inequality_columns], N''), N', ', N'_'), N'[', N''), N']', N'') + N'_'
+					+ LEFT(CAST(NEWID() AS [NVARCHAR](64)), 5)
+					+ N']'
+					+ N' ON '
+					+ id.[statement]
+					+ N' ('
+					+ ISNULL(id.[equality_columns], N'')
+					+ CASE
+						WHEN (id.[equality_columns] IS NOT NULL AND id.[inequality_columns] IS NOT NULL) THEN
+							N','
+						ELSE
+							N''
+					END
+					+ ISNULL(id.[inequality_columns], N'')
+					+ N')'
+					+ ISNULL(N' INCLUDE (' + id.[included_columns] + N')', N'')
+					+ N';'                                                              AS [ProposedIndex]
+			FROM
+				[sys].[dm_db_missing_index_group_stats] gs
+				INNER JOIN [sys].[dm_db_missing_index_groups] ig ON
+					gs.[group_handle] = ig.[index_group_handle]
+				INNER JOIN [sys].[dm_db_missing_index_details] id ON
+					ig.[index_handle] = id.[index_handle]
+				INNER JOIN [sys].[objects] tSO ON
+					tSO.[object_id] = id.[object_id]
+				INNER JOIN [sys].[schemas] tSS ON
+					tSS.[schema_id] = tSO.[schema_id]
+			WHERE
+				id.[database_id] = @dbid
+			ORDER BY
+				[IndexAdvantage] DESC
+			;
+		</sql-select-text>
+	</sql-select>
+</sqlquery>
+</root>

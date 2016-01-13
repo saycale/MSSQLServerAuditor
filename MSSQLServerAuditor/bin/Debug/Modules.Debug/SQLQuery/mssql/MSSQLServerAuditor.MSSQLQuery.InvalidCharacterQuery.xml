@@ -1,0 +1,51 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<root xmlns:xi="http://www.w3.org/2003/XInclude">
+<sqlquery type="MSSQL">
+	<sql-select name="GetInvalidCharacterQuery">
+		<sql-select-text MinSupportedVersion="*" MaxSupportedVersion="*" signature="">
+			SELECT
+				 CHAR(0x00) AS [Char_0x00]
+				,CHAR(0x01) AS [Char_0x01]
+				,CHAR(0x02) AS [Char_0x02]
+				,CHAR(0x03) AS [Char_0x03]
+				,CHAR(0x04) AS [Char_0x04]
+				,CHAR(0x05) AS [Char_0x05]
+				,CHAR(0x06) AS [Char_0x06]
+				,CHAR(0x07) AS [Char_0x07]
+				,CHAR(0x08) AS [Char_0x08]
+				,CHAR(0x09) AS [Char_0x09]
+				,CHAR(0x0A) AS [Char_0x0A]
+				,CHAR(0x0B) AS [Char_0x0B]
+				,CHAR(0x0C) AS [Char_0x0C]
+				,CHAR(0x0D) AS [Char_0x0D]
+				,CHAR(0x0E) AS [Char_0x0E]
+				,CHAR(0x0F) AS [Char_0x0F]
+				,CHAR(0x10) AS [Char_0x10]
+				,CHAR(0x11) AS [Char_0x11]
+				,CHAR(0x12) AS [Char_0x12]
+				,CHAR(0x13) AS [Char_0x13]
+				,CHAR(0x14) AS [Char_0x14]
+				,CHAR(0x15) AS [Char_0x15]
+				,CHAR(0x16) AS [Char_0x16]
+				,CHAR(0x17) AS [Char_0x17]
+				,CHAR(0x18) AS [Char_0x18]
+				,CHAR(0x19) AS [Char_0x19]
+				,CHAR(0x1A) AS [Char_0x1A]
+				,CHAR(0x1B) AS [Char_0x1B]
+				,CHAR(0x1C) AS [Char_0x1C]
+				,CHAR(0x1D) AS [Char_0x1D]
+				,CHAR(0x1E) AS [Char_0x1E]
+				,CHAR(0x1F) AS [Char_0x1F]
+				,CHAR(0x20) AS [Char_0x20]
+				,CHAR(0x21) AS [Char_0x21]
+				,CHAR(0x22) AS [Char_0x22]
+				,CHAR(0x23) AS [Char_0x23]
+				,CHAR(0x24) AS [Char_0x24]
+				,CHAR(0x25) AS [Char_0x25]
+				,CHAR(0x26) AS [Char_0x26]
+				,CHAR(0x27) AS [Char_0x27]
+		;
+		</sql-select-text>
+	</sql-select>
+</sqlquery>
+</root>

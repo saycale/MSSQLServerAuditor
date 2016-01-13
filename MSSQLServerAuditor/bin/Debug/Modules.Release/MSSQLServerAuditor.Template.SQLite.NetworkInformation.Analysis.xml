@@ -1,0 +1,63 @@
+﻿<?xml version="1.0" encoding="UTF-8"?>
+<MSSQLServerAuditorTemplate id="sqlite_networkinformation_analysis" type="SQLite-NetworkInformation" startuptemplateid="" xmlns:xi="http://www.w3.org/2003/XInclude" version="1.0">
+	<i18n name="en">
+		SQLite: NetworkInformation: Historical Data: Analysis
+	</i18n>
+	<i18n name="ru">
+		SQLite: NetworkInformation: Анализ исторических данных
+	</i18n>
+
+	<MainWindowTitle>
+		<i18n name="en">
+			$ConnectionName$ $ModuleName$ $ApplicationProductName$ $ApplicationProductVersion$
+		</i18n>
+		<i18n name="ru">
+			$ConnectionName$ $ModuleName$ $ApplicationProductName$ $ApplicationProductVersion$
+		</i18n>
+	</MainWindowTitle>
+
+	<TreeTitle>
+		<i18n name="en">
+			$ConnectionName$ : $ModuleName$
+		</i18n>
+		<i18n name="ru">
+			$ConnectionName$ : $ModuleName$
+		</i18n>
+	</TreeTitle>
+
+	<template id="1100000" name="Activity" IsHideTabs="false" file="" icon="folder" showIfEmpty="true" showNumberOfRecords="false">
+		<i18n name="en">
+			History: Activity
+		</i18n>
+		<i18n name="ru">
+			История: Активность
+		</i18n>
+
+		<template id="1110000" name="NetworkInformationInfo" IsHideTabs="false" file="" icon="doc" showIfEmpty="true" showNumberOfRecords="false">
+			<i18n name="en">
+				Network Information
+			</i18n>
+			<i18n name="ru">
+				Сетевой статус
+			</i18n>
+
+			<group-select id="1" name="GetNetworkInformationInfo.Month" file="SQLQuery\sqlite\networkinformation\NetworkInformation.Instance.Info.xml">
+				<parameter name="@strDateTimeModifier" value="-12 month" />
+			</group-select>
+
+			<template id="1111000" group-select-id="1" name="GetNetworkInformationInfo.Days" file="" icon="doc" showIfEmpty="true" showNumberOfRecords="false">
+				<group-select id="1" name="GetNetworkInformationInfo.Days" file="SQLQuery\sqlite\networkinformation\NetworkInformation.Instance.Info.xml">
+					<parameter name="@EventDayMin" />
+					<parameter name="@EventDayMax" />
+				</group-select>
+
+				<template id="1111100" group-select-id="1" name="GetNetworkInformationInfo" file="sqlite\networkinformation\Monitoring\NetworkInformation.Instance.Graph.xsl" icon="doc" showIfEmpty="true" showNumberOfRecords="false">
+					<sql-select id="GetNetworkInformationInfo" name="GetNetworkInformationInfo" file="SQLQuery\sqlite\networkinformation\NetworkInformation.Instance.Info.xml" hierarchy="">
+						<parameter name="@EventDayMin" />
+						<parameter name="@EventDayMax" />
+					</sql-select>
+				</template>
+			</template>
+		</template>
+	</template>
+</MSSQLServerAuditorTemplate>

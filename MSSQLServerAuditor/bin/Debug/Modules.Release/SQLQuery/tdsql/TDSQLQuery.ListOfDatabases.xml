@@ -1,0 +1,21 @@
+﻿<?xml version="1.0" encoding="UTF-8"?>
+<root xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+<sqlquery type="TDSQL">
+	<sql-select name="GetListOfDatabases">
+		<sql-select-text MinSupportedVersion="*" MaxSupportedVersion="*" signature="">
+			SELECT
+				 tDD.DBKind       AS DatabaseKind
+				,tDD.DatabaseName AS DatabaseName
+				,tDD.Creatorname  AS DatabaseCreatorName
+				,tDD.OWnername    AS DatabaseOwnerName
+			FROM
+				DBC.Databases tDD
+			ORDER BY
+				 tDD.DBKind
+				,tDD.DatabaseName
+			;
+		</sql-select-text>
+	</sql-select>
+</sqlquery>
+</root>
+

@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<root xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+<sqlquery type="MSSQL">
+	<sql-select name="GetEmptySQLQuery">
+		<sql-select-text MinSupportedVersion="5.5.*" MaxSupportedVersion="5.5.*" signature="">
+			SELECT
+				 @@VERSION          AS [Version]
+				,@@MICROSOFTVERSION AS [MicrosoftVersion]
+			;
+		</sql-select-text>
+	</sql-select>
+</sqlquery>
+</root>
