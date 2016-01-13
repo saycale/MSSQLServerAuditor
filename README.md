@@ -13,3 +13,11 @@ The key features of the MSSQLServerAudit utility are the followings:
 •	Multitasking application: reports are generated in parallel by many working threads
 •	To minimize affect on the production MS SQL instance, the number of threads for MS SQL databases queries is limited.
 
+How to run:
+
+1. Download repository
+2. Check the .Net 4.x is installed
+3. Check the file "Build all64.cmd" to fix the location of MSBuild.exe. The default location is "C:\Windows\Microsoft.NET\Framework64\v4.0.30319\"
+4. Build project by "Build all64.cmd"
+5. Start "MSSQLServerAuditor\bin\Release\MSSQLServerAuditor.exe"
+5. 
