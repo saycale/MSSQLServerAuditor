@@ -1,0 +1,81 @@
+﻿<?xml version="1.0" encoding="UTF-8"?>
+<root xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+<sqlquery type="MSSQL">
+	<sql-select name="GetTablesWithoutAPrimaryKey">
+		<name>
+			Tables without a primary key
+		</name>
+		<description>
+			Find all tables without a primary key.
+		</description>
+		<reference>
+			http://blogs.lessthandot.com/index.php/DataMgmt/DBProgramming/best-practice-every-table-should-have-a
+		</reference>
+		<sql-select-text MinSupportedVersion="8.*" MaxSupportedVersion="8.*" signature="">
+			SET NOCOUNT ON;
+			SET DEADLOCK_PRIORITY LOW;
+
+			SELECT
+				 tSU.[name]   AS [SchemaName]
+				,tSO.[name]   AS [ObjectName]
+				,tSO.[xtype]  AS [ObjectType]
+				,tSO.[crdate] AS [ObjectCreateDate]
+			FROM
+				[dbo].[sysobjects] tSO
+				INNER JOIN [dbo].[sysusers] tSU ON
+					tSU.[uid] = tSO.[uid]
+				LEFT OUTER JOIN [dbo].[sysindexes] tSIND ON
+					tSIND.[id] = tSO.[id]
+					AND tSIND.[indid] BETWEEN 1 AND 254
+					AND (tSIND.[status] &amp; 0x20) = 0 -- Is hypothetical
+					AND (tSIND.[status] &amp; 0x40) = 0 -- Is only statistic
+					AND (tSIND.[status] &amp; 0x800) &gt; 0 -- Is primary key
+			WHERE
+				tSO.[xtype] IN (
+					N'U'
+				)
+				AND OBJECTPROPERTY(tSO.[id], N'IsMSShipped') = 0
+				AND tSIND.[id] IS NULL
+			GROUP BY
+				 tSU.[name]
+				,tSO.[name]
+				,tSO.[xtype]
+				,tSO.[crdate]
+			ORDER BY
+				 tSU.[name]
+				,tSO.[name]
+			;
+		</sql-select-text>
+		<sql-select-text MinSupportedVersion="9.*" MaxSupportedVersion="*" signature="">
+			SET NOCOUNT ON;
+			SET DEADLOCK_PRIORITY LOW;
+
+			SELECT
+				 tSS.[name]        AS [SchemaName]
+				,tSO.[name]        AS [ObjectName]
+				,tSO.[type_desc]   AS [ObjectType]
+				,tSO.[create_date] AS [ObjectCreateDate]
+			FROM
+				[sys].[objects] tSO
+				INNER JOIN [sys].[schemas] tSS ON
+					tSS.[schema_id] = tSO.[schema_id]
+				LEFT OUTER JOIN [sys].[indexes] tSIND ON
+					tSIND.[object_id] = tSO.[object_id]
+					AND tSIND.[is_primary_key] = 1
+			WHERE
+				tSO.[type_desc] = N'USER_TABLE'
+				AND OBJECTPROPERTY(tSO.[object_id], N'IsMSShipped') = 0
+				AND tSIND.[object_id] IS NULL
+			GROUP BY
+				 tSS.[name]
+				,tSO.[name]
+				,tSO.[type_desc]
+				,tSO.[create_date]
+			ORDER BY
+				 tSS.[name]
+				,tSO.[name]
+			;
+		</sql-select-text>
+	</sql-select>
+</sqlquery>
+</root>

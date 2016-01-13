@@ -1,0 +1,67 @@
+﻿<?xml version="1.0" encoding="UTF-8"?>
+<root xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+<sqlquery type="MSSQL">
+	<sql-select name="GetListOfDatabaseObjectTypes">
+		<sql-select-text MinSupportedVersion="8.*" MaxSupportedVersion="8.*" signature="">
+			SET NOCOUNT ON;
+			SET DEADLOCK_PRIORITY LOW;
+
+			SELECT
+				 tSO.[xtype] AS [NodeUName]
+				,tSO.[xtype] AS [NodeUId]
+				,1           AS [NodeEnabled]
+				,CASE
+					WHEN tSO.[xtype] IN (N'U') THEN
+						N'UserTableIcon'
+					ELSE
+						N'GeneralIcon'
+				END          AS [NodeUIcon]
+				,N'#808080'  AS [NodeFontColor]
+				,N'normal'   AS [NodeFontStyle]
+				,tSO.[xtype] AS [XTypeId]
+				,tSO.[xtype] AS [XTypeName]
+			FROM
+				[dbo].[sysobjects] tSO
+			WHERE
+				tSO.[xtype] = ISNULL(@ObjectType, tSO.[xtype])
+			GROUP BY
+				tSO.[xtype]
+			ORDER BY
+				tSO.[xtype]
+			;
+		</sql-select-text>
+		<sql-select-text MinSupportedVersion="9.*" MaxSupportedVersion="*" signature="">
+			SET NOCOUNT ON;
+			SET DEADLOCK_PRIORITY LOW;
+
+			SELECT
+				 tSO.[type_desc] AS [NodeUName]
+				,tSO.[type]      AS [NodeUId]
+				,1               AS [NodeEnabled]
+				,CASE
+					WHEN tSO.[type] IN (N'U') THEN
+						N'UserTableIcon'
+					ELSE
+						N'GeneralIcon'
+				END              AS [NodeUIcon]
+				,N'#808080'      AS [NodeFontColor]
+				,N'normal'       AS [NodeFontStyle]
+				,tSO.[type]      AS [XTypeId]
+				,tSO.[type_desc] AS [XTypeName]
+			FROM
+				[sys].[objects] tSO
+			WHERE
+				tSO.[type] = ISNULL(@ObjectType, tSO.[type])
+			GROUP BY
+				 tSO.[type_desc]
+				,tSO.[type]
+			ORDER BY
+				tSO.[type_desc]
+			;
+		</sql-select-text>
+		<sql-select-parameters>
+			<sql-select-parameter name="@ObjectType" type="NChar" />
+		</sql-select-parameters>
+	</sql-select>
+</sqlquery>
+</root>

@@ -1,0 +1,12 @@
+--- MSSQLServerAuditor/BusinessLogic/LocalStorage/StorageManager.cs
++++ MSSQLServerAuditor/BusinessLogic/LocalStorage/StorageManager.cs
+@@ -46,7 +46,8 @@
+ 
+ 			this.CurrentStorage = new CurrentStorage(currentStorageFileName);
+ 
+-			this.ReportStorage  = new ReportStorage(reportStorageFileName);
++			//this.ReportStorage  = new ReportStorage(reportStorageFileName);
++            this.ReportStorage = new ReportMemoryStorage(reportStorageFileName);
+ 
+ 			this.CurrentStorage.AttachDatabase(reportStorageFileName, "report");
+ 

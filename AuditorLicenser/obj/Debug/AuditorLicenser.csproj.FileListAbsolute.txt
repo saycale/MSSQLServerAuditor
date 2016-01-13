@@ -1,0 +1,1 @@
+D:\Users\saychenkoa\Projects\MSSQLServerAuditor\svn\trunk\AuditorLicenser\bin\Debug\AuditorLicenser.exe.config

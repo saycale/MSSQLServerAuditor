@@ -1,0 +1,78 @@
+﻿<?xml version="1.0" encoding="UTF-8"?>
+<MSSQLServerAuditorTemplate id="Multithread" type="MSSQL" xmlns:xi="http://www.w3.org/2003/XInclude" version="1.0">
+	<i18n name="en">
+		Multithread test
+	</i18n>
+	<i18n name="ru">
+		Тестирование многопоточной обработки
+	</i18n>
+
+	<template id="100000" name="MultithreadQuery1" file="mssql\Instance\MSSQLServerAuditor.LongExecutionQuery.xsl" icon="folder" showIfEmpty="true" showNumberOfRecords="true">
+		<i18n name="en">
+			Query1
+		</i18n>
+		<i18n name="ru">
+			Запрос1
+		</i18n>
+
+		<sql-select id="0" file="SQLQuery\mssql\MSSQLServerAuditor.MSSQLQuery.LongExecutionQuery.xml" name="GetLongExecutionQuery" hierarchy="">
+			<parameter name="@WaitForDelay" value="00:00:05.000"/>
+		</sql-select>
+
+		<sql-select id="1" file="SQLQuery\mssql\MSSQLServerAuditor.MSSQLQuery.LongExecutionQuery.xml" name="GetLongExecutionQuery" hierarchy="">
+			<parameter name="@WaitForDelay" value="00:00:05.000"/>
+		</sql-select>
+	</template>
+
+	<template id="200000" name="MultithreadQuery2" file="mssql\Instance\MSSQLServerAuditor.LongExecutionQuery.xsl" icon="folder" showIfEmpty="true" showNumberOfRecords="true">
+		<i18n name="en">
+			Query2
+		</i18n>
+		<i18n name="ru">
+			Запрос2
+		</i18n>
+
+		<sql-select id="0" file="SQLQuery\mssql\MSSQLServerAuditor.MSSQLQuery.LongExecutionQuery.xml" name="GetLongExecutionQuery" hierarchy="">
+			<parameter name="@WaitForDelay" value="00:00:05.000"/>
+		</sql-select>
+	</template>
+
+	<template id="300000" name="MultithreadQuery3" file="mssql\Instance\MSSQLServerAuditor.LongExecutionQuery.xsl" icon="folder" showIfEmpty="true" showNumberOfRecords="true">
+		<i18n name="en">
+			Query3
+		</i18n>
+		<i18n name="ru">
+			Запрос3
+		</i18n>
+
+		<sql-select id="0" file="SQLQuery\mssql\MSSQLServerAuditor.MSSQLQuery.LongExecutionQuery.xml" name="GetLongExecutionQuery" hierarchy="">
+			<parameter name="@WaitForDelay" value="00:00:05.000"/>
+		</sql-select>
+	</template>
+
+	<template id="400000" name="MultithreadQuery4" file="mssql\Instance\MSSQLServerAuditor.LongExecutionQuery.xsl" icon="folder" showIfEmpty="true" showNumberOfRecords="true">
+		<i18n name="en">
+			Query4
+		</i18n>
+		<i18n name="ru">
+			Запрос4
+		</i18n>
+
+		<sql-select id="0" file="SQLQuery\mssql\MSSQLServerAuditor.MSSQLQuery.LongExecutionQuery.xml" name="GetLongExecutionQuery" hierarchy="">
+			<parameter name="@WaitForDelay" value="00:00:05.000"/>
+		</sql-select>
+	</template>
+
+	<template id="500000" name="MultithreadQuery5" file="mssql\Instance\MSSQLServerAuditor.LongExecutionQuery.xsl" icon="folder" showIfEmpty="true" showNumberOfRecords="true">
+		<i18n name="en">
+			Query5
+		</i18n>
+		<i18n name="ru">
+			Запрос5
+		</i18n>
+
+		<sql-select id="0" file="SQLQuery\mssql\MSSQLServerAuditor.MSSQLQuery.LongExecutionQuery.xml" name="GetLongExecutionQuery" hierarchy="">
+			<parameter name="@WaitForDelay" value="00:00:05.000"/>
+		</sql-select>
+	</template>
+</MSSQLServerAuditorTemplate>

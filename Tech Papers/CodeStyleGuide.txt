@@ -1,0 +1,12 @@
+As the gideline use Microsoft - Design Guidelines for Class Library Developers
+
+Ref: http://msdn.microsoft.com/en-us/library/ms229042.aspx
+
+1. Use "tabs" instead of "spaces" at the beginning of the line. No "tabs" in the "middle" of the line.
+2. Use "this" prefix for local class members.
+3. Avoid usage "static" classes and variables.
+4. Avoid usage "public" class members.
+5. Avoid the use of "var", but use real type name for the variables.
+6. Always put comments for "public" class members and functions.
+7. One declaration per line is recommended.
+8. "if" statements always use braces "{}".

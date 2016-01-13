@@ -1,0 +1,37 @@
+﻿<?xml version="1.0" encoding="UTF-8"?>
+<MSSQLServerAuditorTemplate id="A" xmlns:xi="http://www.w3.org/2003/XInclude" version="1.0">
+	<template id="02000" name="Activity" icon="database_lightning" showIfEmpty="true" showNumberOfRecords="true">
+		<i18n name="en" file="en\Instance\MSSQLServerAuditor.xsl">
+			Activity
+		</i18n>
+		<i18n name="ru" file="ru\Instance\MSSQLServerAuditor.xsl">
+			Активность
+		</i18n>
+
+		<template id="00300" name="InstanceCPUUtilization" icon="doc" showIfEmpty="true" showNumberOfRecords="true">
+			<i18n name="en" file="en\Instance\Audit\Processes\CPU\MSSQLServerAuditor.InstanceCPUUtilization.xsl">
+				CPU Utilization
+			</i18n>
+			<i18n name="ru" file="ru\Instance\Audit\Processes\CPU\MSSQLServerAuditor.InstanceCPUUtilization.xsl">
+				Использование процессора
+			</i18n>
+
+			<sql-select id="CPU_Current" file="MSSQLQuery\DynamicManagementViews\MSSQLServerAuditor.MSSQLQuery.InstanceCPUInfo.xml" name="GetInstanceCPUUtilization" hierarchy="">
+			</sql-select>
+		</template>
+
+		<template id="00301" name="InstanceCPUUtilization" icon="doc" showIfEmpty="true" showNumberOfRecords="true">
+			<i18n name="en" file="en\Instance\Audit\Processes\CPU\MSSQLServerAuditor.InstanceCPUUtilization.xsl">
+				CPU (historical)
+			</i18n>
+			<i18n name="ru" file="ru\Instance\Audit\Processes\CPU\MSSQLServerAuditor.InstanceCPUUtilization.xsl">
+				Процессор (историческое)
+			</i18n>
+
+			<sql-select id="CPU_History" file="SQLiteQuery\MSSQLServerAuditor.MSSQLQuery.InstanceCPUInfo.xml" name="GetInstanceCPUUtilization" hierarchy="">
+				<parameter name="@strDateTimeModifier" value="-24 hour" />
+			</sql-select>
+		</template>
+	</template>
+</MSSQLServerAuditorTemplate>
+

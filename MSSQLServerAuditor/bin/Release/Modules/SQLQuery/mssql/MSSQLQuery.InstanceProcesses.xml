@@ -1,0 +1,138 @@
+﻿<?xml version="1.0" encoding="UTF-8"?>
+<root xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+<sqlquery type="MSSQL">
+	<sql-select name="GetInstanceProcesses">
+		<sql-select-text MinSupportedVersion="*" MaxSupportedVersion="8.*" signature="">
+			SET NOCOUNT ON;
+			SET DEADLOCK_PRIORITY LOW;
+
+			DECLARE
+				 @intMinSpId [INTEGER]
+				,@intMySpId  [INTEGER];
+
+			SET @intMinSpId = 0;
+			SET @intMySpId  = @@spid;
+
+			IF (@boolIsShowUsersProcessesOnly IS NOT NULL)
+			BEGIN
+				IF (ISNULL(@boolIsShowUsersProcessesOnly, 0) = 1)
+				BEGIN
+					SET @intMinSpId = 51;
+				END
+			END
+
+			SELECT
+				 tSP.[spid]                AS [SpID]
+				,tSP.[blocked]             AS [BlockedID]
+				,RTRIM(tSP.[program_name]) AS [ProgramName]
+				,RTRIM(tSP.[cmd])          AS [Command]
+				,RTRIM(tSP.[loginame])     AS [LogiName]
+				,tSP.[last_batch]          AS [LastBatchDateTime]
+				,tSP.[login_time]          AS [LoginDateTime]
+			FROM
+				[master].[dbo].[sysprocesses] tSP
+			WHERE
+				tSP.[spid] NOT IN (@intMySpId)
+				AND tSP.[spid] &gt;= @intMinSpId
+				AND (
+					ISNULL(@boolIsShowLockedProcessesOnly, 0) = 0
+					OR (
+						tSP.[blocked] IS NOT NULL
+						AND
+						tSP.[blocked] NOT IN (0)
+					)
+				)
+			ORDER BY
+				tSP.[spid] ASC;
+		</sql-select-text>
+		<sql-select-text MinSupportedVersion="9.*" MaxSupportedVersion="*" signature="">
+			SET NOCOUNT ON;
+			SET DEADLOCK_PRIORITY LOW;
+
+			DECLARE
+				 @intMinSpId [INTEGER]
+				,@intMySpId  [INTEGER]
+			;
+
+			SET @intMinSpId = 0;
+			SET @intMySpId  = @@spid;
+
+			IF (@boolIsShowUsersProcessesOnly IS NOT NULL)
+			BEGIN
+				IF (ISNULL(@boolIsShowUsersProcessesOnly, 0) = 1)
+				BEGIN
+					SET @intMinSpId = 51;
+				END
+			END
+
+			SELECT
+				 tSP.[spid]                AS [SpID]
+				,tSP.[blocked]             AS [BlockedID]
+				,RTRIM(tSP.[program_name]) AS [ProgramName]
+				,RTRIM(tSP.[cmd])          AS [Command]
+				,RTRIM(tSP.[loginame])     AS [LogiName]
+				,tSP.[last_batch]          AS [LastBatchDateTime]
+				,tSP.[login_time]          AS [LoginDateTime]
+			FROM
+				[master].[sys].[sysprocesses] tSP
+			WHERE
+				tSP.[spid] NOT IN (@intMySpId)
+				AND tSP.[spid] &gt;= @intMinSpId
+				AND (
+					ISNULL(@boolIsShowLockedProcessesOnly, 0) = 0
+					OR (
+						tSP.[blocked] IS NOT NULL
+						AND
+						tSP.[blocked] NOT IN (0)
+					)
+				)
+			ORDER BY
+				tSP.[spid] ASC;
+		</sql-select-text>
+		<sql-select-parameters>
+			<sql-select-parameter name="@boolIsShowUsersProcessesOnly" type="Bit"/>
+			<sql-select-parameter name="@boolIsShowLockedProcessesOnly" type="Bit"/>
+		</sql-select-parameters>
+	</sql-select>
+
+	<sql-select name="GetInstanceConnections">
+		<sql-select-text MinSupportedVersion="9.*" MaxSupportedVersion="*" signature="">
+			SET NOCOUNT ON;
+			SET DEADLOCK_PRIORITY LOW;
+
+			DECLARE
+				@intMySpId [INTEGER]
+			;
+
+			SET @intMySpId = @@spid;
+
+			SELECT
+				 tSDEC.[session_id]                                                   AS [SessionID]
+				,tSDES.[login_name]                                                   AS [SessionLoginName]
+				,tSDEC.[connect_time]                                                 AS [SessionConnectTime]
+				,tSDEC.[auth_scheme]                                                  AS [SessionAuthScheme]
+				,tSDEC.[net_transport]                                                AS [SessionNetTransport]
+				,tSDEC.[protocol_type]                                                AS [SessionProtocolType]
+				,tSDEC.[client_net_address]                                           AS [SessionClientNetAddress]
+				,tSDES.[host_name]                                                    AS [SessionHostName]
+				,tSDES.[client_interface_name]                                        AS [SessionClientInterfaceName]
+				,tSDER.[command]                                                      AS [RequestCommand]
+				,tSDER.[start_time]                                                   AS [RequestStartTime]
+				,tSDER.[percent_complete]                                             AS [RequestPercentComplete]
+				,tSDER.[estimated_completion_time] / 1000                             AS [RequestSecondsToGo]
+				,DATEADD(SECOND, tSDER.[estimated_completion_time] / 1000, getdate()) AS [RequestEstimatedCompletionTime]
+			FROM
+				[sys].[dm_exec_connections] tSDEC
+				LEFT OUTER JOIN [sys].[dm_exec_sessions] tSDES ON
+					tSDES.[session_id] = tSDEC.[session_id]
+				LEFT OUTER JOIN [sys].[dm_exec_requests] tSDER ON
+					tSDER.[session_id] = tSDEC.[session_id]
+			WHERE
+				tSDEC.[session_id] NOT IN (@intMySpId)
+			ORDER BY
+				tSDEC.[session_id] ASC;
+		</sql-select-text>
+	</sql-select>
+</sqlquery>
+</root>
+

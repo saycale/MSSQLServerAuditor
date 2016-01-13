@@ -1,0 +1,231 @@
+﻿<?xml version="1.0" encoding="UTF-8"?>
+<root xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+<sqlquery type="MSSQL">
+	<sql-select name="GetListOfDatabases">
+		<sql-select-text MinSupportedVersion="8.*" MaxSupportedVersion="8.*" signature="">
+			SET NOCOUNT ON;
+			SET DEADLOCK_PRIORITY LOW;
+
+			SELECT
+				 t.[name]      AS [NodeUName]
+				,t.[dbid]      AS [NodeUId]
+				,t.[enabled]   AS [NodeEnabled]
+				,t.[icon]      AS [NodeUIcon]
+				,t.[fontcolor] AS [NodeFontColor]
+				,t.[fontstyle] AS [NodeFontStyle]
+				,t.[name]      AS [DatabaseName]
+			FROM (
+				SELECT
+					 tSD.[name]    AS [name]
+					,tSD.[dbid]    AS [dbid]
+					,1             AS [enabled]
+					,N'TempdbIcon' AS [icon]
+					,N'#808080'    AS [fontcolor]
+					,N'italic'     AS [fontstyle]
+					,1             AS [IsSystemDatabase]
+				FROM
+					[master].[dbo].[sysdatabases] tSD
+				WHERE
+					ISNULL(@IsIncludeTempdb, 1) = 1
+					AND tSD.[name] IN (
+						N'tempdb'
+					)
+
+				UNION ALL
+
+				SELECT
+					 tSD.[name]            AS [name]
+					,tSD.[dbid]            AS [dbid]
+					,1                     AS [enabled]
+					,N'SystemDatabaseIcon' AS [icon]
+					,N'#080808'            AS [fontcolor]
+					,N'normal'             AS [fontstyle]
+					,1                     AS [IsSystemDatabase]
+				FROM
+					[master].[dbo].[sysdatabases] tSD
+				WHERE
+					ISNULL(@IsIncludeSystemDatabases, 1) = 1
+					AND tSD.[name] IN (
+						 N'master'
+						,N'model'
+						,N'msdb'
+						,N'distribution'
+					)
+
+				UNION ALL
+
+				SELECT
+					 tSD.[name]          AS [name]
+					,tSD.[dbid]          AS [dbid]
+					,1                   AS [enabled]
+					,CASE
+						WHEN DatabasePropertyEx(tSD.[name], N'Status') = N'RESTORING' THEN
+							N'UserDatabaseRestoringIcon'
+						WHEN DatabasePropertyEx(tSD.[name], N'Status') = N'OFFLINE' THEN
+							N'UserDatabaseOfflineIcon'
+						WHEN DatabasePropertyEx(tSD.[name], N'IsInStandBy') = 1 THEN
+							N'UserDatabaseInStandbyIcon'
+						WHEN DatabasePropertyEx(tSD.[name], N'Updateability') = N'READ_ONLY' THEN
+							N'UserDatabaseReadOnlyIcon'
+						ELSE
+							N'UserDatabaseIcon'
+					END                  AS [icon]
+					,N'#080808'          AS [fontcolor]
+					,N'normal'           AS [fontstyle]
+					,0                   AS [IsSystemDatabase]
+				FROM
+					[master].[dbo].[sysdatabases] tSD
+				WHERE
+					ISNULL(@IsIncludeUserDatabases, 1) = 1
+					AND tSD.[name] NOT IN (
+						 N'master'
+						,N'model'
+						,N'msdb'
+						,N'tempdb'
+						,N'distribution'
+					)
+			) t
+			WHERE
+				DatabasePropertyEx(t.[name], N'Status') = N'ONLINE'
+				AND t.[name] = ISNULL(@DatabaseName, t.[name])
+			GROUP BY
+				 t.[name]
+				,t.[dbid]
+				,t.[enabled]
+				,t.[icon]
+				,t.[fontcolor]
+				,t.[fontstyle]
+				,t.[IsSystemDatabase]
+			ORDER BY
+				 t.[IsSystemDatabase] DESC
+				,t.[name] ASC
+			;
+		</sql-select-text>
+		<sql-select-text MinSupportedVersion="9.*" MaxSupportedVersion="*" signature="">
+			SET NOCOUNT ON;
+			SET DEADLOCK_PRIORITY LOW;
+
+			SELECT
+				 t.[name]        AS [NodeUName]
+				,t.[database_id] AS [NodeUId]
+				,t.[enabled]     AS [NodeEnabled]
+				,t.[icon]        AS [NodeUIcon]
+				,t.[fontcolor]   AS [NodeFontColor]
+				,t.[fontstyle]   AS [NodeFontStyle]
+				,t.[name]        AS [DatabaseName]
+			FROM (
+				SELECT
+					 tSD.[name]        AS [name]
+					,tSD.[database_id] AS [database_id]
+					,1                 AS [enabled]
+					,N'TempdbIcon'     AS [icon]
+					,N'#808080'        AS [fontcolor]
+					,N'normal'         AS [fontstyle]
+					,1                 AS [IsSystemDatabase]
+				FROM
+					[master].[sys].[databases] tSD
+				WHERE
+					ISNULL(@IsIncludeTempdb, 1) = 1
+					AND tSD.[name] IN (
+						N'tempdb'
+					)
+					AND tSD.[source_database_id] IS NULL
+
+				UNION ALL
+
+				SELECT
+					 tSD.[name]            AS [name]
+					,tSD.[database_id]     AS [database_id]
+					,1                     AS [enabled]
+					,N'SystemDatabaseIcon' AS [icon]
+					,N'#080808'            AS [fontcolor]
+					,N'normal'             AS [fontstyle]
+					,1                     AS [IsSystemDatabase]
+				FROM
+					[master].[sys].[databases] tSD
+				WHERE
+					ISNULL(@IsIncludeSystemDatabases, 1) = 1
+					AND tSD.[name] IN (
+						 N'master'
+						,N'model'
+						,N'msdb'
+						,N'distribution'
+					)
+					AND tSD.[source_database_id] IS NULL
+
+				UNION ALL
+
+				SELECT
+					 tSD.[name]          AS [name]
+					,tSD.[database_id]   AS [database_id]
+					,1                   AS [enabled]
+					,CASE
+						WHEN DatabasePropertyEx(tSD.[name], N'Status') = N'RESTORING' THEN
+							N'UserDatabaseRestoringIcon'
+						WHEN DatabasePropertyEx(tSD.[name], N'Status') = N'OFFLINE' THEN
+							N'UserDatabaseOfflineIcon'
+						WHEN DatabasePropertyEx(tSD.[name], N'IsInStandBy') = 1 THEN
+							N'UserDatabaseInStandbyIcon'
+						WHEN DatabasePropertyEx(tSD.[name], N'Updateability') = N'READ_ONLY' THEN
+							N'UserDatabaseReadOnlyIcon'
+						ELSE
+							N'UserDatabaseIcon'
+					END                  AS [icon]
+					,N'#080808'          AS [fontcolor]
+					,N'normal'           AS [fontstyle]
+					,0                   AS [IsSystemDatabase]
+				FROM
+					[master].[sys].[databases] tSD
+				WHERE
+					ISNULL(@IsIncludeUserDatabases, 1) = 1
+					AND tSD.[name] NOT IN (
+						 N'master'
+						,N'model'
+						,N'msdb'
+						,N'tempdb'
+						,N'distribution'
+					)
+					AND tSD.[source_database_id] IS NULL
+
+				UNION ALL
+
+				SELECT
+					 tSD.[name]              AS [name]
+					,tSD.[database_id]       AS [database_id]
+					,1                       AS [enabled]
+					,N'SnapshotDatabaseIcon' AS [icon]
+					,N'#080808'              AS [fontcolor]
+					,N'normal'               AS [fontstyle]
+					,0                       AS [IsSystemDatabase]
+				FROM
+					[master].[sys].[databases] tSD
+				WHERE
+					ISNULL(@IsIncludeSnapshotDatabases, 1) = 1
+					AND tSD.[source_database_id] IS NOT NULL
+			) t
+			WHERE
+				DatabasePropertyEx(t.[name], N'Status') = N'ONLINE'
+				AND t.[name] = ISNULL(@DatabaseName, t.[name])
+			GROUP BY
+				 t.[name]
+				,t.[database_id]
+				,t.[enabled]
+				,t.[icon]
+				,t.[fontcolor]
+				,t.[fontstyle]
+				,t.[IsSystemDatabase]
+			ORDER BY
+				 t.[IsSystemDatabase] DESC
+				,t.[name] ASC
+			;
+		</sql-select-text>
+		<sql-select-parameters>
+			<sql-select-parameter name="@IsIncludeTempdb" type="Bit" />
+			<sql-select-parameter name="@IsIncludeSystemDatabases" type="Bit" />
+			<sql-select-parameter name="@IsIncludeUserDatabases" type="Bit" />
+			<sql-select-parameter name="@IsIncludeSnapshotDatabases" type="Bit" />
+			<sql-select-parameter name="@DatabaseName" type="NVarChar" />
+		</sql-select-parameters>
+	</sql-select>
+</sqlquery>
+</root>

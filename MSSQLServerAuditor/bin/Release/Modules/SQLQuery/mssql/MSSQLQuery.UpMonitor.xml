@@ -1,0 +1,475 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<root xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+<sqlquery type="MSSQL">
+	<sql-select name="UpMonitor">
+		<sql-select-text MinSupportedVersion="8.*" MaxSupportedVersion="*" signature="">
+			SET NOCOUNT ON;
+			SET DEADLOCK_PRIORITY LOW;
+
+			DECLARE
+				 @dbid         [INTEGER]
+				,@cmd          [NVARCHAR](32)
+				,@cmd_history  [NVARCHAR](4000)
+				,@int_snapshot [INTEGER]
+				,@snapshot     [INTEGER]
+				,@spid         [INTEGER]
+				,@total_cpu    [BIGINT]
+				,@total_io     [BIGINT]
+			;
+
+			DECLARE @monitor TABLE
+			(
+				 [nt_username]  [NVARCHAR](128)  NULL
+				,[spid]         [INTEGER]        NULL
+				,[cpu]          [BIGINT]         NULL
+				,[io]           [BIGINT]         NULL
+				,[snapshot]     [INTEGER]        NULL
+				,[cmd]          [NVARCHAR](32)   NULL
+				,[cmd_history]  [NVARCHAR](3500) NULL
+				,[last_batch]   [DATETIME]       NULL
+				,[blocked]      [INTEGER]        NULL
+				,[program_name] [NVARCHAR](128)  NULL
+				,[hostname]     [NVARCHAR](128)  NULL
+			);
+
+			DECLARE @results TABLE
+			(
+				 [nt_username]  [NVARCHAR](128)  NULL
+				,[spid]         [INTEGER]        NULL
+				,[cpu_inc]      [BIGINT]         NULL
+				,[io_inc]       [BIGINT]         NULL
+				,[snapshots]    [VARCHAR](32)    NULL
+				,[cmd_history]  [NVARCHAR](3500) NULL
+				,[last_batch]   [DATETIME]       NULL
+				,[blocked]      [INTEGER]        NULL
+				,[program_name] [NVARCHAR](128)  NULL
+				,[hostname]     [NVARCHAR](128)  NULL
+			);
+
+			DECLARE @io_db_snapshot TABLE
+			(
+				 [snapshot_number] [INTEGER]       NULL
+				,[database_name]   [NVARCHAR](128) NULL
+				,[IO_Read_Mb]      [INTEGER]       NULL
+				,[IO_Written_Mb]   [INTEGER]       NULL
+			)
+
+			DECLARE @tableDatabaseName TABLE
+			(
+				 [DatabaseName] [NVARCHAR](128) NULL
+				,[dbid]         [INTEGER]       NULL
+			);
+
+			INSERT @tableDatabaseName
+			(
+				 [DatabaseName]
+				,[dbid]
+			)
+			SELECT
+				 sd.[name] AS [DatabaseName]
+				,sd.[dbid] AS [dbid]
+			FROM
+				[master].[dbo].[sysdatabases] sd
+			WHERE
+				DatabasePropertyEx(sd.[name], N'Status') IN (
+					 N'ONLINE'
+				);
+
+			SELECT
+				@dbid = MIN(sd.dbid)
+			FROM
+				@tableDatabaseName sd
+
+			WHILE (@dbid IS NOT NULL)
+			BEGIN
+				INSERT @io_db_snapshot
+					SELECT
+						 1                                              AS [snapshot_number]
+						,db_name([dbid])                                AS [database_name]
+						,SUM(ISNULL([bytesread], 0) / (1024 * 1024))    AS [IO_Read_Mb]
+						,SUM(ISNULL([byteswritten], 0) / (1024 * 1024)) AS [IO_Written_Mb]
+					FROM
+						:: fn_virtualfilestats(@dbid, -1)
+					GROUP BY
+						db_name([dbid]);
+
+				SELECT
+					@dbid = MIN(sd.[dbid])
+				FROM
+					@tableDatabaseName sd
+				WHERE
+					sd.dbid &gt; @dbid;
+			END
+
+			SET @int_snapshot = 0;
+
+			WHILE (@int_snapshot &lt; ISNULL(@total_snapshots, 0))
+			BEGIN
+				IF (@int_snapshot &gt; 0)
+				BEGIN
+					WAITFOR DELAY '00:00:01';
+				END
+
+				INSERT INTO @monitor
+					SELECT
+						 t.[nt_username]  AS [nt_username]
+						,t.[spid]         AS [spid]
+						,t.[cpu]          AS [cpu]
+						,t.[physical_io]  AS [io]
+						,@int_snapshot    AS [snapshot]
+						,t.[cmd]          AS [cmd]
+						,NULL             AS [cmd_history]
+						,t.[last_batch]   AS [last_batch]
+						,t.[blocked]      AS [blocked]
+						,t.[program_name] AS [program_name]
+						,t.[hostname]     AS [hostname]
+				FROM (
+					SELECT
+						CASE
+							WHEN LEN(LTRIM(RTRIM(ISNULL(sp.[nt_username], '')))) = 0 THEN
+								LEFT(LTRIM(RTRIM(ISNULL(sp.[loginame], ''))), 20)
+							ELSE
+								LEFT(LTRIM(RTRIM(ISNULL(sp.[nt_username], ''))), 20)
+						END                                               AS [nt_username]
+						,sp.[spid]                                        AS [spid]
+						,SUM(CAST(sp.cpu AS [BIGINT]))                    AS [cpu]
+						,SUM(CAST(sp.[physical_io] AS [BIGINT]))          AS [physical_io]
+						,ISNULL(RTRIM(LTRIM(sp.cmd)), N'')                AS [cmd]
+						,MAX(ISNULL(sp.[last_batch], N'19000101'))        AS [last_batch]
+						,MAX(ISNULL(sp.[blocked], 0))                     AS [blocked]
+						,MAX(ISNULL(RTRIM(LTRIM(sp.[program_name])), '')) AS [program_name]
+						,MAX(ISNULL(RTRIM(LTRIM(sp.[hostname])), ''))     AS [hostname]
+					FROM
+						[master].[dbo].[sysprocesses] sp
+					WHERE
+						sp.kpid NOT IN (
+							0
+						)
+					GROUP BY
+						CASE
+							WHEN LEN(LTRIM(RTRIM(ISNULL(sp.[nt_username], '')))) = 0 THEN
+								LEFT(LTRIM(RTRIM(ISNULL(sp.[loginame], ''))), 20)
+							ELSE
+								LEFT(LTRIM(RTRIM(ISNULL(sp.[nt_username], ''))), 20)
+						END
+						,sp.[spid]
+						,ISNULL(RTRIM(LTRIM(sp.[cmd])), N'')
+				) t WHERE
+					(
+						ISNULL(t.[cpu], 0) &gt; 0
+						OR
+						ISNULL(t.[physical_io], 0) &gt; 0
+					)
+					AND t.[spid] NOT IN (
+						@@spid
+					)
+
+				SELECT
+					@spid = MIN(t.[spid])
+				FROM
+					@monitor t;
+
+				WHILE (@spid IS NOT NULL)
+				BEGIN
+					SET @cmd_history = NULL;
+
+					SELECT
+						@cmd_history = t.[cmd_history]
+					FROM
+						@monitor t
+					WHERE
+						t.[spid] = @spid
+						AND t.[snapshot] = (
+							SELECT
+								MAX(t1.[snapshot])
+							FROM
+								@monitor t1
+							WHERE
+								t1.[spid] = t.[spid]
+								AND t1.[snapshot] &lt; @int_snapshot
+						)
+
+					UPDATE @monitor SET
+						[cmd_history] = @cmd_history
+					WHERE
+						[spid] = @spid
+						AND [snapshot] = @int_snapshot;
+
+					SET @cmd = NULL;
+
+					SELECT
+						@cmd = t.[cmd]
+					FROM
+						@monitor t
+					WHERE
+						t.[spid] = @spid
+						AND t.[snapshot] = @int_snapshot;
+
+					IF (@cmd IS NOT NULL)
+					BEGIN
+						SET @snapshot = NULL;
+
+						SELECT
+							@snapshot = MIN(t.[snapshot])
+						FROM
+							@monitor t
+						WHERE
+							t.[spid] = @spid
+							AND t.[cmd] = @cmd
+							AND t.[snapshot] &lt; @int_snapshot;
+
+						IF (@snapshot IS NULL)
+						BEGIN
+							UPDATE @monitor SET
+								[cmd_history] = CASE
+									WHEN [cmd_history] IS NULL THEN
+										@cmd
+									ELSE
+										[cmd_history] + ';' + @cmd
+								END
+							WHERE
+								[spid] = @spid
+								AND [snapshot] = @int_snapshot;
+						END
+					END
+
+					SELECT
+						@cmd_history = t.[cmd_history]
+					FROM
+						@monitor t
+					WHERE
+						t.[spid] = @spid
+						AND t.[snapshot] = @int_snapshot;
+
+					SELECT
+						@spid = MIN(t.[spid])
+					FROM
+						@monitor t
+					WHERE
+						t.[spid] &gt; @spid;
+				END
+
+				SET @int_snapshot = @int_snapshot + 1;
+			END
+
+			SELECT
+				@dbid = MIN(sd.[dbid])
+			FROM
+				@tableDatabaseName sd;
+
+			WHILE (@dbid IS NOT NULL)
+			BEGIN
+				INSERT @io_db_snapshot
+					SELECT
+						 2                                             AS [snapshot_number]
+						,db_name([dbid])                               AS [database_name]
+						,SUM(ISNULL([bytesread], 0) / (1024 *1024))    AS [IO_Read_Mb]
+						,SUM(ISNULL([byteswritten], 0) / (1024 *1024)) AS [IO_Written_Mb]
+					FROM
+						:: fn_virtualfilestats(@dbid, -1)
+					GROUP BY
+						db_name([dbid]);
+
+				SELECT
+					@dbid = MIN(sd.[dbid])
+				FROM
+					@tableDatabaseName sd
+				WHERE
+					sd.[dbid] &gt; @dbid;
+			END
+
+			INSERT @io_db_snapshot
+				SELECT
+					 3                                          AS [snapshot_number]
+					,a.[database_name]                          AS [database_name]
+					,ABS(a.[IO_Read_Mb] - b.[IO_Read_Mb])       AS [IO_Read_Mb]
+					,ABS(a.[IO_Written_Mb] - b.[IO_Written_Mb]) AS [IO_Written_Mb]
+			FROM
+				@io_db_snapshot a
+				INNER JOIN @io_db_snapshot b ON
+					b.database_name = a.database_name
+			WHERE
+				a.[snapshot_number] = 1
+				AND b.[snapshot_number] = 2;
+
+			INSERT @results
+				SELECT
+					 a.[nt_username]                                    AS [nt_username]
+					,a.[spid]                                           AS [spid]
+					,ABS(MAX(ISNULL(b.cpu, 0)) - MIN(ISNULL(a.cpu, 0))) AS [cpu_inc]
+					,ABS(MAX(ISNULL(b.io, 0))  - MIN(ISNULL(a.io, 0)))  AS [io_inc]
+					,CONVERT(VARCHAR, MAX(b.snapshot) - MIN(a.snapshot) + 1)
+						+ ' {'
+						+ CONVERT(VARCHAR, MIN(a.snapshot))
+						+ ' - '
+						+ CONVERT(VARCHAR, MAX(b.snapshot))
+						+ ' }'
+					                                                    AS [snapshots]
+					,b.[cmd_history]                                    AS [cmd_history]
+					,b.[last_batch]                                     AS [last_batch]
+					,b.blocked                                          AS [blocked]
+					,b.program_name                                     AS [program_name]
+					,b.hostname                                         AS [hostname]
+				FROM
+					(
+						SELECT
+							 m.nt_username
+							,m.spid
+							,m.cpu
+							,m.io
+							,m.snapshot
+						FROM
+							@monitor m
+						WHERE
+							m.snapshot = (
+								SELECT
+									MIN(m2.snapshot)
+								FROM
+									@monitor m2
+								WHERE
+									m2.nt_username = m.nt_username
+									AND m2.spid = m.spid
+							)
+					) a
+					INNER JOIN (
+						SELECT
+							 m.nt_username
+							,m.spid
+							,m.cpu
+							,m.io
+							,m.snapshot
+							,m.cmd_history
+							,m.last_batch
+							,m.blocked
+							,m.program_name
+							,m.hostname
+						FROM
+							@monitor m
+						WHERE
+							m.snapshot = (
+								SELECT
+									MAX(m2.snapshot)
+								FROM
+									@monitor m2
+								WHERE
+									m2.nt_username = m.nt_username
+									AND m2.spid = m.spid
+							)
+						) b ON
+							b.nt_username = a.nt_username
+							AND b.spid = a.spid
+					GROUP BY
+						 a.nt_username
+						,a.spid
+						,b.[cmd_history]
+						,b.[last_batch]
+						,b.[blocked]
+						,b.[program_name]
+						,b.[hostname];
+
+			SELECT
+				 @total_io  = SUM(ISNULL([io_inc], 0))
+				,@total_cpu = SUM(ISNULL([cpu_inc], 0))
+			FROM
+				@results;
+
+			SELECT
+				 a.[nt_username]                       AS [nt_username]
+				,SUM(ISNULL([cpu_inc], 0))             AS [cpu_inc]
+				,CONVERT([INTEGER], CASE
+					WHEN ISNULL(@total_cpu, 0) = 0 THEN
+						0
+					ELSE
+						(100 * SUM([cpu_inc])) / @Total_CPU
+				END)                                   AS [cpu]
+				,SUM(ISNULL([io_inc], 0))              AS [io_inc]
+				,CONVERT([INTEGER], CASE
+					WHEN ISNULL(@total_io, 0) = 0 THEN
+						0
+					ELSE
+						(100 * SUM(io_inc)) / @Total_IO
+				END)                                   AS [io]
+				,COUNT(1)                              AS [ProcessCount]
+			FROM
+				@results a
+			GROUP BY
+				a.[nt_username]
+			ORDER BY
+				 4 DESC
+				,2 DESC
+				,6 DESC
+			;
+
+			SELECT
+				 a.[nt_username]                           AS [nt_username]
+				,a.[spid]                                  AS [spid]
+				,CASE
+					WHEN ISNULL(a.[blocked], 0) = 0 THEN
+						NULL
+					WHEN ISNULL(a.[blocked], 0) = a.[spid] THEN
+						NULL
+					ELSE
+						a.[blocked]
+				END                                      AS [blocked]
+				,a.[cpu_inc]                             AS [cpu_inc]
+				,CONVERT([FLOAT], CASE
+					WHEN ISNULL(@total_cpu, 0.0) = 0.0 THEN
+						0.0
+					ELSE
+						(100.0 * ISNULL(CONVERT([FLOAT], a.[cpu_inc]), 0.0)) / (CONVERT([FLOAT], @Total_CPU))
+				END)                                     AS [cpu]
+				,a.[io_inc]                              AS [io_inc]
+				,CONVERT([FLOAT], CASE
+					WHEN ISNULL(@total_io, 0.0) = 0.0 THEN
+						0.0
+					ELSE
+						(100.0 * ISNULL(CONVERT([FLOAT], a.[io_inc]), 0.0)) / (CONVERT([FLOAT], @Total_IO))
+				END)                                     AS [IO]
+				,a.[snapshots]                           AS [Snapshots]
+				,a.[cmd_history]                         AS [cmd_history]
+				,a.[last_batch]                          AS [last_batch]
+				,a.[program_name]                        AS [program_name]
+				,a.[hostname]                            AS [hostname]
+			FROM
+				@results a
+			ORDER BY
+				 a.[io_inc] DESC
+				,a.[cpu_inc] DESC
+				,a.[spid] ASC
+			;
+
+			SELECT
+				 '-TOTAL-'                AS [Database]
+				,SUM(ids.[IO_Read_Mb])    AS [IO_Read_Mb]
+				,SUM(ids.[IO_Written_Mb]) AS [IO_Written_Mb]
+			FROM
+				@io_db_snapshot ids
+			WHERE
+				ids.[snapshot_number] = 3
+
+			UNION ALL
+
+			SELECT
+				 ids.[database_name]      AS [Database]
+				,ids.[IO_Read_Mb]         AS [IO_Read_Mb]
+				,ids.[IO_Written_Mb]      AS [IO_Written_Mb]
+			FROM
+				@io_db_snapshot ids
+			WHERE
+				ids.[snapshot_number] = 3
+				AND (
+					ids.[IO_Read_Mb] &gt; 0
+					OR
+					ids.[IO_Written_Mb] &gt; 0
+				)
+			ORDER BY
+				 2 DESC
+				,3 DESC
+			;
+		</sql-select-text>
+		<sql-select-parameters>
+			<sql-select-parameter name="@total_snapshots" type="Int"/>
+		</sql-select-parameters>
+	</sql-select>
+</sqlquery>
+</root>

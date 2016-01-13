@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<MSSQLServerAuditorConnections xmlns:xi="http://www.w3.org/2003/XInclude" version="1.0">
+
+	<connections name="OneLocalInstance" template="MSSQLServerAuditor.Template.xml">
+		<connection name="localExpress" instance="ANDREY-PC\SQLEXPRESS" type="MSSQL">
+			<authentication isWindows="true" username="" password=""/>
+			<license hostname="ANDREY-PC" osusername="Andrey-PC\Андрей" expirydate="99991231" buildexpirydate="20150801" signature=""/>
+		</connection>
+	</connections>
+
+	<connections name="GroupOfLocalInstances" template="MSSQLServerAuditor.Template.xml">
+		<connection name="localExpress1" instance="ANDREY-PC\SQLEXPRESS_1" type="MSSQL">
+			<authentication isWindows="true" username="" password=""/>
+			<license hostname="ANDREY-PC" osusername="Andrey-PC\Андрей" expirydate="99991231" buildexpirydate="20150801" signature=""/>
+		</connection>
+		<connection name="localExpress2" instance="ANDREY-PC\SQLEXPRESS_2" type="MSSQL">
+			<authentication isWindows="true" username="" password=""/>
+			<license hostname="ANDREY-PC" osusername="Andrey-PC\Андрей" expirydate="99991231" buildexpirydate="20150801" signature=""/>
+		</connection>
+	</connections>
+
+</MSSQLServerAuditorConnections>

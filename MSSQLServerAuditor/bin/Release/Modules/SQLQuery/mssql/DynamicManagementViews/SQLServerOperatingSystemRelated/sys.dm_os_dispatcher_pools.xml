@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<root xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+<sqlquery type="MSSQL">
+	<sql-select name="sys.dm_os_dispatcher_pools">
+		<name>
+			sys.dm_os_dispatcher_pools
+		</name>
+		<description>
+			Returns information about session dispatcher pools. Dispatcher pools are thread pools used by system components to perform background processing.
+		</description>
+		<reference>
+			http://technet.microsoft.com/en-us/library/bb630336.aspx
+		</reference>
+		<sql-select-text MinSupportedVersion="9.*" MaxSupportedVersion="*" signature="">
+			SET NOCOUNT ON;
+			SET DEADLOCK_PRIORITY LOW;
+
+			SELECT
+				*
+			FROM
+				[sys].[dm_os_dispatcher_pools]
+			;
+		</sql-select-text>
+	</sql-select>
+</sqlquery>
+</root>
+

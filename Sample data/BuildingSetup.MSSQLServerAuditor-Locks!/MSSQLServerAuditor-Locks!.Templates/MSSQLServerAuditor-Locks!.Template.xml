@@ -1,0 +1,54 @@
+﻿<?xml version="1.0" encoding="UTF-8"?>
+<MSSQLServerAuditorTemplate id="locks" xmlns:xi="http://www.w3.org/2003/XInclude" version="1.0">
+	<template id="10000" name="InstanceProcesses" icon="doc" showIfEmpty="true" showNumberOfRecords="false">
+		<i18n name="ru" file="ru\Instance\Audit\Processes\MSSQLServerAuditor.xsl">
+			Процессы
+		</i18n>
+
+		<sql-select file="MSSQLQuery\MSSQLServerAuditor.MSSQLQuery.InstanceProcesses.xml" name="GetInstanceProcesses" hierarchy="">
+			<parameter name="@boolIsShowUsersProcessesOnly" value="False"/>
+		</sql-select>
+
+		<schedule
+			schedule_name          = "Every 10 Seconds"
+			enabled                = "true"
+			schedule_type          = "0"
+			freq_type              = "4"
+			freq_interval          = "4"
+			active_start_date  = "635317874579569317"
+			active_end_date    = "655317874579569317"
+			
+			freq_day_type          = "0"
+			freq_subday_type       = "2"
+			freq_subday_interval   = "14"
+			active_start_time      = "000000"
+			active_end_time        = "235959"
+		></schedule>
+	</template>
+
+	<template id="20000" name="InstanceCPUUtilization" icon="doc" showIfEmpty="true" showNumberOfRecords="false">
+		<i18n name="ru" file="ru\Instance\Audit\Processes\CPU\MSSQLServerAuditor.InstanceCPUUtilization.xsl">
+			Использование процессора
+		</i18n>
+
+		<sql-select file="MSSQLQuery\MSSQLServerAuditor.MSSQLQuery.InstanceCPUInfo.xml" name="GetInstanceCPUUtilization" hierarchy="">
+		</sql-select>
+
+		<schedule
+			schedule_name          = "Every 10 Seconds"
+			enabled                = "true"
+			schedule_type          = "0"
+			freq_type              = "4"
+			freq_interval          = "4"
+			active_start_date  = "635317874579569317"
+			active_end_date    = "655317874579569317"
+			
+			freq_day_type          = "0"
+			freq_subday_type       = "2"
+			freq_subday_interval   = "14"
+			active_start_time      = "000000"
+			active_end_time        = "235959"
+		></schedule>
+	</template>
+</MSSQLServerAuditorTemplate>
+

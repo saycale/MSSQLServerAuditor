@@ -1,0 +1,5 @@
+D:\Users\saychenkoa\Projects\MSSQLServerAuditor\svn\trunk\MSSQLServerAuditorData\bin\Debug\MSSQLServerAuditorData.dll
+D:\Users\saychenkoa\Projects\MSSQLServerAuditor\svn\trunk\MSSQLServerAuditorData\bin\Debug\MSSQLServerAuditorData.pdb
+D:\Users\saychenkoa\Projects\MSSQLServerAuditor\svn\trunk\MSSQLServerAuditorData\obj\Debug\MSSQLServerAuditorData.csprojResolveAssemblyReference.cache
+D:\Users\saychenkoa\Projects\MSSQLServerAuditor\svn\trunk\MSSQLServerAuditorData\obj\Debug\MSSQLServerAuditorData.dll
+D:\Users\saychenkoa\Projects\MSSQLServerAuditor\svn\trunk\MSSQLServerAuditorData\obj\Debug\MSSQLServerAuditorData.pdb

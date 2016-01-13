@@ -1,0 +1,153 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<root xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+<sqlquery type="MSSQL">
+	<sql-select name="GetDatabaseOverlappingIndexes">
+		<reference>
+			http://www.sql.ru/blogs/andraptor/1218
+		</reference>
+		<sql-select-text MinSupportedVersion="9.*" MaxSupportedVersion="*" signature="">
+			SET NOCOUNT ON;
+			SET DEADLOCK_PRIORITY LOW;
+
+			DECLARE
+				@dbid [INTEGER]
+			;
+
+			SET @dbid = db_id();
+
+			WITH cte_index_info AS (
+				SELECT
+					 tSS.[name]                       AS [SchemaName]
+					,tSO.[name]                       AS [ObjectName]
+					,tSO.[type_desc]                  AS [ObjectType]
+					,tSO.[create_date]                AS [ObjectCreateDate]
+					,tSI.[name]                       AS [IndexName]
+					,tSI.[is_primary_key]             AS [IndexIsPrimaryKey]
+					,d.[index_type_desc]              AS [IndexType]
+					,d.[avg_fragmentation_in_percent] AS [IndexFragmentation]
+					,d.[fragment_count]               AS [IndexFragmentCount]
+					,d.[avg_fragment_size_in_pages]   AS [IndexAvgFragmentSizeInPages]
+					,d.[page_count]                   AS [IndexPages]
+					,c.key_columns                    AS [IndexKeyColumns]
+					,ISNULL(ic.included_columns, '')  AS [IndexIncludedColumns]
+				FROM
+					(
+						SELECT
+							 tSDDIPS.[object_id]                         AS [object_id]
+							,tSDDIPS.[index_id]                          AS [index_id]
+							,tSDDIPS.[index_type_desc]                   AS [index_type_desc]
+							,MAX(tSDDIPS.[avg_fragmentation_in_percent]) AS [avg_fragmentation_in_percent]
+							,MAX(tSDDIPS.[fragment_count])               AS [fragment_count]
+							,MAX(tSDDIPS.[avg_fragment_size_in_pages])   AS [avg_fragment_size_in_pages]
+							,MAX(tSDDIPS.[page_count])                   AS [page_count]
+						FROM
+							[sys].[dm_db_index_physical_stats] (@dbid, NULL, NULL , NULL, N'LIMITED') tSDDIPS
+						GROUP BY
+							 tSDDIPS.[object_id]
+							,tSDDIPS.[index_id]
+							,tSDDIPS.[index_type_desc]
+					) d
+					INNER JOIN [sys].[indexes] tSI ON
+						tSI.[object_id] = d.[object_id]
+						AND tSI.[index_id] = d.[index_id]
+					INNER JOIN [sys].[objects] tSO ON
+						tSO.[object_id] = d.[object_id]
+					INNER JOIN [sys].[schemas] tSS ON
+						tSS.[schema_id] = tSO.[schema_id]
+					CROSS APPLY (
+						SELECT
+							STUFF((
+								SELECT
+									', ' + c.[name] +
+										CASE ic.[is_descending_key]
+											WHEN 1 THEN
+												'(-)'
+											ELSE
+												''
+										END
+								FROM
+									[sys].[index_columns] ic
+									INNER JOIN [sys].[columns] c ON
+										c.[object_id] = ic.[object_id]
+										and c.[column_id] = ic.[column_id]
+								WHERE
+									ic.[index_id] = tSI.[index_id]
+									AND ic.[object_id] = tSI.[object_id]
+									AND ic.[is_included_column] = 0
+								ORDER BY
+									ic.[key_ordinal]
+								FOR XML
+									PATH('')
+							)
+						,1, 2, ''
+						) AS [key_columns]
+					) c
+					CROSS APPLY (
+						SELECT
+							STUFF((
+								SELECT
+									', ' + c.[name]
+								FROM
+									[sys].[index_columns] ic
+									INNER JOIN [sys].[columns] c ON
+										c.[object_id] = ic.[object_id]
+										AND c.[column_id] = ic.[column_id]
+								WHERE
+									ic.[index_id] = tSI.[index_id]
+									AND ic.[object_id] = tSI.[object_id]
+									AND ic.[is_included_column] = 1
+								FOR XML
+									PATH('')
+							)
+							,1, 2, ''
+						) AS [included_columns]
+					) ic
+				WHERE
+					tSO.[type_desc] IN (
+						N'USER_TABLE'
+					)
+					AND OBJECTPROPERTY(tSO.[object_id], N'IsMSShipped') = 0
+					AND d.[index_type_desc] NOT IN (
+						'HEAP'
+					)
+			)
+			SELECT
+				 t1.[SchemaName]                  AS [SchemaName]
+				,t1.[ObjectName]                  AS [ObjectName]
+				,t1.[ObjectType]                  AS [ObjectType]
+				,t1.[ObjectCreateDate]            AS [ObjectCreateDate]
+				,t1.[IndexName]                   AS [IndexName]
+				,t1.[IndexIsPrimaryKey]           AS [IndexIsPrimaryKey]
+				,t1.[IndexType]                   AS [IndexType]
+				,t1.[IndexFragmentation]          AS [IndexFragmentation]
+				,t1.[IndexFragmentCount]          AS [IndexFragmentCount]
+				,t1.[IndexAvgFragmentSizeInPages] AS [IndexAvgFragmentSizeInPages]
+				,t1.[IndexPages]                  AS [IndexPages]
+				,t1.[IndexKeyColumns]             AS [IndexKeyColumns]
+				,t1.[IndexIncludedColumns]        AS [IndexIncludedColumns]
+				,t2.[IndexName]                   AS [OverlappingIndexName]
+				,t2.[IndexType]                   AS [OverlappingIndexType]
+				,t2.[IndexKeyColumns]             AS [OverlappingIndexKeyColumns]
+			FROM
+				cte_index_info t1
+				INNER JOIN cte_index_info t2 ON
+					t2.[SchemaName] = t1.[SchemaName]
+					AND t2.[ObjectName] = t1.[ObjectName]
+					AND t2.[IndexName] &lt;&gt; t1.[IndexName]
+					AND PATINDEX(REPLACE(t1.[IndexKeyColumns], '_', '[_]') + ',%', t2.[IndexKeyColumns] + ',') &gt; 0
+			WHERE
+				t1.[IndexIncludedColumns] = '' -- don't check indexes with INCLUDE columns
+				AND t1.[IndexIsPrimaryKey] = 0 -- don't check primary keys
+				AND t1.[IndexType] NOT IN (
+					 N'CLUSTERED INDEX'
+					,N'UNIQUE CLUSTERED INDEX'
+				) -- don't check clustered indexes
+			ORDER BY
+				 t1.[SchemaName]
+				,t1.[ObjectName]
+				,t1.[IndexName]
+			;
+		</sql-select-text>
+	</sql-select>
+</sqlquery>
+</root>

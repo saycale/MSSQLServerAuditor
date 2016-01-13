@@ -1,0 +1,740 @@
+﻿<?xml version="1.0" encoding="UTF-8"?>
+<MSSQLServerAuditorTemplate id="mssql_SQLCop" type="MSSQL" xmlns:xi="http://www.w3.org/2003/XInclude" version="1.0">
+	<i18n name="en">
+		MSSQL: SQLCop
+	</i18n>
+	<i18n name="ru">
+		MSSQL: SQLCop
+	</i18n>
+
+	<MainWindowTitle>
+		<i18n name="en">
+			$ConnectionName$ $ModuleName$ $ApplicationProductName$ $ApplicationProductVersion$
+		</i18n>
+		<i18n name="ru">
+			$ConnectionName$ $ModuleName$ $ApplicationProductName$ $ApplicationProductVersion$
+		</i18n>
+	</MainWindowTitle>
+
+	<TreeTitle>
+		<i18n name="en">
+			$ConnectionName$ : $ModuleName$
+		</i18n>
+		<i18n name="ru">
+			$ConnectionName$ : $ModuleName$
+		</i18n>
+	</TreeTitle>
+
+	<template id="100000" name="Code" IsHideTabs="false" file="" icon="folder" showIfEmpty="true" showNumberOfRecords="true">
+		<i18n name="en">
+			Code
+		</i18n>
+		<i18n name="ru">
+			Исходные коды
+		</i18n>
+
+		<template id="110000" name="StoredProceduresWithDecimalIssues" IsHideTabs="false" file="mssql\Instance\Databases\Procedures\DBSPWithDecimalIssues.RA.xsl" icon="doc" showIfEmpty="false" showNumberOfRecords="true" hideEmptyResultDatabases="true">
+			<i18n name="en">
+				Decimal Size Problem
+			</i18n>
+			<i18n name="ru">
+				Переменные с плавающей запятой
+			</i18n>
+
+			<group-select name="GetListOfDatabases" id="1" file="SQLQuery\mssql\SQLCop\MSSQLQuery.Database.xml" defaultDataBaseField="DatabaseName">
+				<parameter name="@IsIncludeTempdb" value="False"/>
+				<parameter name="@IsIncludeSystemDatabases" value="True"/>
+				<parameter name="@IsIncludeUserDatabases" value="True"/>
+				<parameter name="@IsIncludeSnapshotDatabases" value="True"/>
+			</group-select>
+
+			<template id="111000" group-select-id="1" name="DatabaseStoredProceduresWithDecimalIssues" file="mssql\Instance\Databases\Procedures\MSSQLServerAuditor.DatabaseStoredProceduresWithDecimalIssues.xsl" icon="doc" showIfEmpty="false" showNumberOfRecords="true" hideEmptyResultDatabases="true">
+				<sql-select id="0" file="SQLQuery\mssql\SQLCop\MSSQLQuery.ProceduresWithDecimalIssues.xml" name="GetListOfProceduresWithDecimalIssues" hierarchy="">
+				</sql-select>
+			</template>
+		</template>
+
+		<template id="120000" name="StoredProceduresWithDynamicSQL" IsHideTabs="false" file="mssql\Instance\Databases\Procedures\MSSQLServerAuditor.DatabaseStoredProceduresWithDynamicSQL.RA.xsl" icon="doc" showIfEmpty="false" showNumberOfRecords="true" hideEmptyResultDatabases="true">
+			<i18n name="en">
+				Procedures with dynamic SQL
+			</i18n>
+			<i18n name="ru">
+				Процедуры с динамическим SQL
+			</i18n>
+
+			<group-select name="GetListOfDatabases" id="1" file="SQLQuery\mssql\SQLCop\MSSQLQuery.Database.xml" defaultDataBaseField="DatabaseName">
+				<parameter name="@IsIncludeTempdb" value="False"/>
+				<parameter name="@IsIncludeSystemDatabases" value="True"/>
+				<parameter name="@IsIncludeUserDatabases" value="True"/>
+				<parameter name="@IsIncludeSnapshotDatabases" value="True"/>
+			</group-select>
+
+			<template id="121000" group-select-id="1" name="DatabaseStoredProceduresWithDynamicSQL" file="mssql\Instance\Databases\Procedures\MSSQLServerAuditor.DatabaseStoredProceduresWithDynamicSQL.xsl" icon="doc" showIfEmpty="false" showNumberOfRecords="true" hideEmptyResultDatabases="true">
+				<sql-select id="0" file="SQLQuery\mssql\SQLCop\MSSQLQuery.ProceduresWithDynamicSQL.xml" name="GetListOfProceduresWithDynamicSQL" hierarchy="">
+				</sql-select>
+			</template>
+		</template>
+
+		<template id="130000" name="StoredProceduresWithSPName" IsHideTabs="false" file="mssql\Instance\Databases\Procedures\MSSQLServerAuditor.DatabaseStoredProceduresWithSPName.RA.xsl" icon="doc" showIfEmpty="false" showNumberOfRecords="true" hideEmptyResultDatabases="true">
+			<i18n name="en">
+				Procedures with sp_
+			</i18n>
+			<i18n name="ru">
+				Процедуры с именем sp_
+			</i18n>
+
+			<group-select name="GetListOfDatabases" id="1" file="SQLQuery\mssql\SQLCop\MSSQLQuery.Database.xml" defaultDataBaseField="DatabaseName">
+				<parameter name="@IsIncludeTempdb" value="False"/>
+				<parameter name="@IsIncludeSystemDatabases" value="True"/>
+				<parameter name="@IsIncludeUserDatabases" value="True"/>
+				<parameter name="@IsIncludeSnapshotDatabases" value="True"/>
+			</group-select>
+
+			<template id="131000" group-select-id="1" name="DatabaseStoredProceduresWithSPName" file="mssql\Instance\Databases\Procedures\MSSQLServerAuditor.DatabaseStoredProceduresWithSPName.xsl" icon="doc" showIfEmpty="false" showNumberOfRecords="true" hideEmptyResultDatabases="true">
+				<sql-select id="0" file="SQLQuery\mssql\SQLCop\MSSQLQuery.SPProcedures.xml" name="GetListOfProceduresWithSPName" hierarchy="">
+				</sql-select>
+			</template>
+		</template>
+
+		<template id="140000" name="StoredProceduresWithoutSetNocountOn" IsHideTabs="false" file="mssql\Instance\Databases\Procedures\MSSQLServerAuditor.DBSPWithoutSetNocountOn.RA.xsl" icon="doc" showIfEmpty="false" showNumberOfRecords="true" hideEmptyResultDatabases="true">
+			<i18n name="en">
+				Procedures without SET NOCOUNT ON
+			</i18n>
+			<i18n name="ru">
+				Процедуры без SET NOCOUNT ON
+			</i18n>
+
+			<group-select name="GetListOfDatabases" id="1" file="SQLQuery\mssql\SQLCop\MSSQLQuery.Database.xml" defaultDataBaseField="DatabaseName">
+				<parameter name="@IsIncludeTempdb" value="False"/>
+				<parameter name="@IsIncludeSystemDatabases" value="True"/>
+				<parameter name="@IsIncludeUserDatabases" value="True"/>
+				<parameter name="@IsIncludeSnapshotDatabases" value="True"/>
+			</group-select>
+
+			<template id="141000" group-select-id="1" name="DatabaseStoredProceduresWithoutSetNocountOn" file="mssql\Instance\Databases\Procedures\MSSQLServerAuditor.DatabaseStoredProceduresWithoutSetNocountOn.xsl" icon="doc" showIfEmpty="false" showNumberOfRecords="true" hideEmptyResultDatabases="true">
+				<sql-select id="0" file="SQLQuery\mssql\SQLCop\MSSQLQuery.ProceduresWithoutSetNocountOn.xml" name="GetListOfProceduresWithoutSetNocountOn" hierarchy="">
+				</sql-select>
+			</template>
+		</template>
+
+		<template id="150000" name="StoredProceduresWithSetRowCount" IsHideTabs="false" file="mssql\Instance\Databases\Procedures\MSSQLServerAuditor.DatabaseStoredProceduresWithSetRowCount.RA.xsl" icon="doc" showIfEmpty="false" showNumberOfRecords="true" hideEmptyResultDatabases="true">
+			<i18n name="en">
+				Procedures with SET ROWCOUNT
+			</i18n>
+			<i18n name="ru">
+				Процедуры с SET ROWCOUNT
+			</i18n>
+
+			<group-select name="GetListOfDatabases" id="1" file="SQLQuery\mssql\SQLCop\MSSQLQuery.Database.xml" defaultDataBaseField="DatabaseName">
+				<parameter name="@IsIncludeTempdb" value="False"/>
+				<parameter name="@IsIncludeSystemDatabases" value="True"/>
+				<parameter name="@IsIncludeUserDatabases" value="True"/>
+				<parameter name="@IsIncludeSnapshotDatabases" value="True"/>
+			</group-select>
+
+			<template id="151000" group-select-id="1" name="DatabaseStoredProceduresWithSetRowCount" file="mssql\Instance\Databases\Procedures\MSSQLServerAuditor.DatabaseStoredProceduresWithSetRowCount.xsl" icon="doc" showIfEmpty="false" showNumberOfRecords="true" hideEmptyResultDatabases="true">
+				<sql-select id="0" file="SQLQuery\mssql\SQLCop\MSSQLQuery.ProceduresWithSetRowCount.xml" name="GetListOfProceduresWithSetRowCount" hierarchy="">
+				</sql-select>
+			</template>
+		</template>
+
+		<template id="160000" name="StoredProceduresWithIdentity" IsHideTabs="false" file="mssql\Instance\Databases\Procedures\MSSQLServerAuditor.DatabaseStoredProceduresWithIdentity.RA.xsl" icon="doc" showIfEmpty="false" showNumberOfRecords="true" hideEmptyResultDatabases="true">
+			<i18n name="en">
+				Procedures with @@IDENTITY
+			</i18n>
+			<i18n name="ru">
+				Процедуры с @@IDENTITY
+			</i18n>
+
+			<group-select name="GetListOfDatabases" id="1" file="SQLQuery\mssql\SQLCop\MSSQLQuery.Database.xml" defaultDataBaseField="DatabaseName">
+				<parameter name="@IsIncludeTempdb" value="False"/>
+				<parameter name="@IsIncludeSystemDatabases" value="True"/>
+				<parameter name="@IsIncludeUserDatabases" value="True"/>
+				<parameter name="@IsIncludeSnapshotDatabases" value="True"/>
+			</group-select>
+
+			<template id="161000" group-select-id="1" name="DatabaseStoredProceduresWithIdentity" file="mssql\Instance\Databases\Procedures\MSSQLServerAuditor.DatabaseStoredProceduresWithIdentity.xsl" icon="doc" showIfEmpty="false" showNumberOfRecords="true" hideEmptyResultDatabases="true">
+				<sql-select id="0" file="SQLQuery\mssql\SQLCop\MSSQLQuery.ProceduresWithIdentity.xml" name="GetListOfProceduresWithIdentity" hierarchy="">
+				</sql-select>
+			</template>
+		</template>
+
+		<template id="170000" name="StoredProceduresWithUndocumented" IsHideTabs="false" file="mssql\Instance\Databases\Procedures\MSSQLServerAuditor.DatabaseStoredProceduresWithUndocumented.RA.xsl" icon="doc" showIfEmpty="false" showNumberOfRecords="true" hideEmptyResultDatabases="true">
+			<i18n name="en">
+				Undocumented Procedures
+			</i18n>
+			<i18n name="ru">
+				Недокументированные процедуры
+			</i18n>
+
+			<group-select name="GetListOfDatabases" id="1" file="SQLQuery\mssql\SQLCop\MSSQLQuery.Database.xml" defaultDataBaseField="DatabaseName">
+				<parameter name="@IsIncludeTempdb" value="False"/>
+				<parameter name="@IsIncludeSystemDatabases" value="True"/>
+				<parameter name="@IsIncludeUserDatabases" value="True"/>
+				<parameter name="@IsIncludeSnapshotDatabases" value="True"/>
+			</group-select>
+
+			<template id="171000" group-select-id="1" name="DatabaseStoredProceduresWithUndocumented" file="mssql\Instance\Databases\Procedures\MSSQLServerAuditor.DatabaseStoredProceduresWithUndocumented.xsl" icon="doc" showIfEmpty="false" showNumberOfRecords="true" hideEmptyResultDatabases="true">
+				<sql-select id="0" file="SQLQuery\mssql\SQLCop\MSSQLQuery.UndocumentedProcedures.xml" name="GetListOfProceduresWithUndocumentedProcedures" hierarchy="">
+				</sql-select>
+			</template>
+		</template>
+
+		<template id="180000" name="StoredProceduresWithCharIssues" IsHideTabs="false" file="mssql\Instance\Databases\Procedures\MSSQLServerAuditor.DatabaseStoredProceduresWithCharIssues.RA.xsl" icon="doc" showIfEmpty="false" showNumberOfRecords="true" hideEmptyResultDatabases="true">
+			<i18n name="en">
+				VarChar Size Problems
+			</i18n>
+			<i18n name="ru">
+				Текстовые переменные без размера
+			</i18n>
+
+			<group-select name="GetListOfDatabases" id="1" file="SQLQuery\mssql\SQLCop\MSSQLQuery.Database.xml" defaultDataBaseField="DatabaseName">
+				<parameter name="@IsIncludeTempdb" value="False"/>
+				<parameter name="@IsIncludeSystemDatabases" value="True"/>
+				<parameter name="@IsIncludeUserDatabases" value="True"/>
+				<parameter name="@IsIncludeSnapshotDatabases" value="True"/>
+			</group-select>
+
+			<template id="181000" group-select-id="1" name="DatabaseStoredProceduresWithCharIssues" file="mssql\Instance\Databases\Procedures\MSSQLServerAuditor.DatabaseStoredProceduresWithCharIssues.xsl" icon="doc" showIfEmpty="false" showNumberOfRecords="true" hideEmptyResultDatabases="true">
+				<sql-select id="0" file="SQLQuery\mssql\SQLCop\MSSQLQuery.ProceduresWithCharIssues.xml" name="GetListOfProceduresWithCharIssues" hierarchy="">
+				</sql-select>
+			</template>
+		</template>
+	</template>
+
+	<template id="190000" name="ObjectColumns" IsHideTabs="false" file="" icon="folder" showIfEmpty="true" showNumberOfRecords="true">
+		<i18n name="en">
+			Column
+		</i18n>
+		<i18n name="ru">
+			Колонки таблиц
+		</i18n>
+
+		<template id="191000" name="TablesWithColumnNameProblems" IsHideTabs="false" file="mssql\Instance\Databases\Columns\MSSQLServerAuditor.TablesWithColumnNameProblems.RA.xsl" icon="doc" showIfEmpty="false" showNumberOfRecords="true" hideEmptyResultDatabases="true">
+			<i18n name="en">
+				Column Name Problems
+			</i18n>
+			<i18n name="ru">
+				Имена табличных колонок
+			</i18n>
+
+			<group-select name="GetListOfDatabases" id="1" file="SQLQuery\mssql\SQLCop\MSSQLQuery.Database.xml" defaultDataBaseField="DatabaseName">
+				<parameter name="@IsIncludeTempdb" value="False"/>
+				<parameter name="@IsIncludeSystemDatabases" value="True"/>
+				<parameter name="@IsIncludeUserDatabases" value="True"/>
+				<parameter name="@IsIncludeSnapshotDatabases" value="True"/>
+			</group-select>
+
+			<template id="191100" group-select-id="1" name="DatabaseTablesWithColumnNameProblems" file="mssql\Instance\Databases\Columns\MSSQLServerAuditor.TablesWithColumnNameProblems.xsl" icon="doc" showIfEmpty="false" showNumberOfRecords="true" hideEmptyResultDatabases="true">
+				<sql-select id="0" file="SQLQuery\mssql\SQLCop\MSSQLQuery.TablesWithColumnNameProblems.xml" name="GetTablesWithColumnNameProblems" hierarchy="">
+				</sql-select>
+			</template>
+		</template>
+
+		<template id="192000" name="TablesWithFloatTypes" IsHideTabs="false" file="mssql\Instance\Databases\Columns\MSSQLServerAuditor.TablesWithFloatTypes.RA.xsl" icon="doc" showIfEmpty="false" showNumberOfRecords="true" hideEmptyResultDatabases="true">
+			<i18n name="en">
+				Columns with float data type
+			</i18n>
+			<i18n name="ru">
+				Колонки типа float
+			</i18n>
+
+			<group-select name="GetListOfDatabases" id="1" file="SQLQuery\mssql\SQLCop\MSSQLQuery.Database.xml" defaultDataBaseField="DatabaseName">
+				<parameter name="@IsIncludeTempdb" value="False"/>
+				<parameter name="@IsIncludeSystemDatabases" value="True"/>
+				<parameter name="@IsIncludeUserDatabases" value="True"/>
+				<parameter name="@IsIncludeSnapshotDatabases" value="True"/>
+			</group-select>
+
+			<template id="192100" group-select-id="1" name="DatabaseTablesWithFloatTypes" file="mssql\Instance\Databases\Columns\MSSQLServerAuditor.TablesWithFloatTypes.xsl" icon="doc" showIfEmpty="false" showNumberOfRecords="true" hideEmptyResultDatabases="true">
+				<sql-select id="0" file="SQLQuery\mssql\SQLCop\MSSQLQuery.FloatTypes.xml" name="GetObjectsWithFloatTypes" hierarchy="">
+				</sql-select>
+			</template>
+		</template>
+
+		<template id="193000" name="TablesWithTextColumns" IsHideTabs="false" file="mssql\Instance\Databases\Columns\MSSQLServerAuditor.TablesWithTextTypes.RA.xsl" icon="doc" showIfEmpty="false" showNumberOfRecords="true" hideEmptyResultDatabases="true">
+			<i18n name="en">
+				Columns with text data type
+			</i18n>
+			<i18n name="ru">
+				Колонки типа text
+			</i18n>
+
+			<group-select name="GetListOfDatabases" id="1" file="SQLQuery\mssql\SQLCop\MSSQLQuery.Database.xml" defaultDataBaseField="DatabaseName">
+				<parameter name="@IsIncludeTempdb" value="False"/>
+				<parameter name="@IsIncludeSystemDatabases" value="True"/>
+				<parameter name="@IsIncludeUserDatabases" value="True"/>
+				<parameter name="@IsIncludeSnapshotDatabases" value="True"/>
+			</group-select>
+
+			<template id="193100" group-select-id="1" name="DatabaseTablesWithTextColumns" file="mssql\Instance\Databases\Columns\MSSQLServerAuditor.TablesWithTextTypes.xsl" icon="doc" showIfEmpty="false" showNumberOfRecords="true" hideEmptyResultDatabases="true">
+				<sql-select id="0" file="SQLQuery\mssql\SQLCop\MSSQLQuery.TablesWithTextColumns.xml" name="GetTablesWithTextColumns" hierarchy="">
+				</sql-select>
+			</template>
+		</template>
+
+		<template id="194000" name="TablesWithCollationMismatch" IsHideTabs="false" file="mssql\Instance\Databases\Columns\MSSQLServerAuditor.TablesWithCollationColumns.RA.xsl" icon="doc" showIfEmpty="false" showNumberOfRecords="true" hideEmptyResultDatabases="true">
+			<i18n name="en">
+				Collation Mismatch
+			</i18n>
+			<i18n name="ru">
+				Разные типы сортировки
+			</i18n>
+
+			<group-select name="GetListOfDatabases" id="1" file="SQLQuery\mssql\SQLCop\MSSQLQuery.Database.xml" defaultDataBaseField="DatabaseName">
+				<parameter name="@IsIncludeTempdb" value="False"/>
+				<parameter name="@IsIncludeSystemDatabases" value="True"/>
+				<parameter name="@IsIncludeUserDatabases" value="True"/>
+				<parameter name="@IsIncludeSnapshotDatabases" value="True"/>
+			</group-select>
+
+			<template id="194100" group-select-id="1" name="DatabaseTablesWithCollationMismatch" file="mssql\Instance\Databases\Columns\MSSQLServerAuditor.TablesWithCollationColumns.xsl" icon="doc" showIfEmpty="false" showNumberOfRecords="true" hideEmptyResultDatabases="true">
+				<sql-select id="0" file="SQLQuery\mssql\SQLCop\MSSQLQuery.TablesWithCollationColumns.xml" name="GetTablesWithCollationColumns" hierarchy="">
+				</sql-select>
+			</template>
+		</template>
+
+		<template id="195000" name="TablesWithUniqueIdentifierColumn" IsHideTabs="false" file="mssql\Instance\Databases\Columns\MSSQLServerAuditor.TablesWithUniqueIdentifierColumn.RA.xsl" icon="doc" showIfEmpty="false" showNumberOfRecords="true" hideEmptyResultDatabases="true">
+			<i18n name="en">
+				UniqueIdentifier with NewId
+			</i18n>
+			<i18n name="ru">
+				NewId для ключей таблиц
+			</i18n>
+
+			<group-select name="GetListOfDatabases" id="1" file="SQLQuery\mssql\SQLCop\MSSQLQuery.Database.xml" defaultDataBaseField="DatabaseName">
+				<parameter name="@IsIncludeTempdb" value="False"/>
+				<parameter name="@IsIncludeSystemDatabases" value="True"/>
+				<parameter name="@IsIncludeUserDatabases" value="True"/>
+				<parameter name="@IsIncludeSnapshotDatabases" value="True"/>
+			</group-select>
+
+			<template id="00001" group-select-id="1" name="DatabaseTablesWithUniqueIdentifierColumn" file="mssql\Instance\Databases\Columns\MSSQLServerAuditor.TablesWithUniqueIdentifierColumn.xsl" icon="doc" showIfEmpty="false" showNumberOfRecords="true" hideEmptyResultDatabases="true">
+				<sql-select id="0" file="SQLQuery\mssql\SQLCop\MSSQLQuery.TablesWithUniqueIdentifierColumn.xml" name="GetTablesWithUniqueIdentifierColumn" hierarchy="">
+				</sql-select>
+			</template>
+		</template>
+
+		<template id="196000" name="TableColumnsWithInconsistency" IsHideTabs="false" file="mssql\Instance\Databases\Columns\MSSQLServerAuditor.TableColumnsWithInconsistency.RA.xsl" icon="doc" showIfEmpty="false" showNumberOfRecords="true" hideEmptyResultDatabases="true">
+			<i18n name="en">
+				Columns with Inconsistency
+			</i18n>
+			<i18n name="ru">
+				Ошибки типов колонок
+			</i18n>
+
+			<group-select name="GetListOfDatabases" id="1" file="SQLQuery\mssql\SQLCop\MSSQLQuery.Database.xml" defaultDataBaseField="DatabaseName">
+				<parameter name="@IsIncludeTempdb" value="False"/>
+				<parameter name="@IsIncludeSystemDatabases" value="True"/>
+				<parameter name="@IsIncludeUserDatabases" value="True"/>
+				<parameter name="@IsIncludeSnapshotDatabases" value="True"/>
+			</group-select>
+
+			<template id="196100" group-select-id="1" file="mssql\Instance\Databases\Columns\MSSQLServerAuditor.TableColumnsWithInconsistency.xsl">
+				<group-select name="GetTableColumnsWithInconsistencyList" id="1" file="SQLQuery\mssql\SQLCop\MSSQLQuery.TableColumnsWithInconsistency.xml">
+				</group-select>
+
+				<template id="196110" group-select-id="1" file="mssql\Instance\Databases\Columns\MSSQLServerAuditor.TableColumnsWithInconsistency.xsl">
+					<sql-select id="0" file="SQLQuery\mssql\SQLCop\MSSQLQuery.TableColumnsWithInconsistency.xml" name="GetTableColumnsWithInconsistency" hierarchy="">
+						<parameter name="@ObjectColumnName"/>
+					</sql-select>
+				</template>
+			</template>
+		</template>
+	</template>
+
+	<template id="200000" name="TablesAndViews" IsHideTabs="false" file="" icon="folder" showIfEmpty="true" showNumberOfRecords="true">
+		<i18n name="en">
+			Tables/Views
+		</i18n>
+		<i18n name="ru">
+			Таблицы и представления
+		</i18n>
+
+		<template id="210000" name="TablesWithPrefix" IsHideTabs="false" file="mssql\Instance\Databases\Tables\MSSQLServerAuditor.TablesWithPrefix.RA.xsl" icon="doc" showIfEmpty="false" showNumberOfRecords="true" hideEmptyResultDatabases="true">
+			<i18n name="en">
+				Tables with prefix
+			</i18n>
+			<i18n name="ru">
+				Таблицы с префиксом
+			</i18n>
+
+			<group-select name="GetListOfDatabases" id="1" file="SQLQuery\mssql\SQLCop\MSSQLQuery.Database.xml" defaultDataBaseField="DatabaseName">
+				<parameter name="@IsIncludeTempdb" value="False"/>
+				<parameter name="@IsIncludeSystemDatabases" value="False"/>
+				<parameter name="@IsIncludeUserDatabases" value="True"/>
+				<parameter name="@IsIncludeSnapshotDatabases" value="True"/>
+			</group-select>
+
+			<template id="211000" group-select-id="1" name="DatabaseTablesWithPrefix" file="mssql\Instance\Databases\Tables\MSSQLServerAuditor.TablesWithPrefix.xsl" icon="doc" showIfEmpty="false" showNumberOfRecords="true" hideEmptyResultDatabases="true">
+				<sql-select id="0" file="SQLQuery\mssql\SQLCop\MSSQLQuery.TablesWithNamedPrefix.xml" name="GetListOfTablesWithPrefix" hierarchy="">
+				</sql-select>
+			</template>
+		</template>
+
+		<template id="220000" name="TablesWithNameProblems" IsHideTabs="false" file="mssql\Instance\Databases\Tables\MSSQLServerAuditor.TablesWithNameProblems.RA.xsl" icon="doc" showIfEmpty="true" showNumberOfRecords="true" hideEmptyResultDatabases="true">
+			<i18n name="en">
+				Table Name Problems
+			</i18n>
+			<i18n name="ru">
+				Имена таблиц
+			</i18n>
+
+			<group-select name="GetListOfDatabases" id="1" file="SQLQuery\mssql\SQLCop\MSSQLQuery.Database.xml" defaultDataBaseField="DatabaseName">
+				<parameter name="@IsIncludeTempdb" value="False"/>
+				<parameter name="@IsIncludeSystemDatabases" value="False"/>
+				<parameter name="@IsIncludeUserDatabases" value="True"/>
+				<parameter name="@IsIncludeSnapshotDatabases" value="True"/>
+			</group-select>
+
+			<template id="00001" group-select-id="1" name="DatabaseTablesWithNameProblems" file="mssql\Instance\Databases\Tables\MSSQLServerAuditor.TablesWithNameProblems.xsl" icon="doc" showIfEmpty="false" showNumberOfRecords="true" hideEmptyResultDatabases="true">
+				<sql-select id="0" file="SQLQuery\mssql\SQLCop\MSSQLQuery.TablesWithNameProblems.xml" name="GetTablesWithNameProblems" hierarchy="">
+				</sql-select>
+			</template>
+		</template>
+
+		<template id="230000" name="TablesWithMissingForeignKeys" IsHideTabs="false" file="mssql\Instance\Databases\Tables\MSSQLServerAuditor.TablesWithMissingForeignKeys.RA.xsl" icon="doc" showIfEmpty="true" showNumberOfRecords="true" hideEmptyResultDatabases="true">
+			<i18n name="en">
+				Missing Foreign Keys
+			</i18n>
+			<i18n name="ru">
+				Пропущенные внешние ключи
+			</i18n>
+
+			<group-select name="GetListOfDatabases" id="1" file="SQLQuery\mssql\SQLCop\MSSQLQuery.Database.xml" defaultDataBaseField="DatabaseName">
+				<parameter name="@IsIncludeTempdb" value="False"/>
+				<parameter name="@IsIncludeSystemDatabases" value="False"/>
+				<parameter name="@IsIncludeUserDatabases" value="True"/>
+				<parameter name="@IsIncludeSnapshotDatabases" value="True"/>
+			</group-select>
+
+			<template id="00001" group-select-id="1" name="DatabaseTablesWithMissingForeignKeys" file="mssql\Instance\Databases\Tables\MSSQLServerAuditor.TablesWithMissingForeignKeys.xsl" icon="doc" showIfEmpty="false" showNumberOfRecords="true" hideEmptyResultDatabases="true">
+				<sql-select id="0" file="SQLQuery\mssql\SQLCop\MSSQLQuery.TablesWithMissingForeignKeys.xml" name="GetTablesWithMissingForeignKeys" hierarchy="">
+				</sql-select>
+			</template>
+		</template>
+
+		<template id="240000" name="WideTables" IsHideTabs="false" file="mssql\Instance\Databases\Tables\MSSQLServerAuditor.WideTables.RA.xsl" icon="doc" showIfEmpty="false" showNumberOfRecords="true" hideEmptyResultDatabases="true">
+			<i18n name="en">
+				Wide Tables
+			</i18n>
+			<i18n name="ru">
+				Широкие таблицы
+			</i18n>
+
+			<group-select name="GetListOfDatabases" id="1" file="SQLQuery\mssql\SQLCop\MSSQLQuery.Database.xml" defaultDataBaseField="DatabaseName">
+				<parameter name="@IsIncludeTempdb" value="False"/>
+				<parameter name="@IsIncludeSystemDatabases" value="False"/>
+				<parameter name="@IsIncludeUserDatabases" value="True"/>
+				<parameter name="@IsIncludeSnapshotDatabases" value="True"/>
+			</group-select>
+
+			<template id="00001" group-select-id="1" name="DatabaseWideTables" file="mssql\Instance\Databases\Tables\MSSQLServerAuditor.WideTables.xsl" icon="doc" showIfEmpty="false" showNumberOfRecords="true" hideEmptyResultDatabases="true">
+				<sql-select id="0" file="SQLQuery\mssql\SQLCop\MSSQLQuery.WideTables.xml" name="GetWideTables" hierarchy="">
+				</sql-select>
+			</template>
+		</template>
+
+		<template id="250000" name="TablesWithoutAPrimaryKey" IsHideTabs="false" file="mssql\Instance\Databases\Tables\MSSQLServerAuditor.TablesWithoutAPrimaryKey.RA.xsl" icon="doc" showIfEmpty="true" showNumberOfRecords="true" hideEmptyResultDatabases="true">
+			<i18n name="en">
+				Tables without a Primary Key
+			</i18n>
+			<i18n name="ru">
+				Таблицы без первичного ключа
+			</i18n>
+
+			<group-select name="GetListOfDatabases" id="1" file="SQLQuery\mssql\SQLCop\MSSQLQuery.Database.xml" defaultDataBaseField="DatabaseName">
+				<parameter name="@IsIncludeTempdb" value="False"/>
+				<parameter name="@IsIncludeSystemDatabases" value="False"/>
+				<parameter name="@IsIncludeUserDatabases" value="True"/>
+				<parameter name="@IsIncludeSnapshotDatabases" value="True"/>
+			</group-select>
+
+			<template id="00001" group-select-id="1" name="DatabaseTablesWithoutAPrimaryKey" file="mssql\Instance\Databases\Tables\MSSQLServerAuditor.TablesWithoutAPrimaryKey.xsl" icon="doc" showIfEmpty="false" showNumberOfRecords="true" hideEmptyResultDatabases="true">
+				<sql-select id="0" file="SQLQuery\mssql\SQLCop\MSSQLQuery.TablesWithoutAPrimaryKey.xml" name="GetTablesWithoutAPrimaryKey" hierarchy="">
+				</sql-select>
+			</template>
+		</template>
+
+		<template id="260000" name="EmptyTables" IsHideTabs="false" file="mssql\Instance\Databases\Tables\MSSQLServerAuditor.EmptyTables.RA.xsl" icon="doc" showIfEmpty="true" showNumberOfRecords="true" hideEmptyResultDatabases="true">
+			<i18n name="en">
+				Empty Tables
+			</i18n>
+			<i18n name="ru">
+				Пустые таблицы
+			</i18n>
+
+			<group-select name="GetListOfDatabases" id="1" file="SQLQuery\mssql\SQLCop\MSSQLQuery.Database.xml" defaultDataBaseField="DatabaseName">
+				<parameter name="@IsIncludeTempdb" value="False"/>
+				<parameter name="@IsIncludeSystemDatabases" value="False"/>
+				<parameter name="@IsIncludeUserDatabases" value="True"/>
+				<parameter name="@IsIncludeSnapshotDatabases" value="True"/>
+			</group-select>
+
+			<template id="00001" group-select-id="1" name="DatabaseEmptyTables" file="mssql\Instance\Databases\Tables\MSSQLServerAuditor.EmptyTables.xsl" icon="doc" showIfEmpty="false" showNumberOfRecords="true" hideEmptyResultDatabases="true">
+				<sql-select id="0" file="SQLQuery\mssql\SQLCop\MSSQLQuery.EmptyTables.xml" name="GetEmptyTables" hierarchy="">
+				</sql-select>
+			</template>
+		</template>
+
+		<template id="270000" name="UnnamedConstraints" IsHideTabs="false" file="mssql\Instance\Databases\Tables\MSSQLServerAuditor.UnnamedConstraints.RA.xsl" icon="doc" showIfEmpty="true" showNumberOfRecords="true" hideEmptyResultDatabases="true">
+			<i18n name="en">
+				Unnamed Constraints
+			</i18n>
+			<i18n name="ru">
+				Неименованные ограничители
+			</i18n>
+
+			<group-select name="GetListOfDatabases" id="1" file="SQLQuery\mssql\SQLCop\MSSQLQuery.Database.xml" defaultDataBaseField="DatabaseName">
+				<parameter name="@IsIncludeTempdb" value="False"/>
+				<parameter name="@IsIncludeSystemDatabases" value="False"/>
+				<parameter name="@IsIncludeUserDatabases" value="True"/>
+				<parameter name="@IsIncludeSnapshotDatabases" value="True"/>
+			</group-select>
+
+			<template id="00001" group-select-id="1" name="DatabaseUnnamedConstraints" file="mssql\Instance\Databases\Tables\MSSQLServerAuditor.UnnamedConstraints.xsl" icon="doc" showIfEmpty="false" showNumberOfRecords="true" hideEmptyResultDatabases="true">
+				<sql-select id="0" file="SQLQuery\mssql\SQLCop\MSSQLQuery.UnnamedConstraints.xml" name="GetUnnamedConstraints" hierarchy="">
+				</sql-select>
+			</template>
+		</template>
+	</template>
+
+	<template id="300000" name="Indexes" IsHideTabs="false" file="" icon="folder" showIfEmpty="true" showNumberOfRecords="true">
+		<i18n name="en">
+			Indexes
+		</i18n>
+		<i18n name="ru">
+			Индексы
+		</i18n>
+
+		<template id="310000" name="GetIndexesWithForwardedRecords" IsHideTabs="false" file="mssql\Instance\Databases\Indexes\MSSQLServerAuditor.IndexesWithForwardedRecords.RA.xsl" icon="doc" showIfEmpty="true" showNumberOfRecords="true" hideEmptyResultDatabases="true">
+			<i18n name="en">
+				Forwarded Records
+			</i18n>
+			<i18n name="ru">
+				Перенаправленные записи
+			</i18n>
+
+			<group-select name="GetListOfDatabases" id="1" file="SQLQuery\mssql\SQLCop\MSSQLQuery.Database.xml" defaultDataBaseField="DatabaseName">
+				<parameter name="@IsIncludeTempdb" value="False"/>
+				<parameter name="@IsIncludeSystemDatabases" value="False"/>
+				<parameter name="@IsIncludeUserDatabases" value="True"/>
+				<parameter name="@IsIncludeSnapshotDatabases" value="True"/>
+			</group-select>
+
+			<template id="311000" group-select-id="1" name="DatabaseIndexesWithForwardedRecords" file="mssql\Instance\Databases\Indexes\MSSQLServerAuditor.IndexesWithForwardedRecords.xsl" icon="doc" showIfEmpty="false" showNumberOfRecords="true" hideEmptyResultDatabases="true">
+				<sql-select id="0" file="SQLQuery\mssql\SQLCop\MSSQLQuery.IndexesWithForwardedRecords.xml" name="GetIndexesWithForwardedRecords" hierarchy="">
+				</sql-select>
+			</template>
+		</template>
+
+		<template id="320000" name="FragmentedIndexes" IsHideTabs="false" file="" icon="doc" showIfEmpty="true" showNumberOfRecords="true" hideEmptyResultDatabases="true">
+			<i18n name="en">
+				FragmentedIndexes
+			</i18n>
+			<i18n name="ru">
+				Фрагментированные индексы
+			</i18n>
+
+			<template id="321000" name="ReorganizeIndexes" IsHideTabs="false" file="mssql\Instance\Databases\Indexes\ReorganizeIndexes\MSSQLServerAuditor.RA.xsl" icon="doc" showIfEmpty="false" showNumberOfRecords="true" hideEmptyResultDatabases="true">
+				<i18n name="en">
+					Reorganize Indexes
+				</i18n>
+				<i18n name="ru">
+					Индексы для Reorganize
+				</i18n>
+
+				<group-select name="GetListOfDatabases" id="1" file="SQLQuery\mssql\SQLCop\MSSQLQuery.Database.xml" defaultDataBaseField="DatabaseName">
+					<parameter name="@IsIncludeTempdb" value="False"/>
+					<parameter name="@IsIncludeSystemDatabases" value="False"/>
+					<parameter name="@IsIncludeUserDatabases" value="True"/>
+					<parameter name="@IsIncludeSnapshotDatabases" value="True"/>
+				</group-select>
+
+				<template id="321100" group-select-id="1" name="DatabaseReorganizeIndexes" file="mssql\Instance\Databases\Indexes\FragmentedIndexes\MSSQLServerAuditor.xsl" icon="doc" showIfEmpty="false" showNumberOfRecords="true" hideEmptyResultDatabases="true">
+					<sql-select id="0" file="SQLQuery\mssql\SQLCop\MSSQLQuery.FragmentedIndexes.xml" name="GetFragmentedIndexes" hierarchy="">
+						<parameter name="@isMinPageCountToShow" value="100"/>
+						<parameter name="@isMinFragmentationInPercent" value="5.0"/>
+						<parameter name="@isMaxFragmentationInPercent" value="30.0"/>
+					</sql-select>
+				</template>
+			</template>
+
+			<template id="322000" name="RebuildIndexes" IsHideTabs="false" file="mssql\Instance\Databases\Indexes\RebuildIndexes\MSSQLServerAuditor.RA.xsl" icon="doc" showIfEmpty="false" showNumberOfRecords="true" hideEmptyResultDatabases="true">
+				<i18n name="en">
+					Rebuild Indexes
+				</i18n>
+				<i18n name="ru">
+					Индексы для Rebuild
+				</i18n>
+
+				<group-select name="GetListOfDatabases" id="1" file="SQLQuery\mssql\SQLCop\MSSQLQuery.Database.xml" defaultDataBaseField="DatabaseName">
+					<parameter name="@IsIncludeTempdb" value="False"/>
+					<parameter name="@IsIncludeSystemDatabases" value="False"/>
+					<parameter name="@IsIncludeUserDatabases" value="True"/>
+					<parameter name="@IsIncludeSnapshotDatabases" value="True"/>
+				</group-select>
+
+				<template id="322100" group-select-id="1" name="DatabaseRebuildIndexes" file="mssql\Instance\Databases\Indexes\FragmentedIndexes\MSSQLServerAuditor.xsl" icon="doc" showIfEmpty="false" showNumberOfRecords="true" hideEmptyResultDatabases="true">
+					<sql-select id="0" file="SQLQuery\mssql\SQLCop\MSSQLQuery.FragmentedIndexes.xml" name="GetFragmentedIndexes" hierarchy="">
+						<parameter name="@isMinPageCountToShow" value="100"/>
+						<parameter name="@isMinFragmentationInPercent" value="30.0"/>
+						<parameter name="@isMaxFragmentationInPercent" value="100.0"/>
+					</sql-select>
+				</template>
+			</template>
+		</template>
+
+		<template id="330000" name="GetMissingIndexes" IsHideTabs="false" file="mssql\Instance\Databases\Indexes\MissingIndexes\MSSQLServerAuditor.MissingIndexes.RA.xsl" icon="doc" showIfEmpty="true" showNumberOfRecords="true" hideEmptyResultDatabases="true">
+			<i18n name="en">
+				Missing Indexes
+			</i18n>
+			<i18n name="ru">
+				Пропущенные индексы
+			</i18n>
+
+			<group-select name="GetListOfDatabases" id="1" file="SQLQuery\mssql\SQLCop\MSSQLQuery.Database.xml" defaultDataBaseField="DatabaseName">
+				<parameter name="@IsIncludeTempdb" value="False"/>
+				<parameter name="@IsIncludeSystemDatabases" value="False"/>
+				<parameter name="@IsIncludeUserDatabases" value="True"/>
+				<parameter name="@IsIncludeSnapshotDatabases" value="True"/>
+			</group-select>
+
+			<template id="331000" group-select-id="1" name="DatabaseMissingIndexes" file="mssql\Instance\Databases\Indexes\MissingIndexes\MSSQLServerAuditor.MissingIndexes.xsl" icon="doc" showIfEmpty="false" showNumberOfRecords="true" hideEmptyResultDatabases="true">
+				<sql-select id="0" file="SQLQuery\mssql\SQLCop\MSSQLQuery.DatabaseIndexes.MissingIndexes.xml" name="GetMissingIndexes" hierarchy="">
+				</sql-select>
+			</template>
+		</template>
+
+		<template id="340000" name="ObjectsWithMissingForeignKeyIndexes" IsHideTabs="false" file="mssql\Instance\Databases\Tables\TablesWithMissingForeignKeyIndexes.RA.xsl" icon="doc" showIfEmpty="false" showNumberOfRecords="true" hideEmptyResultDatabases="true">
+			<i18n name="en">
+				Missing Foreign Key Indexes
+			</i18n>
+			<i18n name="ru">
+				Индексы для внешних ключей
+			</i18n>
+
+			<group-select name="GetListOfDatabases" id="1" file="SQLQuery\mssql\SQLCop\MSSQLQuery.Database.xml" defaultDataBaseField="DatabaseName">
+				<parameter name="@IsIncludeTempdb" value="False"/>
+				<parameter name="@IsIncludeSystemDatabases" value="False"/>
+				<parameter name="@IsIncludeUserDatabases" value="True"/>
+				<parameter name="@IsIncludeSnapshotDatabases" value="True"/>
+			</group-select>
+
+			<template id="341000" group-select-id="1" name="DatabaseObjectsWithMissingForeignKeyIndexes" file="mssql\Instance\Databases\Tables\TablesWithMissingForeignKeyIndexes.xsl" icon="doc" showIfEmpty="false" showNumberOfRecords="true" hideEmptyResultDatabases="true">
+				<sql-select id="0" file="SQLQuery\mssql\SQLCop\MSSQLQuery.TablesWithMissingForeignKeyIndexes.xml" name="GetTablesWithMissingForeignKeyIndexes" hierarchy="">
+				</sql-select>
+			</template>
+		</template>
+
+		<template id="350000" name="ObjectsWithForeignKeysNotTrusted" IsHideTabs="false" file="mssql\Instance\Databases\Tables\MSSQLServerAuditor.TablesWithForeignKeysNotTrusted.RA.xsl" icon="doc" showIfEmpty="false" showNumberOfRecords="true" hideEmptyResultDatabases="true">
+			<i18n name="en">
+				Foreign Keys Not Trusted
+			</i18n>
+			<i18n name="ru">
+				Ненадёжные внешние ключи
+			</i18n>
+
+			<group-select name="GetListOfDatabases" id="1" file="SQLQuery\mssql\SQLCop\MSSQLQuery.Database.xml" defaultDataBaseField="DatabaseName">
+				<parameter name="@IsIncludeTempdb" value="False"/>
+				<parameter name="@IsIncludeSystemDatabases" value="False"/>
+				<parameter name="@IsIncludeUserDatabases" value="True"/>
+				<parameter name="@IsIncludeSnapshotDatabases" value="True"/>
+			</group-select>
+
+			<template id="351000" group-select-id="1" name="DatabaseObjectsWithForeignKeysNotTrusted" file="mssql\Instance\Databases\Tables\MSSQLServerAuditor.TablesWithForeignKeysNotTrusted.xsl" icon="doc" showIfEmpty="false" showNumberOfRecords="true" hideEmptyResultDatabases="true">
+				<sql-select id="0" file="SQLQuery\mssql\SQLCop\MSSQLQuery.Table.ForeignKeysNotTrusted.xml" name="GetTablesWithForeignKeysNotTrusted" hierarchy="">
+				</sql-select>
+			</template>
+		</template>
+
+		<template id="360000" name="ObjectsWithConstraintNotTrusted" IsHideTabs="false" file="mssql\Instance\Databases\Tables\MSSQLServerAuditor.TablesWithConstraintNotTrusted.RA.xsl" icon="doc" showIfEmpty="false" showNumberOfRecords="true" hideEmptyResultDatabases="true">
+			<i18n name="en">
+				Constraint Not Trusted
+			</i18n>
+			<i18n name="ru">
+				Ненадёжные ограничители
+			</i18n>
+
+			<group-select name="GetListOfDatabases" id="1" file="SQLQuery\mssql\SQLCop\MSSQLQuery.Database.xml" defaultDataBaseField="DatabaseName">
+				<parameter name="@IsIncludeTempdb" value="False"/>
+				<parameter name="@IsIncludeSystemDatabases" value="False"/>
+				<parameter name="@IsIncludeUserDatabases" value="True"/>
+				<parameter name="@IsIncludeSnapshotDatabases" value="True"/>
+			</group-select>
+
+			<template id="361000" group-select-id="1" name="DatabaseObjectsWithConstraintNotTrusted" file="mssql\Instance\Databases\Tables\MSSQLServerAuditor.TablesWithConstraintNotTrusted.xsl" icon="doc" showIfEmpty="false" showNumberOfRecords="true" hideEmptyResultDatabases="true">
+				<sql-select id="0" file="SQLQuery\mssql\SQLCop\MSSQLQuery.Table.ConstraintNotTrusted.xml" name="GetTablesWithConstraintNotTrusted" hierarchy="">
+				</sql-select>
+			</template>
+		</template>
+	</template>
+
+	<template id="400000" name="Configuration" IsHideTabs="false" file="" icon="folder" showIfEmpty="true" showNumberOfRecords="true">
+		<i18n name="en">
+			Configuration
+		</i18n>
+		<i18n name="ru">
+			Конфигурация
+		</i18n>
+
+		<template id="410000" name="CompatibilityLevel" IsHideTabs="false" file="mssql\Instance\Databases\CompatibilityLevel\MSSQLServerAuditor.xsl" icon="doc" showIfEmpty="true" showNumberOfRecords="true">
+			<i18n name="en">
+				Compatibility Level
+			</i18n>
+			<i18n name="ru">
+				Совместимость
+			</i18n>
+
+			<sql-select id="0" file="SQLQuery\mssql\SQLCop\MSSQLQuery.DatabaseInfo.xml" name="DatabaseInfo" hierarchy="">
+			</sql-select>
+		</template>
+
+		<template id="420000" name="Users" IsHideTabs="false" file="mssql\Instance\Security\Databases\Users\MSSQLServerAuditor.RA.xsl" icon="doc" showIfEmpty="true" showNumberOfRecords="true" hideEmptyResultDatabases="true">
+			<i18n name="en">
+				Orphaned Users
+			</i18n>
+			<i18n name="ru">
+				Пользователи сироты
+			</i18n>
+
+			<group-select name="GetListOfDatabases" id="1" file="SQLQuery\mssql\SQLCop\MSSQLQuery.Database.xml" defaultDataBaseField="DatabaseName">
+				<parameter name="@IsIncludeTempdb" value="False"/>
+				<parameter name="@IsIncludeSystemDatabases" value="False"/>
+				<parameter name="@IsIncludeUserDatabases" value="True"/>
+				<parameter name="@IsIncludeSnapshotDatabases" value="True"/>
+			</group-select>
+
+			<template id="00001" group-select-id="1" name="DatabaseUsers" file="mssql\Instance\Security\Databases\Users\MSSQLServerAuditor.xsl" icon="doc" showIfEmpty="false" showNumberOfRecords="true" hideEmptyResultDatabases="true">
+				<sql-select id="0" file="SQLQuery\mssql\SQLCop\MSSQLQuery.GetUsersList.xml" name="GetUsersList" hierarchy="">
+					<parameter name="@isShowOrphahUsersOnly" value="True"/>
+					<parameter name="@isShowUserAliasesOnly" value="False"/>
+					<parameter name="@isShowMembersOfGroupsWithElevatedPermissionsOnly" value="False"/>
+				</sql-select>
+			</template>
+		</template>
+	</template>
+
+	<template id="500000" name="Health" IsHideTabs="false" file="" icon="folder" showIfEmpty="true" showNumberOfRecords="true">
+		<i18n name="en">
+			Health
+		</i18n>
+		<i18n name="ru">
+			Здоровье
+		</i18n>
+
+		<template id="510000" name="InstanceMemoryBufferCacheHitRatio" IsHideTabs="false" file="mssql\Instance\Audit\Processes\Memory\MSSQLServerAuditor.InstanceMemoryBufferCacheHitRatio.xsl" icon="doc" showIfEmpty="true" showNumberOfRecords="true">
+			<i18n name="en">
+				Buffer Cache Hit Ratio
+			</i18n>
+			<i18n name="ru">
+				Buffer Cache Hit Ratio
+			</i18n>
+
+			<sql-select id="0" file="SQLQuery\mssql\SQLCop\DynamicManagementViews\MSSQLQuery.InstanceMemoryStatus.xml" name="GetInstanceMemoryBufferCacheHitRatio" hierarchy="">
+			</sql-select>
+			<sql-select id="0" file="SQLQuery\mssql\SQLCop\DynamicManagementViews\MSSQLQuery.InstanceMemoryStatus.xml" name="GetInstancePageLifeExpectancy" hierarchy="">
+			</sql-select>
+		</template>
+	</template>
+</MSSQLServerAuditorTemplate>

@@ -1,0 +1,101 @@
+﻿<?xml version="1.0" encoding="UTF-8"?>
+<root xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+<sqlquery type="MSSQL">
+	<sql-select name="GetDatabaseSize">
+		<sql-select-text MinSupportedVersion="8.*" MaxSupportedVersion="8.*" signature="">
+			SET NOCOUNT ON;
+			SET DEADLOCK_PRIORITY LOW;
+
+			DECLARE
+				@intPageSize [INTEGER]
+			;
+
+			SELECT
+				@intPageSize = tSV.[low]
+			FROM
+				[master].[dbo].[spt_values] tSV
+			WHERE
+				tSV.[number] = 1
+				AND tSV.[type] = N'E';
+
+			SELECT
+				 RTRIM(tSF.[name])                                                                                                                                                         AS [DatabaseFileName]
+				,RTRIM(tSF.[filename])                                                                                                                                                     AS [DatabaseFilePhysicalName]
+				,tSF.[status]                                                                                                                                                              AS [DatabaseFileStatus]
+				,CASE
+					WHEN (tSF.[status] &amp; 0x40 = 0) THEN
+						N'ROWS'
+					ELSE
+						N'LOG'
+				END                                                                                                                                                                        AS [DatabaseFileStatusDesc]
+				,NULL                                                                                                                                                                      AS [DatabaseFileIsSparce]
+				,(CONVERT([DECIMAL](24, 2), tSF.[size]) * CONVERT([DECIMAL](24, 2), @intPageSize)) / (CONVERT([DECIMAL](24, 2), 1024.0 * 1024.0))                                          AS [DatabaseFileSizeMB]
+				,(CONVERT([DECIMAL](24, 2), FILEPROPERTY(tSF.[name], N'SpaceUsed')) * CONVERT([DECIMAL](24, 2), @intPageSize)) / (CONVERT([DECIMAL](24, 2), 1024.0 * 1024.0))              AS [DatabaseFileSizeUsedMB]
+				,(CONVERT([DECIMAL](24, 2), tSF.[size] - FILEPROPERTY(tSF.[name], N'SpaceUsed')) * CONVERT([DECIMAL](24, 2), @intPageSize)) / (CONVERT([DECIMAL](24, 2), 1024.0 * 1024.0)) AS [DatabaseFileSizeFreeMB]
+			FROM
+				[dbo].[sysfiles] tSF
+			ORDER BY
+				 tSF.[name]
+				,tSF.[filename]
+			;
+		</sql-select-text>
+		<sql-select-text MinSupportedVersion="9.*" MaxSupportedVersion="*" signature="">
+			SET NOCOUNT ON;
+			SET DEADLOCK_PRIORITY LOW;
+
+			DECLARE
+				 @intPageSize [INTEGER]
+				,@dbid        [INTEGER]
+			;
+
+			SET @dbid = db_id();
+
+			SELECT
+				@intPageSize = tSV.[low]
+			FROM
+				[master].[dbo].[spt_values] tSV
+			WHERE
+				tSV.[number] = 1
+				AND tSV.[type] = N'E';
+
+			SELECT
+				 RTRIM(tMF.[name])                                                                                                                                                                             AS [DatabaseFileName]
+				,RTRIM(tMF.[physical_name])                                                                                                                                                                    AS [DatabaseFilePhysicalName]
+				,tMF.[type]                                                                                                                                                                                    AS [DatabaseFileStatus]
+				,tMF.[type_desc]                                                                                                                                                                               AS [DatabaseFileStatusDesc]
+				,tMF.[is_sparse]                                                                                                                                                                               AS [DatabaseFileIsSparce]
+				,CASE
+					WHEN (tMF.[is_sparse] = 0) THEN
+						(CONVERT([DECIMAL](24, 2), ISNULL(tDF.[size], tMF.[size])) * CONVERT([DECIMAL](24, 2), @intPageSize)) / (CONVERT([DECIMAL](24, 2), 1024.0 * 1024.0))
+					ELSE
+						(CONVERT([DECIMAL](24, 2), divfs.[size_on_disk_bytes])) / (CONVERT([DECIMAL](24, 2), 1024.0 * 1024.0))
+				END                                                                                                                                                                                             AS [DatabaseFileSizeMB]
+				,CASE
+					WHEN (tMF.[is_sparse] = 0) THEN
+						(CONVERT([DECIMAL](24, 2), FILEPROPERTY(tMF.[name], N'SpaceUsed')) * CONVERT([DECIMAL](24, 2), @intPageSize)) / (CONVERT([DECIMAL](24, 2), 1024.0 * 1024.0))
+					ELSE
+						(CONVERT([DECIMAL](24, 2), divfs.[size_on_disk_bytes])) / (CONVERT([DECIMAL](24, 2), 1024.0 * 1024.0))
+				END                                                                                                                                                                                             AS [DatabaseFileSizeUsedMB]
+				,CASE
+					WHEN (tMF.[is_sparse] = 0) THEN
+						(CONVERT([DECIMAL](24, 2), ISNULL(tDF.[size], tMF.[size]) - FILEPROPERTY(tMF.[name], N'SpaceUsed')) * CONVERT([DECIMAL](24, 2), @intPageSize)) / (CONVERT([DECIMAL](24, 2), 1024.0 * 1024.0))
+					ELSE
+						(CONVERT([DECIMAL](24, 2), 0.0))
+				END                                                                                                                                                                                             AS [DatabaseFileSizeFreeMB]
+			FROM
+				[master].[sys].[master_files] tMF
+				LEFT OUTER JOIN [sys].[database_files] tDF ON
+					tDF.[file_id] = tMF.[file_id]
+				LEFT OUTER JOIN [sys].[dm_io_virtual_file_stats](@dbid, NULL) AS divfs ON
+					divfs.[database_id] = tMF.[database_id]
+					AND divfs.[file_id] = tMF.[file_id]
+			WHERE
+				tMF.[database_id] = @dbid
+			ORDER BY
+				 tMF.[name]
+				,tMF.[physical_name]
+			;
+		</sql-select-text>
+	</sql-select>
+</sqlquery>
+</root>

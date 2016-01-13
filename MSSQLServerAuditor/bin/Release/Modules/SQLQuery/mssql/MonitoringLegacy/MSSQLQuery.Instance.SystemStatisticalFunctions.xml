@@ -1,0 +1,192 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<root xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+<sqlquery type="MSSQL">
+	<sql-select name="GetInstanceSystemStatisticalFunctions">
+		<description>
+			The following scalar functions return statistical information about the system.
+		</description>
+		<reference>
+			http://msdn.microsoft.com/en-us/library/ms177520.aspx
+		</reference>
+		<sql-select-text MinSupportedVersion="8.*" MaxSupportedVersion="*.*" signature="">
+			SELECT
+				 GETDATE()        AS [EventTime]
+				,@@CONNECTIONS    AS [Connections]
+				,@@CPU_BUSY       AS [CPUBusy]
+				,@@IDLE           AS [CPUIdle]
+				,@@IO_BUSY        AS [IOBusy]
+				,@@PACKET_ERRORS  AS [PacketErrors]
+				,@@PACK_RECEIVED  AS [PackReceived]
+				,@@PACK_SENT      AS [PackSent]
+				,@@TIMETICKS      AS [TimeTicks]
+				,@@TOTAL_ERRORS   AS [TotalErrors]
+				,@@TOTAL_READ     AS [TotalRead]
+				,@@TOTAL_WRITE    AS [TotalWrite]
+			;
+		</sql-select-text>
+		<sqlite_statements>
+			<sqlite_statement id="13">
+				INSERT INTO [hist].[h_ServerInstance]
+				(
+					 [d_Query_id]
+					,[d_ServerInstance_id]
+					,[ServerInstanceName]
+					,[ConnectionName]
+				)
+				SELECT
+					 MIN(dQ.[rowid])
+					,MIN(dQ.[d_ServerInstance_id])
+					,dSI.[ServerInstanceName]
+					,MIN(IFNULL(dSI.[ConnectionName], ''))
+				FROM
+					[d_Query] dQ
+					INNER JOIN [d_ServerInstance] dSI ON
+						dSI.[rowid] = dQ.[d_ServerInstance_id]
+					LEFT OUTER JOIN [hist].[h_ServerInstance] hSI ON
+						hSI.[ServerInstanceName] = dSI.[ServerInstanceName]
+				WHERE
+					dQ.[rowid] = @d_Query_id
+					AND dSI.[ServerInstanceName] IS NOT NULL
+					AND hSI.[rowid] IS NULL
+				GROUP BY
+					dSI.[ServerInstanceName]
+				;
+			</sqlite_statement>
+			<sqlite_statement id="14">
+				UPDATE [hist].[h_ServerInstance] SET
+					 [d_Query_id] = @d_Query_id
+					,[d_ServerInstance_id] = (
+						SELECT
+							MIN(dQ.[d_ServerInstance_id])
+						FROM
+							[d_Query] dQ
+						WHERE
+							dQ.[rowid] = @d_Query_id
+							AND dQ.[d_ServerInstance_id] IS NOT NULL
+					)
+				WHERE
+					[ServerInstanceName] = (
+						SELECT
+							MIN(dSI.[ServerInstanceName])
+						FROM
+							[d_Query] dQ
+							INNER JOIN [d_ServerInstance] dSI ON
+								dSI.[rowid] = dQ.[d_ServerInstance_id]
+						WHERE
+							dQ.[rowid] = @d_Query_id
+							AND dSI.[ServerInstanceName] IS NOT NULL
+					) AND [d_ServerInstance_id] != (
+						SELECT
+							MIN(dQ.[d_ServerInstance_id])
+						FROM
+							[d_Query] dQ
+						WHERE
+							dQ.[rowid] = @d_Query_id
+							AND dQ.[d_ServerInstance_id] IS NOT NULL
+					)
+				;
+			</sqlite_statement>
+			<sqlite_statement id="31">
+				INSERT INTO [hist].[h_InstanceSystemStatisticalFunctions]
+				(
+					 [d_Query_id]
+					,[h_ServerInstance_id]
+					,[EventDay]
+					,[EventTime]
+					,[Connections]
+					,[CPUBusy]
+					,[CPUIdle]
+					,[IOBusy]
+					,[PackReceived]
+					,[PackSent]
+					,[PacketErrors]
+					,[TimeTicks]
+					,[TotalErrors]
+					,[TotalRead]
+					,[TotalWrite]
+				)
+				SELECT
+					 dQ.[rowid]
+					,hSI.[rowid]
+					,date(t.[EventTime])
+					,t.[EventTime]
+					,t.[Connections]
+					,t.[CPUBusy]      - hISSFB.[CPUBusy]
+					,t.[CPUIdle]      - hISSFB.[CPUIdle]
+					,t.[IOBusy]       - hISSFB.[IOBusy]
+					,t.[PackReceived] - hISSFB.[PackReceived]
+					,t.[PackSent]     - hISSFB.[PackSent]
+					,t.[PacketErrors] - hISSFB.[PacketErrors]
+					,t.[TimeTicks]    - hISSFB.[TimeTicks]
+					,t.[TotalErrors]  - hISSFB.[TotalErrors]
+					,t.[TotalRead]    - hISSFB.[TotalRead]
+					,t.[TotalWrite]   - hISSFB.[TotalWrite]
+				FROM
+					[d_Query] dQ
+					INNER JOIN [hist].[h_ServerInstance] hSI ON
+						hSI.[d_ServerInstance_id] = dQ.[d_ServerInstance_id]
+					INNER JOIN [hist].[h_InstanceSystemStatisticalFunctionsBaseline] hISSFB ON
+						hISSFB.[h_ServerInstance_id] = hSI.[rowid]
+					INNER JOIN [report].[${GetInstanceSystemStatisticalFunctions}$_${1}$] t ON
+						t.[d_Query_id] = dQ.[rowid]
+					LEFT OUTER JOIN [hist].[h_InstanceSystemStatisticalFunctions] hISSF ON
+						hISSF.[h_ServerInstance_id] = hSI.[rowid]
+						AND hISSF.[EventTime] = t.[EventTime]
+				WHERE
+					dQ.[rowid] = @d_Query_id
+					AND hISSF.[rowid] IS NULL
+				;
+			</sqlite_statement>
+			<sqlite_statement id="41">
+				INSERT OR REPLACE INTO [hist].[h_InstanceSystemStatisticalFunctionsBaseline]
+				(
+					 [d_Query_id]
+					,[h_ServerInstance_id]
+					,[EventDay]
+					,[EventTime]
+					,[Connections]
+					,[CPUBusy]
+					,[CPUIdle]
+					,[IOBusy]
+					,[PackReceived]
+					,[PackSent]
+					,[PacketErrors]
+					,[TimeTicks]
+					,[TotalErrors]
+					,[TotalRead]
+					,[TotalWrite]
+				)
+				SELECT
+					 dQ.[rowid]
+					,hSI.[rowid]
+					,date(t.[EventTime])
+					,t.[EventTime]
+					,t.[Connections]
+					,t.[CPUBusy]
+					,t.[CPUIdle]
+					,t.[IOBusy]
+					,t.[PackReceived]
+					,t.[PackSent]
+					,t.[PacketErrors]
+					,t.[TimeTicks]
+					,t.[TotalErrors]
+					,t.[TotalRead]
+					,t.[TotalWrite]
+				FROM
+					[d_Query] dQ
+					INNER JOIN [hist].[h_ServerInstance] hSI ON
+						hSI.[d_ServerInstance_id] = dQ.[d_ServerInstance_id]
+					INNER JOIN [report].[${GetInstanceSystemStatisticalFunctions}$_${1}$] t ON
+						t.[d_Query_id] = dQ.[rowid]
+					LEFT OUTER JOIN [hist].[h_InstanceSystemStatisticalFunctionsBaseline] hISSFB ON
+						hISSFB.[h_ServerInstance_id] = hSI.[rowid]
+						AND hISSFB.[EventTime] = t.[EventTime]
+				WHERE
+					dQ.[rowid] = @d_Query_id
+					AND hISSFB.[rowid] IS NULL
+				;
+			</sqlite_statement>
+		</sqlite_statements>
+	</sql-select>
+</sqlquery>
+</root>

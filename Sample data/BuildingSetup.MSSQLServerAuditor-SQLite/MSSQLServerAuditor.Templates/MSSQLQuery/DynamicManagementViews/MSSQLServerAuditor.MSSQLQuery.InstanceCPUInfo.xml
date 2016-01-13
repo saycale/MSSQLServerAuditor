@@ -1,0 +1,240 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<root xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+<MSSQLQuery>
+	<sql-select name="GetInstanceCPUUtilization" group="" scope="instance">
+		<description>
+			This script will display CPU usage on the server. The data comes from dm_os_ring_buffers
+			which only stored data for the past 4 HOURS. Within the ring buffers, data is averaged
+			at the minute level. There are variables limit the results to a smaller time window and
+			for hiding the details.
+		</description>
+		<reference>
+			http://www.sqlservercentral.com/Forums/Topic611107-146-2.aspx
+		</reference>
+		<reference>
+			http://social.msdn.microsoft.com/Forums/en-US/sqldatabaseengine/thread/abbf67ab-fc8b-4567-b6d4-1c605bc9866c/
+		</reference>
+		<reference>
+			https://www.simple-talk.com/content/print.aspx?article=1544
+		</reference>
+		<sql-select-text MinSupportedVersion="10.*" MaxSupportedVersion="*" signature="">
+			SELECT
+				 y.RecordEventTime                             AS [EventTime]
+				,y.[RecordTimeStamp]                           AS [RecordTimeStamp]
+				,y.[RingBufferType]                            AS [RecordRingBufferType]
+				,y.[MemoryUtilization]                         AS [MemoryUtilization]
+				,y.[SystemIdle]                                AS [SystemIdle]
+				,y.[ProcessUtilization]                        AS [SQLProcessCPUUtilization]
+				,100 - y.[SystemIdle] - y.[ProcessUtilization] AS [OtherProcessesCPUUtilization]
+			FROM
+				(
+					SELECT
+						 x.[RecordEventTime]                                                                             AS [RecordEventTime]
+						,x.[RecordTimeStamp]                                                                             AS [RecordTimeStamp]
+						,x.[RingBufferType]                                                                              AS [RingBufferType]
+						,XMLRecord.value('(//Record/@id)[1]', 'int')                                                     AS [RecordId]
+						,XMLRecord.value('(//Record/@type)[1]', 'VARCHAR(128)')                                          AS [RecordType]
+						,XMLRecord.value('(//Record/@time)[1]', 'bigint')                                                AS [RecordTime]
+						,XMLRecord.value('(./Record/SchedulerMonitorEvent/SystemHealth/SystemIdle)[1]', 'int')           AS [SystemIdle]
+						,XMLRecord.value('(./Record/SchedulerMonitorEvent/SystemHealth/ProcessUtilization)[1]', 'int')   AS [ProcessUtilization]
+						,XMLRecord.value('(./Record/SchedulerMonitorEvent/SystemHealth/MemoryUtilization)[1]', 'bigint') AS [MemoryUtilization]
+					FROM (
+						SELECT
+							 DATEADD(ms, t.[timestamp] - tSDOSI.[ms_ticks], GETDATE()) AS [RecordEventTime]
+							,t.[timestamp]                                             AS [RecordTimeStamp]
+							,t.[ring_buffer_type]                                      AS [RingBufferType]
+							,CONVERT(XML, t.[record])                                  AS [XMLRecord]
+						FROM
+							[sys].[dm_os_ring_buffers] t
+							CROSS JOIN [sys].[dm_os_sys_info] AS tSDOSI
+						WHERE
+							t.[ring_buffer_type] = N'RING_BUFFER_SCHEDULER_MONITOR'
+							AND t.[record] LIKE '% %'
+							AND (tSDOSI.[ms_ticks] - t.[timestamp]) &lt; 2147483647
+					) AS x
+				) AS y
+			ORDER BY
+				1 ASC;
+		</sql-select-text>
+		<sqlite_statements>
+			<sqlite_statement id="1">
+				CREATE TABLE IF NOT EXISTS [hist].[d_ConnectionGroup]
+				(
+					 [DateCreated]          [DATETIME] NOT NULL DEFAULT (DATETIME('now'))
+					,[DateUpdated]          [DATETIME] NOT NULL DEFAULT (DATETIME('now'))
+					,[d_Query_Id]           [INTEGER]  NOT NULL
+					,[d_ConnectionGroup_Id] [INTEGER]  NOT NULL
+					,[ConnectionGroupName]  [TEXT]     NULL
+				);
+			</sqlite_statement>
+			<sqlite_statement id="2">
+				CREATE INDEX IF NOT EXISTS [hist].[idx_d_ConnectionGroup] ON [d_ConnectionGroup]
+				(
+					[d_ConnectionGroup_Id]
+				);
+			</sqlite_statement>
+			<sqlite_statement id="3">
+				INSERT INTO [hist].[d_ConnectionGroup]
+				(
+					 [d_Query_Id]
+					,[d_ConnectionGroup_Id]
+					,[ConnectionGroupName]
+				)
+				SELECT
+					 dQ.[rowid]
+					,dCG.[rowid]
+					,dCG.[ConnectionGroupName]
+				FROM
+					[d_Query] dQ
+					INNER JOIN [d_Instance] dI ON
+						dI.[rowid] = dQ.[d_Instance_id]
+					INNER JOIN [d_ConnectionGroup] dCG ON
+						dCG.[rowid] = dI.[d_ConnectionGroup_id]
+					LEFT OUTER JOIN [hist].[d_ConnectionGroup] hCG ON
+						hCG.[d_ConnectionGroup_Id] = dCG.[rowid]
+				WHERE
+					dQ.[rowid] = @d_Query_id
+					AND hCG.[d_ConnectionGroup_Id] IS NULL;
+			</sqlite_statement>
+			<sqlite_statement id="10">
+				CREATE TABLE IF NOT EXISTS [hist].[d_Instance]
+				(
+					 [DateCreated]          [DATETIME] NOT NULL DEFAULT (DATETIME('now'))
+					,[DateUpdated]          [DATETIME] NOT NULL DEFAULT (DATETIME('now'))
+					,[d_Query_id]           [INTEGER]  NOT NULL
+					,[d_ConnectionGroup_Id] [INTEGER]  NOT NULL
+					,[d_Instance_id]        [INTEGER]  NOT NULL
+					,[ServerInstanceName]         [TEXT]     NULL
+					,[ConnectionName]       [TEXT]     NULL
+				);
+			</sqlite_statement>
+			<sqlite_statement id="11">
+				CREATE INDEX IF NOT EXISTS [hist].[idx_d_Instance] ON [d_Instance]
+				(
+					 [d_ConnectionGroup_Id]
+					,[d_Instance_id]
+				);
+			</sqlite_statement>
+			<sqlite_statement id="12">
+				INSERT INTO [hist].[d_Instance]
+				(
+					 [d_Query_id]
+					,[d_ConnectionGroup_Id]
+					,[d_Instance_id]
+					,[ServerInstanceName]
+					,[ConnectionName]
+				)
+				SELECT
+					 dQ.[rowid]
+					,dCG.[rowid]
+					,dI.[rowid]
+					,dI.[ServerInstanceName]
+					,dI.[ConnectionName]
+				FROM
+					[d_Query] dQ
+					INNER JOIN [d_Instance] dI ON
+						dI.[rowid] = dQ.[d_Instance_id]
+					INNER JOIN [d_ConnectionGroup] dCG ON
+						dCG.[rowid] = dI.[d_ConnectionGroup_id]
+					INNER JOIN [hist].[d_ConnectionGroup] hCG ON
+						hCG.[d_ConnectionGroup_id] = dCG.[rowid]
+					LEFT OUTER JOIN [hist].[d_Instance] hI ON
+						hI.[d_ConnectionGroup_Id] = hCG.[d_ConnectionGroup_Id]
+						AND hI.[d_Instance_id] = dQ.[d_Instance_id]
+				WHERE
+					dQ.[rowid] = @d_Query_id
+					AND hI.[d_Instance_id] IS NULL;
+			</sqlite_statement>
+			<sqlite_statement id="20">
+				CREATE TABLE IF NOT EXISTS [hist].[h_GetInstanceCPUUtilization]
+				(
+					 [DateCreated]                  [DATETIME]         NOT NULL DEFAULT (DATETIME('now'))
+					,[DateUpdated]                  [DATETIME]         NOT NULL DEFAULT (DATETIME('now'))
+					,[d_Query_id]                   [INTEGER]          NOT NULL
+					,[d_Instance_id]                [INTEGER]          NOT NULL
+					,[EventTime]                    [DATETIME]         NULL
+					,[RecordTimeStamp]              [UNSIGNED BIG INT] NULL
+					,[RecordRingBufferType]         [TEXT]             NULL
+					,[MemoryUtilization]            [UNSIGNED BIG INT] NULL
+					,[SystemIdle]                   [INTEGER]          NULL
+					,[SQLProcessCPUUtilization]     [INTEGER]          NULL
+					,[OtherProcessesCPUUtilization] [INTEGER]          NULL
+				);
+			</sqlite_statement>
+			<sqlite_statement id="21">
+				CREATE INDEX IF NOT EXISTS [hist].[idx_h_GetInstanceCPUUtilization] ON [h_GetInstanceCPUUtilization]
+				(
+					 [d_Instance_id]
+					,[EventTime] DESC
+				);
+			</sqlite_statement>
+			<sqlite_statement id="22">
+				INSERT INTO [hist].[h_GetInstanceCPUUtilization]
+				(
+					 [d_Query_id]
+					,[d_Instance_id]
+					,[EventTime]
+					,[RecordTimeStamp]
+					,[RecordRingBufferType]
+					,[MemoryUtilization]
+					,[SystemIdle]
+					,[SQLProcessCPUUtilization]
+					,[OtherProcessesCPUUtilization]
+				)
+				SELECT
+					 d.[rowid]
+					,d.[d_Instance_id]
+					,t.[EventTime]
+					,t.[RecordTimeStamp]
+					,t.[RecordRingBufferType]
+					,t.[MemoryUtilization]
+					,t.[SystemIdle]
+					,t.[SQLProcessCPUUtilization]
+					,t.[OtherProcessesCPUUtilization]
+				FROM
+					[d_Query] d
+					INNER JOIN [t_A_02000_00300_GetInstanceCPUUtilization_qCPU_Current_r1] t ON
+						t.[d_Query_id] = d.[rowid]
+					LEFT OUTER JOIN [hist].[h_GetInstanceCPUUtilization] hGICU ON
+						hGICU.[d_Instance_id] = d.[d_Instance_id]
+						AND hGICU.[RecordTimeStamp] = t.[RecordTimeStamp]
+						AND hGICU.[RecordRingBufferType] = t.[RecordRingBufferType]
+				WHERE
+					d.[rowid] = @d_Query_id
+					AND hGICU.[rowid] IS NULL;
+			</sqlite_statement>
+			<sqlite_statement id="23">
+				UPDATE [hist].[h_GetInstanceCPUUtilization] SET
+					[DateUpdated] = (
+						SELECT
+							DATETIME('now')
+						FROM
+							[d_Query] d
+							INNER JOIN [t_A_02000_00300_GetInstanceCPUUtilization_qCPU_Current_r1] t ON
+								t.[d_Query_id] = d.[rowid]
+						WHERE
+							d.[rowid] = @d_Query_id
+							AND d.[d_Instance_id] = [hist].[h_GetInstanceCPUUtilization].[d_Instance_id]
+							AND t.[RecordTimeStamp] = [hist].[h_GetInstanceCPUUtilization].[RecordTimeStamp]
+							AND t.[RecordRingBufferType] = [hist].[h_GetInstanceCPUUtilization].[RecordRingBufferType]
+					)
+				WHERE
+					EXISTS (
+						SELECT
+							1
+						FROM
+							[d_Query] d
+							INNER JOIN [t_A_02000_00300_GetInstanceCPUUtilization_qCPU_Current_r1] t ON
+								t.[d_Query_id] = d.[rowid]
+						WHERE
+							d.[rowid] = @d_Query_id
+							AND d.[d_Instance_id] = [hist].[h_GetInstanceCPUUtilization].[d_Instance_id]
+							AND t.[RecordTimeStamp] = [hist].[h_GetInstanceCPUUtilization].[RecordTimeStamp]
+							AND t.[RecordRingBufferType] = [hist].[h_GetInstanceCPUUtilization].[RecordRingBufferType]
+					);
+			</sqlite_statement>
+		</sqlite_statements>
+	</sql-select>
+</MSSQLQuery>
+</root>
+

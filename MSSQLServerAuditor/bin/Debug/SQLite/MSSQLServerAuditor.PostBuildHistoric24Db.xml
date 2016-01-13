@@ -1,0 +1,24 @@
+﻿<?xml version="1.0" encoding="UTF-8"?>
+<root xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+<sqlquery type="SQLite">
+	<sql-select id="0001" name="h_ServerInstance">
+		<sql-select-text>
+			CREATE TABLE IF NOT EXISTS [h_ServerInstance]
+			(
+				 [DateCreated]        [DATETIME] NOT NULL DEFAULT (DATETIME('now'))
+				,[DateUpdated]        [DATETIME] NOT NULL DEFAULT (DATETIME('now'))
+				,[ServerInstanceName] [TEXT]     NOT NULL
+				,[ConnectionName]     [TEXT]     NULL
+			);
+		</sql-select-text>
+	</sql-select>
+	<sql-select id="0002" name="idx_h_ServerInstance">
+		<sql-select-text>
+			CREATE INDEX IF NOT EXISTS [idx_h_ServerInstance] ON [h_ServerInstance]
+			(
+				[ServerInstanceName]
+			);
+		</sql-select-text>
+	</sql-select>
+</sqlquery>
+</root>

@@ -1,0 +1,27 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<root xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
+  <settings>
+    <extsettings />
+    <interface_lang>en</interface_lang>
+    <report_lang>en</report_lang>
+    <sqltimeout>90</sqltimeout>
+    <showstatuspanel>true</showstatuspanel>
+    <showmainmenu>true</showmainmenu>
+    <showaddressline>false</showaddressline>
+    <showsinglecnntab>true</showsinglecnntab>
+    <showclosetabconfirm>false</showclosetabconfirm>
+    <WarnAboutUnsignedQuery>true</WarnAboutUnsignedQuery>
+    <MainWindowState>
+      <Location>
+        <X>10</X>
+        <Y>10</Y>
+      </Location>
+      <Size>
+        <Width>780</Width>
+        <Height>580</Height>
+      </Size>
+      <WindowState>Normal</WindowState>
+    </MainWindowState>
+    <SystemSettings />
+  </settings>
+</root>

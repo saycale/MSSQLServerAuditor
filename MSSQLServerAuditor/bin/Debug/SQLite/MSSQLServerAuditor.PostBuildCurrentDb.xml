@@ -1,0 +1,21 @@
+﻿<?xml version="1.0" encoding="UTF-8"?>
+<root xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+<sqlquery type="SQLite">
+	<sql-select id="100002" name="idx_d_TemplateNodeSchedule_UserSettings_date_created">
+		<sql-select-text>
+			CREATE INDEX IF NOT EXISTS [idx_d_TemplateNodeSchedule_UserSettings_date_created] ON [d_TemplateNodeSchedule_UserSettings]
+			(
+				[date_created]
+			);
+		</sql-select-text>
+	</sql-select>
+	<sql-select id="100003" name="idx_d_TemplateNodeSchedule_UserSettings_date_updated">
+		<sql-select-text>
+			CREATE INDEX IF NOT EXISTS [idx_d_TemplateNodeSchedule_UserSettings_date_updated] ON [d_TemplateNodeSchedule_UserSettings]
+			(
+				[date_updated]
+			);
+		</sql-select-text>
+	</sql-select>
+</sqlquery>
+</root>

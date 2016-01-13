@@ -1,0 +1,74 @@
+﻿<?xml version="1.0" encoding="UTF-8"?>
+<MSSQLServerAuditorTemplate id="sr" type="MSSQL" xmlns:xi="http://www.w3.org/2003/XInclude" version="1.0">
+	<i18n name="en">
+		SplitterReport Template
+	</i18n>
+	<i18n name="ru">
+		Отчёты с разделителями
+	</i18n>
+
+	<template id="1" name="InstanceProcesses" file="mssql\Instance\Audit\Processes\MSSQLServerAuditor.xsl" icon="doc" showIfEmpty="true" showNumberOfRecords="true">
+		<i18n name="en">
+			Splitter Report Test
+		</i18n>
+		<i18n name="ru">
+			Тестирование отчёта с разделителями
+		</i18n>
+
+		<sql-select id="0" file="SQLQuery\mssql\MSSQLServerAuditor.MSSQLQuery.InstanceProcesses.xml" name="GetInstanceProcesses" hierarchy="Users">
+			<parameter name="@boolIsShowUsersProcessesOnly" value="True"/>
+		</sql-select>
+
+		<sql-select id="0" file="SQLQuery\mssql\MSSQLServerAuditor.MSSQLQuery.InstanceProcesses.xml" name="GetInstanceProcesses" hierarchy="All">
+			<parameter name="@boolIsShowUsersProcessesOnly" value="False"/>
+		</sql-select>
+
+		<sql-select id="CPU_Current" file="SQLQuery\mssql\DynamicManagementViews\MSSQLServerAuditor.MSSQLQuery.InstanceCPUInfo.xml" name="GetInstanceCPUUtilization" hierarchy="">
+		</sql-select>
+	</template>
+
+	<template id="2" name="Databases" file="" icon="doc" showIfEmpty="true" showNumberOfRecords="true">
+		<i18n>
+			Databases
+		</i18n>
+		<i18n name="ru">
+			Базы данных
+		</i18n>
+
+		<template id="1" name="Size" file="mssql\Instance\Databases\Size\MSSQLServerAuditor.xsl" icon="doc" showIfEmpty="true" showNumberOfRecords="true">
+			<i18n name="en">
+				Database Size
+			</i18n>
+			<i18n name="ru">
+				Размер баз данных (3 отчёта с разделителями)
+			</i18n>
+
+			<sql-select id="0" file="SQLQuery\mssql\MSSQLServerAuditor.MSSQLQuery.Instance.DatabasesSize.xml" name="GetInstanceDatabasesSize" hierarchy="">
+			</sql-select>
+		</template>
+
+		<template id="2" name="Size" file="mssql\Instance\Databases\Size\MSSQLServerAuditor.3.xsl" icon="doc" showIfEmpty="true" showNumberOfRecords="true">
+			<i18n name="en">
+				Database Size
+			</i18n>
+			<i18n name="ru">
+				Размер баз данных (4 отчёта с разделителями)
+			</i18n>
+
+			<sql-select id="0" file="SQLQuery\mssql\MSSQLServerAuditor.MSSQLQuery.Instance.DatabasesSize.xml" name="GetInstanceDatabasesSize" hierarchy="">
+			</sql-select>
+		</template>
+
+		<template id="4" name="Size" file="mssql\Instance\Databases\Size\MSSQLServerAuditor.4.xsl" icon="doc" showIfEmpty="true" showNumberOfRecords="true">
+			<i18n name="en">
+				Database Size
+			</i18n>
+			<i18n name="ru">
+				Размер баз данных (4 отчёта с разделителями)
+			</i18n>
+
+			<sql-select id="0" file="SQLQuery\mssql\MSSQLServerAuditor.MSSQLQuery.Instance.DatabasesSize.xml" name="GetInstanceDatabasesSize" hierarchy="">
+			</sql-select>
+		</template>
+	</template>
+</MSSQLServerAuditorTemplate>

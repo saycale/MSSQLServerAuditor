@@ -1,0 +1,145 @@
+﻿<?xml version="1.0" encoding="UTF-8"?>
+<root xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+<sqlquery type="MSSQL">
+	<sql-select name="GetTopBigTables">
+		<name>
+			Top Big Tables
+		</name>
+		<description>
+			Get the list of top big tables on the database
+		</description>
+		<reference>
+		</reference>
+		<sql-select-text MinSupportedVersion="8.*" MaxSupportedVersion="8.*" signature="">
+			SET NOCOUNT ON;
+			SET DEADLOCK_PRIORITY LOW;
+
+			DECLARE
+				@intPageSize [INTEGER]
+			;
+
+			SELECT TOP 1
+				@intPageSize = CONVERT([INTEGER], tSV.[low] / 1024)
+			FROM
+				[master].[dbo].[spt_values] tSV
+			WHERE
+				tSV.[number] = 1
+				AND tSV.[type] = N'E';
+
+			SET ROWCOUNT @intNumberOfRowsToShow;
+
+			SELECT
+				 tSU.[name]                                        AS [SchemaName]
+				,tSO.[name]                                        AS [ObjectName]
+				,tSO.[xtype]                                       AS [ObjectType]
+				,tSO.[crdate]                                      AS [ObjectCreateDate]
+				,MAX(tSI.[rowcnt])                                 AS [ObjectRowCount]
+				,MAX(tSI.[reserved] * @intPageSize)                AS [ObjectTotalKb]
+				,MAX(tSI.[used] * @intPageSize)                    AS [ObjectUsedKb]
+				,NULL                                              AS [ObjectDataKb]
+				,NULL                                              AS [ObjectIndexKb]
+				,MAX((tSI.[used] - tSI.[reserved]) * @intPageSize) AS [ObjectUnUsedKb]
+			FROM
+				[dbo].[sysobjects] tSO
+				INNER JOIN [dbo].[sysusers] tSU ON
+					tSU.[uid] = tSO.[uid]
+				INNER JOIN [dbo].[sysindexes] tSI ON
+					tSI.[id] = tSO.[id]
+			WHERE
+				tSO.[xtype] IN (
+					N'U'
+				)
+				AND OBJECTPROPERTY(tSO.[id], N'IsMSShipped') = 0
+				AND tSI.[indid] IN (0, 1)
+				AND (
+					tSI.[name] NOT LIKE 'sys%'
+					OR
+					tSI.[name] IS NULL
+				)
+				AND tSI.[rowcnt] IS NOT NULL
+				AND tSI.[dpages] IS NOT NULL
+				AND tSI.[reserved] IS NOT NULL
+				AND tSI.[used] IS NOT NULL
+			GROUP BY
+				 tSU.[name]
+				,tSO.[name]
+				,tSO.[xtype]
+				,tSO.[crdate]
+			ORDER BY
+				6 DESC;
+		</sql-select-text>
+		<sql-select-text MinSupportedVersion="9.*" MaxSupportedVersion="*" signature="">
+			SET NOCOUNT ON;
+			SET DEADLOCK_PRIORITY LOW;
+
+			DECLARE
+				@intPageSize [NUMERIC]
+			;
+
+			SELECT TOP 1
+				@intPageSize = CONVERT([INTEGER], tSV.[low] / 1024)
+			FROM
+				[master].[dbo].[spt_values] tSV
+			WHERE
+				tSV.[number] = 1
+				AND tSV.[type] = N'E';
+
+			SELECT TOP (@intNumberOfRowsToShow)
+				 tSS.[name]                                                   AS [SchemaName]
+				,tSO.[name]                                                   AS [ObjectName]
+				,tSO.[type_desc]                                              AS [ObjectType]
+				,tSO.[create_date]                                            AS [ObjectCreateDate]
+				,SUM(
+					CASE
+						WHEN (tSP.[index_id] IN (0, 1)) AND (tSAU.[type] = 1) THEN
+							tSP.[rows]
+						ELSE
+							0
+					END
+				)                                                             AS [ObjectRowCount]
+				,SUM(tSAU.[total_pages] * @intPageSize)                       AS [ObjectTotalKb]
+				,SUM(tSAU.[used_pages] * @intPageSize)                        AS [ObjectUsedKb]
+				,SUM(
+					CASE
+						WHEN (tSP.[index_id] IN (0, 1)) AND (tSAU.[type] = 1) THEN
+							tSAU.[used_pages] * @intPageSize
+						ELSE
+							0
+					END
+				)                                                             AS [ObjectDataKb]
+				,SUM(
+					CASE
+						WHEN (tSP.[index_id] IN (0, 1)) AND (tSAU.[type] = 1) THEN
+							0
+						ELSE
+							tSAU.[used_pages] * @intPageSize
+					END
+				)                                                             AS [ObjectIndexKb]
+				,SUM((tSAU.[total_pages] - tSAU.[used_pages]) * @intPageSize) AS [ObjectUnUsedKb]
+			FROM
+				[sys].[objects] tSO
+				INNER JOIN [sys].[schemas] tSS ON
+					tSS.[schema_id] = tSO.[schema_id]
+				INNER JOIN [sys].[partitions] tSP ON
+					tSP.[object_id] = tSO.[object_id]
+				INNER JOIN [sys].[allocation_units] tSAU ON
+					tSAU.[container_id] = tSP.[partition_id]
+			WHERE
+				tSO.[type_desc] IN (
+					N'USER_TABLE'
+				)
+				AND OBJECTPROPERTY(tSO.[object_id], N'IsMSShipped') = 0
+			GROUP BY
+				 tSS.[name]
+				,tSO.[name]
+				,tSO.[type_desc]
+				,tSO.[create_date]
+			ORDER BY
+				6 DESC;
+		</sql-select-text>
+		<sql-select-parameters>
+			<sql-select-parameter name="@intNumberOfRowsToShow" type="Int" />
+		</sql-select-parameters>
+	</sql-select>
+</sqlquery>
+</root>

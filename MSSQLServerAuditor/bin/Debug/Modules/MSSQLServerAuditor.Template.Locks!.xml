@@ -1,0 +1,235 @@
+﻿<?xml version="1.0" encoding="UTF-8"?>
+<MSSQLServerAuditorTemplate id="Locks" type="MSSQL" xmlns:xi="http://www.w3.org/2003/XInclude" version="1.0">
+	<i18n name="en">
+		Locks!
+	</i18n>
+	<i18n name="ru">
+		Блокировки
+	</i18n>
+
+	<template id="10000" name="InstanceProcesses" file="mssql\Instance\Audit\Processes\MSSQLServerAuditor.xsl" icon="doc" showIfEmpty="true" showNumberOfRecords="false">
+		<i18n name="en">
+			Processes
+		</i18n>
+		<i18n name="ru">
+			Процессы
+		</i18n>
+
+		<template id="01000" name="InstanceProcesses" file="mssql\Instance\Audit\Processes\MSSQLServerAuditor.Processes.xsl" icon="doc" showIfEmpty="true" showNumberOfRecords="true">
+			<i18n name="en">
+				Locked
+			</i18n>
+			<i18n name="ru">
+				Блокированные
+			</i18n>
+
+			<sql-select id="0" file="SQLQuery\mssql\MSSQLServerAuditor.MSSQLQuery.InstanceProcesses.xml" name="GetInstanceProcesses" hierarchy="">
+				<parameter name="@boolIsShowSystemProcesses" value="True"/>
+				<parameter name="@boolIsShowUserProcesses" value="True"/>
+				<parameter name="@boolIsShowLockedProcessesOnly" value="True"/>
+			</sql-select>
+
+			<RefreshSchedules>
+				<RefreshSchedule>
+					<Enabled>false</Enabled>
+					<Id>001</Id>
+					<Name>GetLockedInstanceProcesses</Name>
+					<OccursOnceDateTime>1900-01-01T00:00:00</OccursOnceDateTime>
+					<OccursOnceDateTimeEnabled>false</OccursOnceDateTimeEnabled>
+					<ReccurPeriod>
+						<TimeUnit>Daily</TimeUnit>
+						<TimeUnitCount>1</TimeUnitCount>
+					</ReccurPeriod>
+					<DailyFrequency>
+						<OccursOnce>false</OccursOnce>
+						<OccursOnceTime>PT0S</OccursOnceTime>
+						<PeriodTimeUnit>Minute</PeriodTimeUnit>
+						<PeriodTimeUnitCount>1</PeriodTimeUnitCount>
+						<StartingAt>PT00H00M30S</StartingAt>
+						<EndingAt>PT23H59M59S</EndingAt>
+					</DailyFrequency>
+					<ActiveWeekDays />
+					<DayOfMonth>
+						<DayNumber>1</DayNumber>
+					</DayOfMonth>
+					<StartDate>1900-01-01T00:00:00</StartDate>
+					<EndDate>1900-01-01T00:00:00</EndDate>
+					<HasEndDate>false</HasEndDate>
+				</RefreshSchedule>
+			</RefreshSchedules>
+		</template>
+
+		<template id="02000" name="InstanceProcesses" file="mssql\Instance\Audit\Processes\MSSQLServerAuditor.Processes.xsl" icon="doc" showIfEmpty="true" showNumberOfRecords="true">
+			<i18n name="en">
+				Users
+			</i18n>
+			<i18n name="ru">
+				Пользовательские
+			</i18n>
+
+			<sql-select id="0" file="SQLQuery\mssql\MSSQLServerAuditor.MSSQLQuery.InstanceProcesses.xml" name="GetInstanceProcesses" hierarchy="">
+				<parameter name="@boolIsShowSystemProcesses" value="False"/>
+				<parameter name="@boolIsShowUserProcesses" value="True"/>
+				<parameter name="@boolIsShowLockedProcessesOnly" value="False"/>
+			</sql-select>
+
+			<RefreshSchedules>
+				<RefreshSchedule>
+					<Enabled>false</Enabled>
+					<Id>001</Id>
+					<Name>GetUsersInstanceProcesses</Name>
+					<OccursOnceDateTime>1900-01-01T00:00:00</OccursOnceDateTime>
+					<OccursOnceDateTimeEnabled>false</OccursOnceDateTimeEnabled>
+					<ReccurPeriod>
+						<TimeUnit>Daily</TimeUnit>
+						<TimeUnitCount>1</TimeUnitCount>
+					</ReccurPeriod>
+					<DailyFrequency>
+						<OccursOnce>false</OccursOnce>
+						<OccursOnceTime>PT0S</OccursOnceTime>
+						<PeriodTimeUnit>Minute</PeriodTimeUnit>
+						<PeriodTimeUnitCount>1</PeriodTimeUnitCount>
+						<StartingAt>PT00H00M30S</StartingAt>
+						<EndingAt>PT23H59M59S</EndingAt>
+					</DailyFrequency>
+					<ActiveWeekDays />
+					<DayOfMonth>
+						<DayNumber>1</DayNumber>
+					</DayOfMonth>
+					<StartDate>1900-01-01T00:00:00</StartDate>
+					<EndDate>1900-01-01T00:00:00</EndDate>
+					<HasEndDate>false</HasEndDate>
+				</RefreshSchedule>
+			</RefreshSchedules>
+		</template>
+
+		<template id="03000" name="InstanceProcesses" file="mssql\Instance\Audit\Processes\MSSQLServerAuditor.Processes.xsl" icon="doc" showIfEmpty="true" showNumberOfRecords="true">
+			<i18n name="en">
+				Systems
+			</i18n>
+			<i18n name="ru">
+				Системные
+			</i18n>
+
+			<sql-select id="0" file="SQLQuery\mssql\MSSQLServerAuditor.MSSQLQuery.InstanceProcesses.xml" name="GetInstanceProcesses" hierarchy="">
+				<parameter name="@boolIsShowSystemProcesses" value="True"/>
+				<parameter name="@boolIsShowUserProcesses" value="False"/>
+				<parameter name="@boolIsShowLockedProcessesOnly" value="False"/>
+			</sql-select>
+
+			<RefreshSchedules>
+				<RefreshSchedule>
+					<Enabled>false</Enabled>
+					<Id>001</Id>
+					<Name>GetSystemsInstanceProcesses</Name>
+					<OccursOnceDateTime>1900-01-01T00:00:00</OccursOnceDateTime>
+					<OccursOnceDateTimeEnabled>false</OccursOnceDateTimeEnabled>
+					<ReccurPeriod>
+						<TimeUnit>Daily</TimeUnit>
+						<TimeUnitCount>1</TimeUnitCount>
+					</ReccurPeriod>
+					<DailyFrequency>
+						<OccursOnce>false</OccursOnce>
+						<OccursOnceTime>PT0S</OccursOnceTime>
+						<PeriodTimeUnit>Minute</PeriodTimeUnit>
+						<PeriodTimeUnitCount>1</PeriodTimeUnitCount>
+						<StartingAt>PT00H00M30S</StartingAt>
+						<EndingAt>PT23H59M59S</EndingAt>
+					</DailyFrequency>
+					<ActiveWeekDays />
+					<DayOfMonth>
+						<DayNumber>1</DayNumber>
+					</DayOfMonth>
+					<StartDate>1900-01-01T00:00:00</StartDate>
+					<EndDate>1900-01-01T00:00:00</EndDate>
+					<HasEndDate>false</HasEndDate>
+				</RefreshSchedule>
+			</RefreshSchedules>
+		</template>
+
+		<template id="04000" name="InstanceProcesses" file="mssql\Instance\Audit\Processes\MSSQLServerAuditor.Processes.xsl" icon="doc" showIfEmpty="true" showNumberOfRecords="true">
+			<i18n name="en">
+				All
+			</i18n>
+			<i18n name="ru">
+				Все
+			</i18n>
+
+			<sql-select id="0" file="SQLQuery\mssql\MSSQLServerAuditor.MSSQLQuery.InstanceProcesses.xml" name="GetInstanceProcesses" hierarchy="">
+				<parameter name="@boolIsShowSystemProcesses" value="True"/>
+				<parameter name="@boolIsShowUserProcesses" value="True"/>
+				<parameter name="@boolIsShowLockedProcessesOnly" value="False"/>
+			</sql-select>
+
+			<RefreshSchedules>
+				<RefreshSchedule>
+					<Enabled>false</Enabled>
+					<Id>001</Id>
+					<Name>GetAllInstanceProcesses</Name>
+					<OccursOnceDateTime>1900-01-01T00:00:00</OccursOnceDateTime>
+					<OccursOnceDateTimeEnabled>false</OccursOnceDateTimeEnabled>
+					<ReccurPeriod>
+						<TimeUnit>Daily</TimeUnit>
+						<TimeUnitCount>1</TimeUnitCount>
+					</ReccurPeriod>
+					<DailyFrequency>
+						<OccursOnce>false</OccursOnce>
+						<OccursOnceTime>PT0S</OccursOnceTime>
+						<PeriodTimeUnit>Minute</PeriodTimeUnit>
+						<PeriodTimeUnitCount>1</PeriodTimeUnitCount>
+						<StartingAt>PT00H00M30S</StartingAt>
+						<EndingAt>PT23H59M59S</EndingAt>
+					</DailyFrequency>
+					<ActiveWeekDays />
+					<DayOfMonth>
+						<DayNumber>1</DayNumber>
+					</DayOfMonth>
+					<StartDate>1900-01-01T00:00:00</StartDate>
+					<EndDate>1900-01-01T00:00:00</EndDate>
+					<HasEndDate>false</HasEndDate>
+				</RefreshSchedule>
+			</RefreshSchedules>
+		</template>
+	</template>
+
+	<template id="20000" name="InstanceCPUUtilization" file="mssql\Instance\Audit\Processes\CPU\MSSQLServerAuditor.InstanceCPUUtilization.xsl" icon="doc" showIfEmpty="true" showNumberOfRecords="false">
+		<i18n name="en">
+			CPU Utilization
+		</i18n>
+		<i18n name="ru">
+			Использование процессора
+		</i18n>
+
+		<sql-select id="0" file="SQLQuery\mssql\DynamicManagementViews\MSSQLServerAuditor.MSSQLQuery.InstanceCPUInfo.xml" name="GetInstanceCPUUtilization" hierarchy="">
+		</sql-select>
+
+		<RefreshSchedules>
+			<RefreshSchedule>
+				<Enabled>false</Enabled>
+				<Id>001</Id>
+				<Name>GetCPUUtilization</Name>
+				<OccursOnceDateTime>1900-01-01T00:00:00</OccursOnceDateTime>
+				<OccursOnceDateTimeEnabled>false</OccursOnceDateTimeEnabled>
+				<ReccurPeriod>
+					<TimeUnit>Daily</TimeUnit>
+					<TimeUnitCount>1</TimeUnitCount>
+				</ReccurPeriod>
+				<DailyFrequency>
+					<OccursOnce>false</OccursOnce>
+					<OccursOnceTime>PT0S</OccursOnceTime>
+					<PeriodTimeUnit>Minute</PeriodTimeUnit>
+					<PeriodTimeUnitCount>1</PeriodTimeUnitCount>
+					<StartingAt>PT00H00M30S</StartingAt>
+					<EndingAt>PT23H59M59S</EndingAt>
+				</DailyFrequency>
+				<ActiveWeekDays />
+				<DayOfMonth>
+					<DayNumber>1</DayNumber>
+				</DayOfMonth>
+				<StartDate>1900-01-01T00:00:00</StartDate>
+				<EndDate>1900-01-01T00:00:00</EndDate>
+				<HasEndDate>false</HasEndDate>
+			</RefreshSchedule>
+		</RefreshSchedules>
+	</template>
+</MSSQLServerAuditorTemplate>

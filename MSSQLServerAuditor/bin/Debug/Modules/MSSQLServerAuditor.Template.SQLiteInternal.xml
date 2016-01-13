@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<MSSQLServerAuditorTemplate id="SQLiteInternal" type="SQLite-MSSQL" xmlns:xi="http://www.w3.org/2003/XInclude" version="1.0">
+	<i18n name="en">
+		SQLite internal
+	</i18n>
+	<i18n name="ru">
+		SQLite internal
+	</i18n>
+
+	<template id="100000" name="InstanceProcesses" IsHideTabs="true" file="hist_sqlite_test\MSSQLServerAuditor.InstanceSummaryProcesses.xsl" icon="doc" showIfEmpty="true" showNumberOfRecords="false">
+		<i18n name="en">
+			Processes
+		</i18n>
+		<i18n name="ru">
+			Процессы
+		</i18n>
+
+		<sql-select id="0" name="hist.GetInstanceSummaryProcessesToday" file="SQLQuery\sqlite\Monitoring\MSSQLServerAuditor.SQLite.GetInstanceSummaryProcesses.xml" hierarchy="">
+		</sql-select>
+	</template>
+</MSSQLServerAuditorTemplate>

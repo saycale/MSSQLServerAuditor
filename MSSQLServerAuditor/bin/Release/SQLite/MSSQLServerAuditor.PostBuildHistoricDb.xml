@@ -1,0 +1,1374 @@
+﻿<?xml version="1.0" encoding="UTF-8"?>
+<root xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+<sqlquery type="SQLite">
+	<sql-select id="0001" name="h_ServerInstance">
+		<sql-select-text>
+			CREATE TABLE IF NOT EXISTS [h_ServerInstance]
+			(
+				 [DateCreated]         [DATETIME] NOT NULL DEFAULT (DATETIME('now'))
+				,[DateUpdated]         [DATETIME] NOT NULL DEFAULT (DATETIME('now'))
+				,[d_Query_id]          [INTEGER]  NOT NULL
+				,[d_ServerInstance_id] [INTEGER]  NOT NULL
+				,[ServerInstanceName]  [TEXT]     NOT NULL
+				,[ConnectionName]      [TEXT]     NULL
+			);
+		</sql-select-text>
+	</sql-select>
+	<sql-select id="0002" name="idx_h_ServerInstance_ServerInstanceName">
+		<sql-select-text>
+			CREATE INDEX IF NOT EXISTS [idx_h_ServerInstance_ServerInstanceName] ON [h_ServerInstance]
+			(
+				[ServerInstanceName]
+			);
+		</sql-select-text>
+	</sql-select>
+	<sql-select id="0003" name="idx_h_ServerInstance_d_ServerInstance_id">
+		<sql-select-text>
+			CREATE INDEX IF NOT EXISTS [idx_h_ServerInstance_d_ServerInstance_id] ON [h_ServerInstance]
+			(
+				[d_ServerInstance_id]
+			);
+		</sql-select-text>
+	</sql-select>
+	<sql-select id="0004" name="trigger_h_ServerInstance_after_update">
+		<sql-select-text>
+			CREATE TRIGGER IF NOT EXISTS [trigger_h_ServerInstance_after_update]
+				AFTER UPDATE ON [h_ServerInstance] FOR EACH ROW
+			BEGIN
+				UPDATE [h_ServerInstance] SET
+					[DateUpdated] = DATETIME('now')
+				WHERE
+					[rowid] = new.[rowid];
+			END;
+		</sql-select-text>
+	</sql-select>
+
+	<sql-select id="0011" name="h_InstanceIOStatus">
+		<sql-select-text>
+			CREATE TABLE IF NOT EXISTS [h_InstanceIOStatus]
+			(
+				 [DateCreated]          [DATETIME]         NOT NULL DEFAULT (DATETIME('now'))
+				,[DateUpdated]          [DATETIME]         NOT NULL DEFAULT (DATETIME('now'))
+				,[d_Query_id]           [INTEGER]          NOT NULL
+				,[h_ServerInstance_id]  [INTEGER]          NOT NULL
+				,[EventDay]             [DATE]             NOT NULL
+				,[EventTime]            [DATETIME]         NOT NULL
+				,[num_of_reads]         [DOUBLE PRECISION] NULL
+				,[num_of_bytes_read]    [DOUBLE PRECISION] NULL
+				,[io_stall_read_ms]     [DOUBLE PRECISION] NULL
+				,[num_of_writes]        [DOUBLE PRECISION] NULL
+				,[num_of_bytes_written] [DOUBLE PRECISION] NULL
+				,[io_stall_write_ms]    [DOUBLE PRECISION] NULL
+				,[io_stall]             [DOUBLE PRECISION] NULL
+			);
+		</sql-select-text>
+	</sql-select>
+	<sql-select id="0012" name="idx_h_InstanceIOStatus_EventDay">
+		<sql-select-text>
+			CREATE INDEX IF NOT EXISTS [idx_h_InstanceIOStatus_EventDay] ON [h_InstanceIOStatus]
+			(
+				 [h_ServerInstance_id]
+				,[EventDay] DESC
+			);
+		</sql-select-text>
+	</sql-select>
+	<sql-select id="0013" name="idx_h_InstanceIOStatus_EventTime">
+		<sql-select-text>
+			CREATE INDEX IF NOT EXISTS [idx_h_InstanceIOStatus_EventTime] ON [h_InstanceIOStatus]
+			(
+				 [h_ServerInstance_id]
+				,[EventTime] DESC
+			);
+		</sql-select-text>
+	</sql-select>
+
+	<sql-select id="0021" name="h_InstanceIOStatusBaseline">
+		<sql-select-text>
+			CREATE TABLE IF NOT EXISTS [h_InstanceIOStatusBaseline]
+			(
+				 [DateCreated]          [DATETIME]         NOT NULL DEFAULT (DATETIME('now'))
+				,[DateUpdated]          [DATETIME]         NOT NULL DEFAULT (DATETIME('now'))
+				,[d_Query_id]           [INTEGER]          NOT NULL
+				,[h_ServerInstance_id]  [INTEGER]          NOT NULL
+				,[EventDay]             [DATE]             NOT NULL
+				,[EventTime]            [DATETIME]         NOT NULL
+				,[num_of_reads]         [UNSIGNED BIG INT] NULL
+				,[num_of_bytes_read]    [UNSIGNED BIG INT] NULL
+				,[io_stall_read_ms]     [UNSIGNED BIG INT] NULL
+				,[num_of_writes]        [UNSIGNED BIG INT] NULL
+				,[num_of_bytes_written] [UNSIGNED BIG INT] NULL
+				,[io_stall_write_ms]    [UNSIGNED BIG INT] NULL
+				,[io_stall]             [UNSIGNED BIG INT] NULL
+			);
+		</sql-select-text>
+	</sql-select>
+	<sql-select id="0022" name="uidx_h_InstanceIOStatusBaseline">
+		<sql-select-text>
+			CREATE UNIQUE INDEX IF NOT EXISTS [uidx_h_InstanceIOStatusBaseline] ON [h_InstanceIOStatusBaseline]
+			(
+				[h_ServerInstance_id]
+			);
+		</sql-select-text>
+	</sql-select>
+
+	<sql-select id="0031" name="h_InstanceSummaryProcesses">
+		<sql-select-text>
+			CREATE TABLE IF NOT EXISTS [h_InstanceSummaryProcesses]
+			(
+				 [DateCreated]                 [DATETIME]         NOT NULL DEFAULT (DATETIME('now'))
+				,[DateUpdated]                 [DATETIME]         NOT NULL DEFAULT (DATETIME('now'))
+				,[d_Query_id]                  [INTEGER]          NOT NULL
+				,[h_ServerInstance_id]         [INTEGER]          NOT NULL
+				,[EventDay]                    [DATE]             NOT NULL
+				,[EventTime]                   [DATETIME]         NOT NULL
+				,[NumberOfSystemProcesses]     [UNSIGNED BIG INT] NULL
+				,[NumberOfUserProcesses]       [UNSIGNED BIG INT] NULL
+				,[NumberOfActiveUserProcesses] [UNSIGNED BIG INT] NULL
+				,[NumberOfBlockedProcesses]    [UNSIGNED BIG INT] NULL
+			);
+		</sql-select-text>
+	</sql-select>
+	<sql-select id="0032" name="idx_h_InstanceSummaryProcesses_EventDay">
+		<sql-select-text>
+			CREATE INDEX IF NOT EXISTS [idx_h_InstanceSummaryProcesses_EventDay] ON [h_InstanceSummaryProcesses]
+			(
+				 [h_ServerInstance_id]
+				,[EventDay] DESC
+			);
+		</sql-select-text>
+	</sql-select>
+	<sql-select id="0033" name="idx_h_InstanceSummaryProcesses_EventTime">
+		<sql-select-text>
+			CREATE INDEX IF NOT EXISTS [idx_h_InstanceSummaryProcesses_EventTime] ON [h_InstanceSummaryProcesses]
+			(
+				 [h_ServerInstance_id]
+				,[EventTime] DESC
+			);
+		</sql-select-text>
+	</sql-select>
+
+	<sql-select id="0041" name="h_SysDmOsWaitStatsBaseline">
+		<sql-select-text>
+			CREATE TABLE IF NOT EXISTS [h_SysDmOsWaitStatsBaseline]
+			(
+				 [DateCreated]         [DATETIME]         NOT NULL DEFAULT (DATETIME('now'))
+				,[DateUpdated]         [DATETIME]         NOT NULL DEFAULT (DATETIME('now'))
+				,[d_Query_id]          [INTEGER]          NOT NULL
+				,[h_ServerInstance_id] [INTEGER]          NOT NULL
+				,[EventDay]            [DATE]             NOT NULL
+				,[EventTime]           [DATETIME]         NOT NULL
+				,[WaitType]            [TEXT]             NOT NULL
+				,[WaitTimeMs]          [UNSIGNED BIG INT] NULL
+			);
+		</sql-select-text>
+	</sql-select>
+	<sql-select id="0042" name="uidx_h_SysDmOsWaitStatsBaseline">
+		<sql-select-text>
+			CREATE UNIQUE INDEX IF NOT EXISTS [uidx_h_SysDmOsWaitStatsBaseline] ON [h_SysDmOsWaitStatsBaseline]
+			(
+				 [h_ServerInstance_id]
+				,[WaitType]
+			);
+		</sql-select-text>
+	</sql-select>
+
+	<sql-select id="0051" name="h_SysDmOsWaitStats">
+		<sql-select-text>
+			CREATE TABLE IF NOT EXISTS [h_SysDmOsWaitStats]
+			(
+				 [DateCreated]         [DATETIME]         NOT NULL DEFAULT (DATETIME('now'))
+				,[DateUpdated]         [DATETIME]         NOT NULL DEFAULT (DATETIME('now'))
+				,[d_Query_id]          [INTEGER]          NOT NULL
+				,[h_ServerInstance_id] [INTEGER]          NOT NULL
+				,[EventDay]            [DATE]             NOT NULL
+				,[EventTime]           [DATETIME]         NOT NULL
+				,[WaitType]            [TEXT]             NOT NULL
+				,[WaitTimeMs]          [UNSIGNED BIG INT] NULL
+				,[EventTimeLast]       [DATETIME]         NULL
+				,[WaitTimeMsLast]      [UNSIGNED BIG INT] NULL
+			);
+		</sql-select-text>
+	</sql-select>
+	<sql-select id="0052" name="idx_h_SysDmOsWaitStats_EventDay">
+		<sql-select-text>
+			CREATE INDEX IF NOT EXISTS [idx_h_SysDmOsWaitStats_EventDay] ON [h_SysDmOsWaitStats]
+			(
+				 [h_ServerInstance_id]
+				,[EventDay] DESC
+			);
+		</sql-select-text>
+	</sql-select>
+	<sql-select id="0053" name="idx_h_SysDmOsWaitStats_EventTime">
+		<sql-select-text>
+			CREATE INDEX IF NOT EXISTS [idx_h_SysDmOsWaitStats_EventTime] ON [h_SysDmOsWaitStats]
+			(
+				 [h_ServerInstance_id]
+				,[EventTime] DESC
+			);
+		</sql-select-text>
+	</sql-select>
+
+	<sql-select id="0061" name="h_InstanceNetworkStatus">
+		<sql-select-text>
+			CREATE TABLE IF NOT EXISTS [h_InstanceNetworkStatus]
+			(
+				 [DateCreated]         [DATETIME]         NOT NULL DEFAULT (DATETIME('now'))
+				,[DateUpdated]         [DATETIME]         NOT NULL DEFAULT (DATETIME('now'))
+				,[d_Query_id]          [INTEGER]          NOT NULL
+				,[h_ServerInstance_id] [INTEGER]          NOT NULL
+				,[EventDay]            [DATE]             NOT NULL
+				,[EventTime]           [DATETIME]         NOT NULL
+				,[net_transport]       [TEXT]             NOT NULL
+				,[num_reads]           [UNSIGNED BIG INT] NULL
+				,[num_writes]          [UNSIGNED BIG INT] NULL
+				,[bytes_reads]         [UNSIGNED BIG INT] NULL
+				,[bytes_writes]        [UNSIGNED BIG INT] NULL
+				,[EventTimeLast]       [DATETIME]         NULL
+				,[num_reads_last]      [UNSIGNED BIG INT] NULL
+				,[num_writes_last]     [UNSIGNED BIG INT] NULL
+				,[bytes_reads_last]    [UNSIGNED BIG INT] NULL
+				,[bytes_writes_last]   [UNSIGNED BIG INT] NULL
+			);
+		</sql-select-text>
+	</sql-select>
+	<sql-select id="0062" name="idx_h_InstanceNetworkStatus_EventDay">
+		<sql-select-text>
+			CREATE INDEX IF NOT EXISTS [idx_h_InstanceNetworkStatus_EventDay] ON [h_InstanceNetworkStatus]
+			(
+				 [h_ServerInstance_id]
+				,[net_transport]
+				,[EventDay] DESC
+			);
+		</sql-select-text>
+	</sql-select>
+	<sql-select id="0063" name="idx_h_InstanceNetworkStatus_EventTime">
+		<sql-select-text>
+			CREATE INDEX IF NOT EXISTS [idx_h_InstanceNetworkStatus_EventTime] ON [h_InstanceNetworkStatus]
+			(
+				 [h_ServerInstance_id]
+				,[net_transport]
+				,[EventTime] DESC
+			);
+		</sql-select-text>
+	</sql-select>
+
+	<sql-select id="0071" name="h_InstanceNetworkStatusBaseline">
+		<sql-select-text>
+			CREATE TABLE IF NOT EXISTS [h_InstanceNetworkStatusBaseline]
+			(
+				 [DateCreated]         [DATETIME]         NOT NULL DEFAULT (DATETIME('now'))
+				,[DateUpdated]         [DATETIME]         NOT NULL DEFAULT (DATETIME('now'))
+				,[d_Query_id]          [INTEGER]          NOT NULL
+				,[h_ServerInstance_id] [INTEGER]          NOT NULL
+				,[EventDay]            [DATE]             NOT NULL
+				,[EventTime]           [DATETIME]         NOT NULL
+				,[net_transport]       [TEXT]             NOT NULL
+				,[num_reads]           [UNSIGNED BIG INT] NULL
+				,[num_writes]          [UNSIGNED BIG INT] NULL
+				,[bytes_reads]         [UNSIGNED BIG INT] NULL
+				,[bytes_writes]        [UNSIGNED BIG INT] NULL
+			);
+		</sql-select-text>
+	</sql-select>
+	<sql-select id="0072" name="uidx_h_InstanceNetworkStatusBaseline">
+		<sql-select-text>
+			CREATE UNIQUE INDEX IF NOT EXISTS [uidx_h_InstanceNetworkStatusBaseline] ON [h_InstanceNetworkStatusBaseline]
+			(
+				 [h_ServerInstance_id]
+				,[net_transport]
+			);
+		</sql-select-text>
+	</sql-select>
+
+	<sql-select id="0101" name="h_InstanceSystemStatisticalFunctions">
+		<sql-select-text>
+			CREATE TABLE IF NOT EXISTS [h_InstanceSystemStatisticalFunctions]
+			(
+				 [DateCreated]         [DATETIME]         NOT NULL DEFAULT (DATETIME('now'))
+				,[DateUpdated]         [DATETIME]         NOT NULL DEFAULT (DATETIME('now'))
+				,[d_Query_id]          [INTEGER]          NOT NULL
+				,[h_ServerInstance_id] [INTEGER]          NOT NULL
+				,[EventDay]            [DATE]             NOT NULL
+				,[EventTime]           [DATETIME]         NOT NULL
+				,[Connections]         [UNSIGNED BIG INT] NULL
+				,[CPUBusy]             [UNSIGNED BIG INT] NULL
+				,[CPUIdle]             [UNSIGNED BIG INT] NULL
+				,[IOBusy]              [UNSIGNED BIG INT] NULL
+				,[PackReceived]        [UNSIGNED BIG INT] NULL
+				,[PackSent]            [UNSIGNED BIG INT] NULL
+				,[PacketErrors]        [UNSIGNED BIG INT] NULL
+				,[TimeTicks]           [UNSIGNED BIG INT] NULL
+				,[TotalErrors]         [UNSIGNED BIG INT] NULL
+				,[TotalRead]           [UNSIGNED BIG INT] NULL
+				,[TotalWrite]          [UNSIGNED BIG INT] NULL
+			);
+		</sql-select-text>
+	</sql-select>
+	<sql-select id="0102" name="idx_h_InstanceSystemStatisticalFunctions_EventDay">
+		<sql-select-text>
+			CREATE INDEX IF NOT EXISTS [idx_h_InstanceSystemStatisticalFunctions_EventDay] ON [h_InstanceSystemStatisticalFunctions]
+			(
+				 [h_ServerInstance_id]
+				,[EventDay] DESC
+			);
+		</sql-select-text>
+	</sql-select>
+	<sql-select id="0103" name="idx_h_InstanceSystemStatisticalFunctions_EventTime">
+		<sql-select-text>
+			CREATE INDEX IF NOT EXISTS [idx_h_InstanceSystemStatisticalFunctions_EventTime] ON [h_InstanceSystemStatisticalFunctions]
+			(
+				 [h_ServerInstance_id]
+				,[EventTime] DESC
+			);
+		</sql-select-text>
+	</sql-select>
+
+	<sql-select id="0104" name="h_InstanceSystemStatisticalFunctionsBaseline">
+		<sql-select-text>
+			CREATE TABLE IF NOT EXISTS [h_InstanceSystemStatisticalFunctionsBaseline]
+			(
+				 [DateCreated]         [DATETIME]         NOT NULL DEFAULT (DATETIME('now'))
+				,[DateUpdated]         [DATETIME]         NOT NULL DEFAULT (DATETIME('now'))
+				,[d_Query_id]          [INTEGER]          NOT NULL
+				,[h_ServerInstance_id] [INTEGER]          NOT NULL
+				,[EventDay]            [DATE]             NOT NULL
+				,[EventTime]           [DATETIME]         NOT NULL
+				,[Connections]         [UNSIGNED BIG INT] NULL
+				,[CPUBusy]             [UNSIGNED BIG INT] NULL
+				,[CPUIdle]             [UNSIGNED BIG INT] NULL
+				,[IOBusy]              [UNSIGNED BIG INT] NULL
+				,[PackReceived]        [UNSIGNED BIG INT] NULL
+				,[PackSent]            [UNSIGNED BIG INT] NULL
+				,[PacketErrors]        [UNSIGNED BIG INT] NULL
+				,[TimeTicks]           [UNSIGNED BIG INT] NULL
+				,[TotalErrors]         [UNSIGNED BIG INT] NULL
+				,[TotalRead]           [UNSIGNED BIG INT] NULL
+				,[TotalWrite]          [UNSIGNED BIG INT] NULL
+			);
+		</sql-select-text>
+	</sql-select>
+	<sql-select id="0105" name="uidx_h_InstanceSystemStatisticalFunctionsBaseline">
+		<sql-select-text>
+			CREATE UNIQUE INDEX IF NOT EXISTS [uidx_h_InstanceSystemStatisticalFunctionsBaseline] ON [h_InstanceSystemStatisticalFunctionsBaseline]
+			(
+				[h_ServerInstance_id]
+			);
+		</sql-select-text>
+	</sql-select>
+
+	<sql-select id="0111" name="h_ServerInstanceDatabase">
+		<sql-select-text>
+			CREATE TABLE IF NOT EXISTS [h_ServerInstanceDatabase]
+			(
+				 [DateCreated]         [DATETIME] NOT NULL DEFAULT (DATETIME('now'))
+				,[DateUpdated]         [DATETIME] NOT NULL DEFAULT (DATETIME('now'))
+				,[d_Query_id]          [INTEGER]  NOT NULL
+				,[h_ServerInstance_id] [INTEGER]  NOT NULL
+				,[DatabaseId]          [INTEGER]  NOT NULL
+				,[DatabaseName]        [TEXT]     NULL
+			);
+		</sql-select-text>
+	</sql-select>
+	<sql-select id="0112" name="idx_h_ServerInstanceDatabase_h_ServerInstance_id">
+		<sql-select-text>
+			CREATE INDEX IF NOT EXISTS [idx_h_ServerInstanceDatabase_h_ServerInstance_id] ON [h_ServerInstanceDatabase]
+			(
+				[h_ServerInstance_id]
+			);
+		</sql-select-text>
+	</sql-select>
+	<sql-select id="0113" name="idx_h_ServerInstanceDatabase_h_ServerInstance_id_DatabaseId">
+		<sql-select-text>
+			CREATE INDEX IF NOT EXISTS [idx_h_ServerInstanceDatabase_h_ServerInstance_id_DatabaseId] ON [h_ServerInstanceDatabase]
+			(
+				 [h_ServerInstance_id]
+				,[DatabaseId]
+			);
+		</sql-select-text>
+	</sql-select>
+
+	<sql-select id="0121" name="h_ServerInstanceDatabaseSize">
+		<sql-select-text>
+			CREATE TABLE IF NOT EXISTS [h_ServerInstanceDatabaseSize]
+			(
+				 [DateCreated]            [DATETIME] NOT NULL DEFAULT (DATETIME('now'))
+				,[DateUpdated]            [DATETIME] NOT NULL DEFAULT (DATETIME('now'))
+				,[d_Query_id]             [INTEGER]  NOT NULL
+				,[h_ServerInstance_id]    [INTEGER]  NOT NULL
+				,[EventDay]               [DATE]     NOT NULL
+				,[EventTime]              [DATETIME] NOT NULL
+				,[DatabaseId]             [INTEGER]  NOT NULL
+				,[DatabaseSizeMB]         [NUMERIC]  NULL
+				,[DatabaseDataSizeMB]     [NUMERIC]  NULL
+				,[DatabaseDataSizeUsedMB] [NUMERIC]  NULL
+				,[DatabaseLogSizeMB]      [NUMERIC]  NULL
+				,[DatabaseLogSizeUsedMB]  [NUMERIC]  NULL
+			);
+		</sql-select-text>
+	</sql-select>
+	<sql-select id="0122" name="idx_h_ServerInstanceDatabaseSize_EventDay">
+		<sql-select-text>
+			CREATE INDEX IF NOT EXISTS [idx_h_ServerInstanceDatabaseSize_EventDay] ON [h_ServerInstanceDatabaseSize]
+			(
+				 [h_ServerInstance_id]
+				,[EventDay] DESC
+			);
+		</sql-select-text>
+	</sql-select>
+	<sql-select id="0123" name="idx_h_ServerInstanceDatabaseSize_EventTime">
+		<sql-select-text>
+			CREATE INDEX IF NOT EXISTS [idx_h_ServerInstanceDatabaseSize_EventTime] ON [h_ServerInstanceDatabaseSize]
+			(
+				 [h_ServerInstance_id]
+				,[EventTime] DESC
+			);
+		</sql-select-text>
+	</sql-select>
+	<sql-select id="0124" name="idx_h_ServerInstanceDatabaseSize_DatabaseId">
+		<sql-select-text>
+			CREATE INDEX IF NOT EXISTS [idx_h_ServerInstanceDatabaseSize_DatabaseId] ON [h_ServerInstanceDatabaseSize]
+			(
+				 [h_ServerInstance_id]
+				,[DatabaseId]
+			);
+		</sql-select-text>
+	</sql-select>
+
+	<sql-select id="0141" name="h_InstanceCPUUtilization">
+		<sql-select-text>
+			CREATE TABLE IF NOT EXISTS [h_InstanceCPUUtilization]
+			(
+				 [DateCreated]                  [DATETIME]         NOT NULL DEFAULT (DATETIME('now'))
+				,[DateUpdated]                  [DATETIME]         NOT NULL DEFAULT (DATETIME('now'))
+				,[d_Query_id]                   [INTEGER]          NOT NULL
+				,[h_ServerInstance_id]          [INTEGER]          NOT NULL
+				,[EventDay]                     [DATE]             NOT NULL
+				,[EventTime]                    [DATETIME]         NOT NULL
+				,[RecordTimeStamp]              [UNSIGNED BIG INT] NULL
+				,[RecordRingBufferType]         [TEXT]             NULL
+				,[MemoryUtilization]            [UNSIGNED BIG INT] NULL
+				,[SystemIdle]                   [INTEGER]          NULL
+				,[SQLProcessCPUUtilization]     [INTEGER]          NULL
+				,[OtherProcessesCPUUtilization] [INTEGER]          NULL
+			);
+		</sql-select-text>
+	</sql-select>
+	<sql-select id="0142" name="idx_h_InstanceCPUUtilization_EventDay">
+		<sql-select-text>
+			CREATE INDEX IF NOT EXISTS [idx_h_InstanceCPUUtilization_EventDay] ON [h_InstanceCPUUtilization]
+			(
+				 [h_ServerInstance_id]
+				,[EventDay] DESC
+			);
+		</sql-select-text>
+	</sql-select>
+	<sql-select id="0143" name="idx_h_InstanceCPUUtilization_EventTime">
+		<sql-select-text>
+			CREATE INDEX IF NOT EXISTS [idx_h_InstanceCPUUtilization_EventTime] ON [h_InstanceCPUUtilization]
+			(
+				 [h_ServerInstance_id]
+				,[EventTime] DESC
+			);
+		</sql-select-text>
+	</sql-select>
+
+	<sql-select id="0151" name="h_InstanceMemoryUtilization">
+		<sql-select-text>
+			CREATE TABLE IF NOT EXISTS [h_InstanceMemoryUtilization]
+			(
+				 [DateCreated]               [DATETIME]         NOT NULL DEFAULT (DATETIME('now'))
+				,[DateUpdated]               [DATETIME]         NOT NULL DEFAULT (DATETIME('now'))
+				,[d_Query_id]                [INTEGER]          NOT NULL
+				,[h_ServerInstance_id]       [INTEGER]          NOT NULL
+				,[EventDay]                  [DATE]             NOT NULL
+				,[EventTime]                 [DATETIME]         NOT NULL
+				,[RecordTimeStamp]           [UNSIGNED BIG INT] NULL
+				,[RecordRingBufferType]      [TEXT]             NULL
+				,[AvailiblePhysicalMemoryKb] [INTEGER]          NULL
+				,[AvailibleVirtualMemoryKb]  [INTEGER]          NULL
+				,[AvailablePageFileKb]       [INTEGER]          NULL
+				,[ReservedMemoryKb]          [INTEGER]          NULL
+				,[CommittedMemoryKb]         [INTEGER]          NULL
+			);
+		</sql-select-text>
+	</sql-select>
+	<sql-select id="0152" name="idx_h_InstanceMemoryUtilization_EventDay">
+		<sql-select-text>
+			CREATE INDEX IF NOT EXISTS [idx_h_InstanceMemoryUtilization_EventDay] ON [h_InstanceMemoryUtilization]
+			(
+				 [h_ServerInstance_id]
+				,[EventDay] DESC
+			);
+		</sql-select-text>
+	</sql-select>
+	<sql-select id="0153" name="idx_h_InstanceMemoryUtilization_EventTime">
+		<sql-select-text>
+			CREATE INDEX IF NOT EXISTS [idx_h_InstanceMemoryUtilization_EventTime] ON [h_InstanceMemoryUtilization]
+			(
+				 [h_ServerInstance_id]
+				,[EventTime] DESC
+			);
+		</sql-select-text>
+	</sql-select>
+
+	<sql-select id="0161" name="h_InstanceDBCCMemoryStatus">
+		<sql-select-text>
+			CREATE TABLE IF NOT EXISTS [h_InstanceDBCCMemoryStatus]
+			(
+				 [DateCreated]             [DATETIME]         NOT NULL DEFAULT (DATETIME('now'))
+				,[DateUpdated]             [DATETIME]         NOT NULL DEFAULT (DATETIME('now'))
+				,[d_Query_id]              [INTEGER]          NOT NULL
+				,[h_ServerInstance_id]     [INTEGER]          NOT NULL
+				,[EventDay]                [DATE]             NOT NULL
+				,[EventTime]               [DATETIME]         NOT NULL
+				,[DBCCMemoryStatusCounter] [TEXT]             NULL
+				,[DBCCMemoryStatusValue]   [UNSIGNED BIG INT] NULL
+			);
+		</sql-select-text>
+	</sql-select>
+	<sql-select id="0162" name="idx_h_InstanceDBCCMemoryStatus_EventDay">
+		<sql-select-text>
+			CREATE INDEX IF NOT EXISTS [idx_h_InstanceDBCCMemoryStatus_EventDay] ON [h_InstanceDBCCMemoryStatus]
+			(
+				 [h_ServerInstance_id]
+				,[EventDay] DESC
+			);
+		</sql-select-text>
+	</sql-select>
+	<sql-select id="0163" name="idx_h_InstanceDBCCMemoryStatus_EventTime">
+		<sql-select-text>
+			CREATE INDEX IF NOT EXISTS [idx_h_InstanceDBCCMemoryStatus_EventTime] ON [h_InstanceDBCCMemoryStatus]
+			(
+				 [h_ServerInstance_id]
+				,[EventTime] DESC
+			);
+		</sql-select-text>
+	</sql-select>
+
+	<sql-select id="0171" name="h_InstanceDBCCSQLPerf">
+		<sql-select-text>
+			CREATE TABLE IF NOT EXISTS [h_InstanceDBCCSQLPerf]
+			(
+				 [DateCreated]               [DATETIME]         NOT NULL DEFAULT (DATETIME('now'))
+				,[DateUpdated]               [DATETIME]         NOT NULL DEFAULT (DATETIME('now'))
+				,[d_Query_id]                [INTEGER]          NOT NULL
+				,[h_ServerInstance_id]       [INTEGER]          NOT NULL
+				,[EventDay]                  [DATE]             NOT NULL
+				,[EventTime]                 [DATETIME]         NOT NULL
+				,[DBCCSQLPerfWaitType]       [TEXT]             NULL
+				,[DBCCSQLPerfRequests]       [UNSIGNED BIG INT] NULL
+				,[DBCCSQLPerfWaitTime]       [UNSIGNED BIG INT] NULL
+				,[DBCCSQLPerfSignalWaitTime] [UNSIGNED BIG INT] NULL
+			);
+		</sql-select-text>
+	</sql-select>
+	<sql-select id="0172" name="idx_h_InstanceDBCCSQLPerf_EventDay">
+		<sql-select-text>
+			CREATE INDEX IF NOT EXISTS [idx_h_InstanceDBCCSQLPerf_EventDay] ON [h_InstanceDBCCSQLPerf]
+			(
+				 [h_ServerInstance_id]
+				,[EventDay] DESC
+			);
+		</sql-select-text>
+	</sql-select>
+	<sql-select id="0173" name="idx_h_InstanceDBCCSQLPerf_EventTime">
+		<sql-select-text>
+			CREATE INDEX IF NOT EXISTS [idx_h_InstanceDBCCSQLPerf_EventTime] ON [h_InstanceDBCCSQLPerf]
+			(
+				 [h_ServerInstance_id]
+				,[EventTime] DESC
+			);
+		</sql-select-text>
+	</sql-select>
+
+	<sql-select id="0181" name="h_InstanceDatabaseIOStatusBaseline">
+		<sql-select-text>
+			CREATE TABLE IF NOT EXISTS [h_InstanceDatabaseIOStatusBaseline]
+			(
+				 [DateCreated]                 [DATETIME]         NOT NULL DEFAULT (DATETIME('now'))
+				,[DateUpdated]                 [DATETIME]         NOT NULL DEFAULT (DATETIME('now'))
+				,[d_Query_id]                  [INTEGER]          NOT NULL
+				,[h_ServerInstanceDatabase_id] [INTEGER]          NOT NULL
+				,[EventDay]                    [DATE]             NOT NULL
+				,[EventTime]                   [DATETIME]         NOT NULL
+				,[num_of_reads]                [UNSIGNED BIG INT] NULL
+				,[num_of_bytes_read]           [UNSIGNED BIG INT] NULL
+				,[io_stall_read_ms]            [UNSIGNED BIG INT] NULL
+				,[num_of_writes]               [UNSIGNED BIG INT] NULL
+				,[num_of_bytes_written]        [UNSIGNED BIG INT] NULL
+				,[io_stall_write_ms]           [UNSIGNED BIG INT] NULL
+				,[io_stall]                    [UNSIGNED BIG INT] NULL
+			);
+		</sql-select-text>
+	</sql-select>
+	<sql-select id="0182" name="uidx_h_InstanceDatabaseIOStatusBaseline">
+		<sql-select-text>
+			CREATE UNIQUE INDEX IF NOT EXISTS [uidx_h_InstanceDatabaseIOStatusBaseline] ON [h_InstanceDatabaseIOStatusBaseline]
+			(
+				[h_ServerInstanceDatabase_id]
+			);
+		</sql-select-text>
+	</sql-select>
+
+	<sql-select id="0191" name="h_InstanceDatabaseIOStatus">
+		<sql-select-text>
+			CREATE TABLE IF NOT EXISTS [h_InstanceDatabaseIOStatus]
+			(
+				 [DateCreated]                 [DATETIME]         NOT NULL DEFAULT (DATETIME('now'))
+				,[DateUpdated]                 [DATETIME]         NOT NULL DEFAULT (DATETIME('now'))
+				,[d_Query_id]                  [INTEGER]          NOT NULL
+				,[h_ServerInstanceDatabase_id] [INTEGER]          NOT NULL
+				,[EventDay]                    [DATE]             NOT NULL
+				,[EventTime]                   [DATETIME]         NOT NULL
+				,[num_of_reads]                [DOUBLE PRECISION] NULL
+				,[num_of_bytes_read]           [DOUBLE PRECISION] NULL
+				,[io_stall_read_ms]            [DOUBLE PRECISION] NULL
+				,[num_of_writes]               [DOUBLE PRECISION] NULL
+				,[num_of_bytes_written]        [DOUBLE PRECISION] NULL
+				,[io_stall_write_ms]           [DOUBLE PRECISION] NULL
+				,[io_stall]                    [DOUBLE PRECISION] NULL
+			);
+		</sql-select-text>
+	</sql-select>
+	<sql-select id="0192" name="idx_h_InstanceDatabaseIOStatus_EventDay">
+		<sql-select-text>
+			CREATE INDEX IF NOT EXISTS [idx_h_InstanceDatabaseIOStatus_EventDay] ON [h_InstanceDatabaseIOStatus]
+			(
+				 [h_ServerInstanceDatabase_id]
+				,[EventDay] DESC
+			);
+		</sql-select-text>
+	</sql-select>
+	<sql-select id="0193" name="idx_h_InstanceDatabaseIOStatus_EventTime">
+		<sql-select-text>
+			CREATE INDEX IF NOT EXISTS [idx_h_InstanceDatabaseIOStatus_EventTime] ON [h_InstanceDatabaseIOStatus]
+			(
+				 [h_ServerInstanceDatabase_id]
+				,[EventTime] DESC
+			);
+		</sql-select-text>
+	</sql-select>
+
+	<sql-select id="0201" name="h_ldap_OperatingSystem">
+		<sql-select-text>
+			CREATE TABLE IF NOT EXISTS [h_ldap_OperatingSystem]
+			(
+				 [DateCreated]         [DATETIME] NOT NULL DEFAULT (DATETIME('now'))
+				,[DateUpdated]         [DATETIME] NOT NULL DEFAULT (DATETIME('now'))
+				,[d_Query_id]          [INTEGER]  NOT NULL
+				,[h_ServerInstance_id] [INTEGER]  NOT NULL
+				,[OperatingSystem]     [TEXT]     NOT NULL
+			);
+		</sql-select-text>
+	</sql-select>
+	<sql-select id="0202" name="idx_h_ldap_OperatingSystem_OperatingSystem">
+		<sql-select-text>
+			CREATE INDEX IF NOT EXISTS [idx_h_ldap_OperatingSystem_OperatingSystem] ON [h_ldap_OperatingSystem]
+			(
+				 [h_ServerInstance_id]
+				,[OperatingSystem]
+			);
+		</sql-select-text>
+	</sql-select>
+
+	<sql-select id="0211" name="h_ldap_Groups">
+		<sql-select-text>
+			CREATE TABLE IF NOT EXISTS [h_ldap_Groups]
+			(
+				 [DateCreated]            [DATETIME] NOT NULL DEFAULT (DATETIME('now'))
+				,[DateUpdated]            [DATETIME] NOT NULL DEFAULT (DATETIME('now'))
+				,[d_Query_id]             [INTEGER]  NOT NULL
+				,[h_ServerInstance_id]    [INTEGER]  NOT NULL
+				,[GroupName]              [TEXT]     NOT NULL
+				,[DistinguishedGroupName] [TEXT]     NOT NULL
+				,[isActive]               [INTEGER]  NOT NULL
+			);
+		</sql-select-text>
+	</sql-select>
+	<sql-select id="0212" name="idx_h_ldap_Groups_GroupName">
+		<sql-select-text>
+			CREATE INDEX IF NOT EXISTS [idx_h_ldap_Groups_GroupName] ON [h_ldap_Groups]
+			(
+				 [h_ServerInstance_id]
+				,[GroupName]
+				,[DistinguishedGroupName]
+				,[isActive]
+			);
+		</sql-select-text>
+	</sql-select>
+
+	<sql-select id="0221" name="h_InstanceDiskIOStatusBaseline">
+		<sql-select-text>
+			CREATE TABLE IF NOT EXISTS [h_InstanceDiskIOStatusBaseline]
+			(
+				 [DateCreated]          [DATETIME]         NOT NULL DEFAULT (DATETIME('now'))
+				,[DateUpdated]          [DATETIME]         NOT NULL DEFAULT (DATETIME('now'))
+				,[d_Query_id]           [INTEGER]          NOT NULL
+				,[h_ServerInstance_id]  [INTEGER]          NOT NULL
+				,[EventDay]             [DATE]             NOT NULL
+				,[EventTime]            [DATETIME]         NOT NULL
+				,[Disk]                 [TEXT]             NOT NULL
+				,[num_of_reads]         [UNSIGNED BIG INT] NULL
+				,[num_of_bytes_read]    [UNSIGNED BIG INT] NULL
+				,[io_stall_read_ms]     [UNSIGNED BIG INT] NULL
+				,[num_of_writes]        [UNSIGNED BIG INT] NULL
+				,[num_of_bytes_written] [UNSIGNED BIG INT] NULL
+				,[io_stall_write_ms]    [UNSIGNED BIG INT] NULL
+				,[io_stall]             [UNSIGNED BIG INT] NULL
+			);
+		</sql-select-text>
+	</sql-select>
+	<sql-select id="0012" name="uidx_h_InstanceDiskIOStatusBaseline">
+		<sql-select-text>
+			CREATE UNIQUE INDEX IF NOT EXISTS [uidx_h_InstanceDiskIOStatusBaseline] ON [h_InstanceDiskIOStatusBaseline]
+			(
+				 [h_ServerInstance_id]
+				,[Disk]
+			);
+		</sql-select-text>
+	</sql-select>
+
+	<sql-select id="0231" name="h_InstanceDiskIOStatus">
+		<sql-select-text>
+			CREATE TABLE IF NOT EXISTS [h_InstanceDiskIOStatus]
+			(
+				 [DateCreated]          [DATETIME]         NOT NULL DEFAULT (DATETIME('now'))
+				,[DateUpdated]          [DATETIME]         NOT NULL DEFAULT (DATETIME('now'))
+				,[d_Query_id]           [INTEGER]          NOT NULL
+				,[h_ServerInstance_id]  [INTEGER]          NOT NULL
+				,[EventDay]             [DATE]             NOT NULL
+				,[EventTime]            [DATETIME]         NOT NULL
+				,[Disk]                 [TEXT]             NOT NULL
+				,[num_of_reads]         [DOUBLE PRECISION] NULL
+				,[num_of_bytes_read]    [DOUBLE PRECISION] NULL
+				,[io_stall_read_ms]     [DOUBLE PRECISION] NULL
+				,[num_of_writes]        [DOUBLE PRECISION] NULL
+				,[num_of_bytes_written] [DOUBLE PRECISION] NULL
+				,[io_stall_write_ms]    [DOUBLE PRECISION] NULL
+				,[io_stall]             [DOUBLE PRECISION] NULL
+			);
+		</sql-select-text>
+	</sql-select>
+	<sql-select id="0232" name="idx_h_InstanceDiskIOStatus_EventDay">
+		<sql-select-text>
+			CREATE INDEX IF NOT EXISTS [idx_h_InstanceDiskIOStatus_EventDay] ON [h_InstanceDiskIOStatus]
+			(
+				 [h_ServerInstance_id]
+				,[Disk]
+				,[EventDay] DESC
+			);
+		</sql-select-text>
+	</sql-select>
+	<sql-select id="0233" name="idx_h_InstanceDiskIOStatus_EventTime">
+		<sql-select-text>
+			CREATE INDEX IF NOT EXISTS [idx_h_InstanceDiskIOStatus_EventTime] ON [h_InstanceDiskIOStatus]
+			(
+				 [h_ServerInstance_id]
+				,[Disk]
+				,[EventTime] DESC
+			);
+		</sql-select-text>
+	</sql-select>
+
+	<sql-select id="0241" name="h_ServerInstanceLogiName">
+		<sql-select-text>
+			CREATE TABLE IF NOT EXISTS [h_ServerInstanceLogiName]
+			(
+				 [DateCreated]         [DATETIME] NOT NULL DEFAULT (DATETIME('now'))
+				,[DateUpdated]         [DATETIME] NOT NULL DEFAULT (DATETIME('now'))
+				,[d_Query_id]          [INTEGER]  NOT NULL
+				,[h_ServerInstance_id] [INTEGER]  NOT NULL
+				,[h_LogiName_id]       [INTEGER]  NOT NULL
+				,[LogiName]            [TEXT]     NULL
+			);
+		</sql-select-text>
+	</sql-select>
+	<sql-select id="0242" name="trigger_h_ServerInstanceLogiName">
+		<sql-select-text>
+			CREATE TRIGGER IF NOT EXISTS [trigger_h_ServerInstanceLogiName]
+				AFTER INSERT ON [h_ServerInstanceLogiName] FOR EACH ROW
+			BEGIN
+				UPDATE [h_ServerInstanceLogiName] SET
+					[h_LogiName_id] = (
+						SELECT
+							COALESCE(MAX(h.[h_LogiName_id]), 0) + 1
+						FROM
+							[h_ServerInstanceLogiName] h
+						WHERE
+							h.[h_ServerInstance_id] = new.[h_ServerInstance_id]
+					)
+				WHERE
+					[h_ServerInstance_id] = new.[h_ServerInstance_id]
+					AND [h_LogiName_id] = 0;
+			END;
+		</sql-select-text>
+	</sql-select>
+	<sql-select id="0243" name="uidx_h_ServerInstanceLogiName">
+		<sql-select-text>
+			CREATE UNIQUE INDEX IF NOT EXISTS [uidx_h_ServerInstanceLogiName] ON [h_ServerInstanceLogiName]
+			(
+				 [h_ServerInstance_id]
+				,[h_LogiName_id]
+			);
+		</sql-select-text>
+	</sql-select>
+	<sql-select id="0244" name="idx_h_ServerInstanceLogiName_h_ServerInstance_id">
+		<sql-select-text>
+			CREATE INDEX IF NOT EXISTS [idx_h_ServerInstanceLogiName_h_ServerInstance_id] ON [h_ServerInstanceLogiName]
+			(
+				[h_ServerInstance_id]
+			);
+		</sql-select-text>
+	</sql-select>
+
+	<sql-select id="0251" name="h_InstanceProcessesByLogin">
+		<sql-select-text>
+			CREATE TABLE IF NOT EXISTS [h_InstanceProcessesByLogin]
+			(
+				 [DateCreated]         [DATETIME]         NOT NULL DEFAULT (DATETIME('now'))
+				,[DateUpdated]         [DATETIME]         NOT NULL DEFAULT (DATETIME('now'))
+				,[d_Query_id]          [INTEGER]          NOT NULL
+				,[h_ServerInstance_id] [INTEGER]          NOT NULL
+				,[h_LogiName_id]       [INTEGER]          NOT NULL
+				,[EventDay]            [DATE]             NOT NULL
+				,[EventTime]           [DATETIME]         NOT NULL
+				,[Cpu]                 [UNSIGNED BIG INT] NULL
+				,[PhysicalIO]          [UNSIGNED BIG INT] NULL
+				,[EventTimeLast]       [DATETIME]         NULL
+				,[CpuLast]             [UNSIGNED BIG INT] NULL
+				,[PhysicalIOLast]      [UNSIGNED BIG INT] NULL
+			);
+		</sql-select-text>
+	</sql-select>
+	<sql-select id="0252" name="idx_h_InstanceProcessesByLogin_EventDay">
+		<sql-select-text>
+			CREATE INDEX IF NOT EXISTS [idx_h_InstanceProcessesByLogin_EventDay] ON [h_InstanceProcessesByLogin]
+			(
+				 [h_ServerInstance_id]
+				,[h_LogiName_id]
+				,[EventDay] DESC
+			);
+		</sql-select-text>
+	</sql-select>
+	<sql-select id="0253" name="idx_h_InstanceProcessesByLogin_EventTime">
+		<sql-select-text>
+			CREATE INDEX IF NOT EXISTS [idx_h_InstanceProcessesByLogin_EventTime] ON [h_InstanceProcessesByLogin]
+			(
+				 [h_ServerInstance_id]
+				,[h_LogiName_id]
+				,[EventTime] DESC
+			);
+		</sql-select-text>
+	</sql-select>
+
+	<sql-select id="0261" name="h_InstanceProcessesByLoginBaseline">
+		<sql-select-text>
+			CREATE TABLE IF NOT EXISTS [h_InstanceProcessesByLoginBaseline]
+			(
+				 [DateCreated]         [DATETIME]         NOT NULL DEFAULT (DATETIME('now'))
+				,[DateUpdated]         [DATETIME]         NOT NULL DEFAULT (DATETIME('now'))
+				,[d_Query_id]          [INTEGER]          NOT NULL
+				,[h_ServerInstance_id] [INTEGER]          NOT NULL
+				,[h_LogiName_id]       [INTEGER]          NOT NULL
+				,[EventDay]            [DATE]             NOT NULL
+				,[EventTime]           [DATETIME]         NOT NULL
+				,[Cpu]                 [UNSIGNED BIG INT] NULL
+				,[PhysicalIO]          [UNSIGNED BIG INT] NULL
+			);
+		</sql-select-text>
+	</sql-select>
+	<sql-select id="0262" name="uidx_h_InstanceProcessesByLoginBaseline">
+		<sql-select-text>
+			CREATE UNIQUE INDEX IF NOT EXISTS [uidx_h_InstanceProcessesByLoginBaseline] ON [h_InstanceProcessesByLoginBaseline]
+			(
+				 [h_ServerInstance_id]
+				,[h_LogiName_id]
+			);
+		</sql-select-text>
+	</sql-select>
+
+
+	<sql-select id="0271" name="h_InstanceOSPerformanceCounterObjects">
+		<sql-select-text>
+			CREATE TABLE IF NOT EXISTS [h_InstanceOSPerformanceCounterObjects]
+			(
+				 [DateCreated]         [DATETIME] NOT NULL DEFAULT (DATETIME('now'))
+				,[DateUpdated]         [DATETIME] NOT NULL DEFAULT (DATETIME('now'))
+				,[d_Query_id]          [INTEGER]  NOT NULL
+				,[h_ServerInstance_id] [INTEGER]  NOT NULL
+				,[ObjectId]            [INTEGER]  NOT NULL
+				,[ObjectName]          [TEXT]     NOT NULL
+			);
+		</sql-select-text>
+	</sql-select>
+	<sql-select id="0272" name="trigger_h_InstanceOSPerformanceCounterObjects">
+		<sql-select-text>
+			CREATE TRIGGER IF NOT EXISTS [trigger_h_InstanceOSPerformanceCounterObjects]
+				AFTER INSERT ON [h_InstanceOSPerformanceCounterObjects] FOR EACH ROW
+			BEGIN
+				UPDATE [h_InstanceOSPerformanceCounterObjects] SET
+					[ObjectId] = (
+						SELECT
+							COALESCE(MAX(h.[ObjectId]), 0) + 1
+						FROM
+							[h_InstanceOSPerformanceCounterObjects] h
+						WHERE
+							h.[h_ServerInstance_id] = new.[h_ServerInstance_id]
+					)
+				WHERE
+					[h_ServerInstance_id] = new.[h_ServerInstance_id]
+					AND [ObjectId] = 0;
+			END;
+		</sql-select-text>
+	</sql-select>
+	<sql-select id="0273" name="uidx_h_InstanceOSPerformanceCounterObjects_ObjectId">
+		<sql-select-text>
+			CREATE UNIQUE INDEX IF NOT EXISTS [uidx_h_InstanceOSPerformanceCounterObjects_ObjectId] ON [h_InstanceOSPerformanceCounterObjects]
+			(
+				 [h_ServerInstance_id]
+				,[ObjectId]
+			);
+		</sql-select-text>
+	</sql-select>
+	<sql-select id="0274" name="uidx_h_InstanceOSPerformanceCounterObjects_ObjectName">
+		<sql-select-text>
+			CREATE UNIQUE INDEX IF NOT EXISTS [uidx_h_InstanceOSPerformanceCounterObjects_ObjectName] ON [h_InstanceOSPerformanceCounterObjects]
+			(
+				 [h_ServerInstance_id]
+				,[ObjectName]
+			);
+		</sql-select-text>
+	</sql-select>
+
+	<sql-select id="0281" name="h_InstanceOSPerformanceCounterCounters">
+		<sql-select-text>
+			CREATE TABLE IF NOT EXISTS [h_InstanceOSPerformanceCounterCounters]
+			(
+				 [DateCreated]         [DATETIME] NOT NULL DEFAULT (DATETIME('now'))
+				,[DateUpdated]         [DATETIME] NOT NULL DEFAULT (DATETIME('now'))
+				,[d_Query_id]          [INTEGER]  NOT NULL
+				,[h_ServerInstance_id] [INTEGER]  NOT NULL
+				,[ObjectId]            [INTEGER]  NOT NULL
+				,[CounterId]           [INTEGER]  NOT NULL
+				,[CounterName]         [TEXT]     NOT NULL
+			);
+		</sql-select-text>
+	</sql-select>
+	<sql-select id="0282" name="trigger_h_InstanceOSPerformanceCounterCounters">
+		<sql-select-text>
+			CREATE TRIGGER IF NOT EXISTS [trigger_h_InstanceOSPerformanceCounterCounters]
+				AFTER INSERT ON [h_InstanceOSPerformanceCounterCounters] FOR EACH ROW
+			BEGIN
+				UPDATE [h_InstanceOSPerformanceCounterCounters] SET
+					[CounterId] = (
+						SELECT
+							COALESCE(MAX(h.[CounterId]), 0) + 1
+						FROM
+							[h_InstanceOSPerformanceCounterCounters] h
+						WHERE
+							h.[h_ServerInstance_id] = new.[h_ServerInstance_id]
+							AND h.[ObjectId] = new.[ObjectId]
+					)
+				WHERE
+					[h_ServerInstance_id] = new.[h_ServerInstance_id]
+					AND [ObjectId] = new.[ObjectId]
+					AND [CounterId] = 0;
+			END;
+		</sql-select-text>
+	</sql-select>
+	<sql-select id="0283" name="uidx_h_InstanceOSPerformanceCounterCounters_CounterId">
+		<sql-select-text>
+			CREATE UNIQUE INDEX IF NOT EXISTS [uidx_h_InstanceOSPerformanceCounterCounters_CounterId] ON [h_InstanceOSPerformanceCounterCounters]
+			(
+				 [h_ServerInstance_id]
+				,[ObjectId]
+				,[CounterId]
+			);
+		</sql-select-text>
+	</sql-select>
+	<sql-select id="0284" name="uidx_h_InstanceOSPerformanceCounterCounters_CounterName">
+		<sql-select-text>
+			CREATE UNIQUE INDEX IF NOT EXISTS [uidx_h_InstanceOSPerformanceCounterCounters_CounterName] ON [h_InstanceOSPerformanceCounterCounters]
+			(
+				 [h_ServerInstance_id]
+				,[ObjectId]
+				,[CounterName]
+			);
+		</sql-select-text>
+	</sql-select>
+
+	<sql-select id="0291" name="h_InstanceOSPerformanceCounterInstances">
+		<sql-select-text>
+			CREATE TABLE IF NOT EXISTS [h_InstanceOSPerformanceCounterInstances]
+			(
+				 [DateCreated]         [DATETIME] NOT NULL DEFAULT (DATETIME('now'))
+				,[DateUpdated]         [DATETIME] NOT NULL DEFAULT (DATETIME('now'))
+				,[d_Query_id]          [INTEGER]  NOT NULL
+				,[h_ServerInstance_id] [INTEGER]  NOT NULL
+				,[ObjectId]            [INTEGER]  NOT NULL
+				,[InstanceId]          [INTEGER]  NOT NULL
+				,[InstanceName]        [TEXT]     NOT NULL
+			);
+		</sql-select-text>
+	</sql-select>
+	<sql-select id="0292" name="trigger_h_InstanceOSPerformanceCounterInstances">
+		<sql-select-text>
+			CREATE TRIGGER IF NOT EXISTS [trigger_h_InstanceOSPerformanceCounterInstances]
+				AFTER INSERT ON [h_InstanceOSPerformanceCounterInstances] FOR EACH ROW
+			BEGIN
+				UPDATE [h_InstanceOSPerformanceCounterInstances] SET
+					[InstanceId] = (
+						SELECT
+							COALESCE(MAX(h.[InstanceId]), 0) + 1
+						FROM
+							[h_InstanceOSPerformanceCounterInstances] h
+						WHERE
+							h.[h_ServerInstance_id] = new.[h_ServerInstance_id]
+							AND h.[ObjectId] = new.[ObjectId]
+					)
+				WHERE
+					[h_ServerInstance_id] = new.[h_ServerInstance_id]
+					AND [ObjectId] = new.[ObjectId]
+					AND [InstanceId] = 0;
+			END;
+		</sql-select-text>
+	</sql-select>
+	<sql-select id="0293" name="uidx_h_InstanceOSPerformanceCounterInstances">
+		<sql-select-text>
+			CREATE UNIQUE INDEX IF NOT EXISTS [uidx_h_InstanceOSPerformanceCounterInstances] ON [h_InstanceOSPerformanceCounterInstances]
+			(
+				 [h_ServerInstance_id]
+				,[ObjectId]
+				,[InstanceId]
+			);
+		</sql-select-text>
+	</sql-select>
+	<sql-select id="0294" name="uidx_h_InstanceOSPerformanceCounterInstances_InstanceName">
+		<sql-select-text>
+			CREATE UNIQUE INDEX IF NOT EXISTS [uidx_h_InstanceOSPerformanceCounterInstances_InstanceName] ON [h_InstanceOSPerformanceCounterInstances]
+			(
+				 [h_ServerInstance_id]
+				,[ObjectId]
+				,[InstanceName]
+			);
+		</sql-select-text>
+	</sql-select>
+
+	<sql-select id="0301" name="h_InstanceOSPerformanceCounters">
+		<sql-select-text>
+			CREATE TABLE IF NOT EXISTS [h_InstanceOSPerformanceCounters]
+			(
+				 [DateCreated]         [DATETIME] NOT NULL DEFAULT (DATETIME('now'))
+				,[DateUpdated]         [DATETIME] NOT NULL DEFAULT (DATETIME('now'))
+				,[d_Query_id]          [INTEGER]  NOT NULL
+				,[h_ServerInstance_id] [INTEGER]  NOT NULL
+				,[ObjectId]            [INTEGER]  NOT NULL
+				,[CounterId]           [INTEGER]  NOT NULL
+				,[InstanceId]          [INTEGER]  NOT NULL
+				,[CounterType]         [INTEGER]  NOT NULL
+				,[EventDay]            [DATE]     NOT NULL
+				,[EventTime]           [DATETIME] NOT NULL
+				,[CounterValue]        [INTEGER]  NOT NULL
+				,[EventTimeLast]       [DATETIME] NULL
+				,[CounterValueLast]    [INTEGER]  NULL
+			);
+		</sql-select-text>
+	</sql-select>
+	<sql-select id="0302" name="idx_h_InstanceOSPerformanceCounters">
+		<sql-select-text>
+			CREATE INDEX IF NOT EXISTS [idx_h_InstanceOSPerformanceCounters] ON [h_InstanceOSPerformanceCounters]
+			(
+				 [h_ServerInstance_id]
+				,[ObjectId]
+				,[CounterId]
+				,[InstanceId]
+			);
+		</sql-select-text>
+	</sql-select>
+	<sql-select id="0303" name="idx_h_InstanceOSPerformanceCounters_EventDay">
+		<sql-select-text>
+			CREATE INDEX IF NOT EXISTS [idx_h_InstanceOSPerformanceCounters_EventDay] ON [h_InstanceOSPerformanceCounters]
+			(
+				 [h_ServerInstance_id]
+				,[ObjectId]
+				,[CounterId]
+				,[InstanceId]
+				,[EventDay] DESC
+			);
+		</sql-select-text>
+	</sql-select>
+	<sql-select id="0303" name="idx_h_InstanceOSPerformanceCounters_EventTime">
+		<sql-select-text>
+			CREATE INDEX IF NOT EXISTS [idx_h_InstanceOSPerformanceCounters_EventTime] ON [h_InstanceOSPerformanceCounters]
+			(
+				 [h_ServerInstance_id]
+				,[ObjectId]
+				,[CounterId]
+				,[InstanceId]
+				,[EventTime] DESC
+			);
+		</sql-select-text>
+	</sql-select>
+	<sql-select id="0304" name="idx_h_InstanceOSPerformanceCounters_EventTime2">
+		<sql-select-text>
+			CREATE INDEX IF NOT EXISTS [idx_h_InstanceOSPerformanceCounters_EventTime2] ON [h_InstanceOSPerformanceCounters]
+			(
+				 [h_ServerInstance_id]
+				,[ObjectId]
+				,[CounterId]
+				,[EventTime] DESC
+			);
+		</sql-select-text>
+	</sql-select>
+
+	<sql-select id="0311" name="h_InstanceOSPerformanceCountersBaseline">
+		<sql-select-text>
+			CREATE TABLE IF NOT EXISTS [h_InstanceOSPerformanceCountersBaseline]
+			(
+				 [DateCreated]         [DATETIME] NOT NULL DEFAULT (DATETIME('now'))
+				,[DateUpdated]         [DATETIME] NOT NULL DEFAULT (DATETIME('now'))
+				,[d_Query_id]          [INTEGER]  NOT NULL
+				,[h_ServerInstance_id] [INTEGER]  NOT NULL
+				,[ObjectId]            [INTEGER]  NOT NULL
+				,[CounterId]           [INTEGER]  NOT NULL
+				,[InstanceId]          [INTEGER]  NOT NULL
+				,[EventTime]           [DATETIME] NOT NULL
+				,[CounterValue]        [INTEGER]  NOT NULL
+				,[CounterType]         [INTEGER]  NOT NULL
+			);
+		</sql-select-text>
+	</sql-select>
+	<sql-select id="0312" name="uidx_h_InstanceOSPerformanceCountersBaseline">
+		<sql-select-text>
+			CREATE UNIQUE INDEX IF NOT EXISTS [uidx_h_InstanceOSPerformanceCountersBaseline] ON [h_InstanceOSPerformanceCountersBaseline]
+			(
+				 [h_ServerInstance_id]
+				,[ObjectId]
+				,[CounterId]
+				,[InstanceId]
+				,[CounterType]
+			);
+		</sql-select-text>
+	</sql-select>
+
+	<sql-select id="0321" name="h_InstanceExecQueryText">
+		<sql-select-text>
+			CREATE TABLE IF NOT EXISTS [h_InstanceExecQueryText]
+			(
+				 [DateCreated]         [DATETIME] NOT NULL DEFAULT (DATETIME('now'))
+				,[DateUpdated]         [DATETIME] NOT NULL DEFAULT (DATETIME('now'))
+				,[d_Query_id]          [INTEGER]  NOT NULL
+				,[h_ServerInstance_id] [INTEGER]  NOT NULL
+				,[ExecQueryId]         [INTEGER]  NOT NULL
+				,[ExecQueryText]       [TEXT]     NULL
+			);
+		</sql-select-text>
+	</sql-select>
+	<sql-select id="0322" name="trigger_h_InstanceExecQueryText">
+		<sql-select-text>
+			CREATE TRIGGER IF NOT EXISTS [trigger_h_InstanceExecQueryText]
+				AFTER INSERT ON [h_InstanceExecQueryText] FOR EACH ROW
+			BEGIN
+				UPDATE [h_InstanceExecQueryText] SET
+					[ExecQueryId] = (
+						SELECT
+							COALESCE(MAX(h.[ExecQueryId]), 0) + 1
+						FROM
+							[h_InstanceExecQueryText] h
+						WHERE
+							h.[h_ServerInstance_id] = new.[h_ServerInstance_id]
+					)
+				WHERE
+					[h_ServerInstance_id] = new.[h_ServerInstance_id]
+					AND [ExecQueryId] = 0;
+			END;
+		</sql-select-text>
+	</sql-select>
+	<sql-select id="0323" name="uidx_h_InstanceExecQueryText">
+		<sql-select-text>
+			CREATE UNIQUE INDEX IF NOT EXISTS [uidx_h_InstanceExecQueryText] ON [h_InstanceExecQueryText]
+			(
+				 [h_ServerInstance_id]
+				,[ExecQueryId]
+			);
+		</sql-select-text>
+	</sql-select>
+	<sql-select id="0324" name="idx_h_InstanceExecQueryText_h_ServerInstance_id">
+		<sql-select-text>
+			CREATE INDEX IF NOT EXISTS [idx_h_InstanceExecQueryText_h_ServerInstance_id] ON [h_InstanceExecQueryText]
+			(
+				[h_ServerInstance_id]
+			);
+		</sql-select-text>
+	</sql-select>
+
+	<sql-select id="0331" name="h_InstanceExecQuery">
+		<sql-select-text>
+			CREATE TABLE IF NOT EXISTS [h_InstanceExecQuery]
+			(
+				 [DateCreated]          [DATETIME] NOT NULL DEFAULT (DATETIME('now'))
+				,[DateUpdated]          [DATETIME] NOT NULL DEFAULT (DATETIME('now'))
+				,[d_Query_id]           [INTEGER]  NOT NULL
+				,[h_ServerInstance_id]  [INTEGER]  NOT NULL
+				,[DatabaseId]           [INTEGER]  NOT NULL
+				,[ExecQueryId]          [INTEGER]  NOT NULL
+				,[EventDay]             [DATE]     NOT NULL
+				,[EventTime]            [DATETIME] NOT NULL
+				,[execution_count]      [INTEGER]  NULL
+				,[total_worker_time]    [INTEGER]  NULL
+				,[total_elapsed_time]   [INTEGER]  NULL
+				,[total_logical_reads]  [INTEGER]  NULL
+				,[total_logical_writes] [INTEGER]  NULL
+			);
+		</sql-select-text>
+	</sql-select>
+	<sql-select id="0332" name="idx_h_InstanceExecQuery_EventDay">
+		<sql-select-text>
+			CREATE INDEX IF NOT EXISTS [idx_h_InstanceExecQuery_EventDay] ON [h_InstanceExecQuery]
+			(
+				 [h_ServerInstance_id]
+				,[EventDay] DESC
+			);
+		</sql-select-text>
+	</sql-select>
+	<sql-select id="0333" name="idxh_InstanceExecQuery_EventTime">
+		<sql-select-text>
+			CREATE INDEX IF NOT EXISTS [idx_h_InstanceExecQuery_EventTime] ON [h_InstanceExecQuery]
+			(
+				 [h_ServerInstance_id]
+				,[EventTime] DESC
+			);
+		</sql-select-text>
+	</sql-select>
+	<sql-select id="0334" name="idx_h_InstanceExecQuery_ExecQueryId_EventDay">
+		<sql-select-text>
+			CREATE INDEX IF NOT EXISTS [idx_h_InstanceExecQuery_ExecQueryId_EventDay] ON [h_InstanceExecQuery]
+			(
+				 [h_ServerInstance_id]
+				,[ExecQueryId]
+				,[EventDay] DESC
+			);
+		</sql-select-text>
+	</sql-select>
+	<sql-select id="0335" name="idxh_InstanceExecQuery_ExecQueryId_EventTime">
+		<sql-select-text>
+			CREATE INDEX IF NOT EXISTS [idxh_InstanceExecQuery_ExecQueryId_EventTime] ON [h_InstanceExecQuery]
+			(
+				 [h_ServerInstance_id]
+				,[ExecQueryId]
+				,[EventTime] DESC
+			);
+		</sql-select-text>
+	</sql-select>
+
+	<sql-select id="0341" name="h_InstanceExecProcedureName">
+		<sql-select-text>
+			CREATE TABLE IF NOT EXISTS [h_InstanceExecProcedureName]
+			(
+				 [DateCreated]         [DATETIME] NOT NULL DEFAULT (DATETIME('now'))
+				,[DateUpdated]         [DATETIME] NOT NULL DEFAULT (DATETIME('now'))
+				,[d_Query_id]          [INTEGER]  NOT NULL
+				,[h_ServerInstance_id] [INTEGER]  NOT NULL
+				,[DatabaseId]          [INTEGER]  NOT NULL
+				,[ProcedureId]         [INTEGER]  NOT NULL
+				,[ProcedureType]       [TEXT]     NULL
+				,[ProcedureName]       [TEXT]     NULL
+			);
+		</sql-select-text>
+	</sql-select>
+	<sql-select id="0342" name="uidx_h_InstanceExecProcedureName">
+		<sql-select-text>
+			CREATE UNIQUE INDEX IF NOT EXISTS [uidx_h_InstanceExecProcedureName] ON [h_InstanceExecProcedureName]
+			(
+				 [h_ServerInstance_id]
+				,[DatabaseId]
+				,[ProcedureId]
+			);
+		</sql-select-text>
+	</sql-select>
+
+	<sql-select id="0351" name="h_InstanceExecProcedure">
+		<sql-select-text>
+			CREATE TABLE IF NOT EXISTS [h_InstanceExecProcedure]
+			(
+				 [DateCreated]          [DATETIME] NOT NULL DEFAULT (DATETIME('now'))
+				,[DateUpdated]          [DATETIME] NOT NULL DEFAULT (DATETIME('now'))
+				,[d_Query_id]           [INTEGER]  NOT NULL
+				,[h_ServerInstance_id]  [INTEGER]  NOT NULL
+				,[DatabaseId]           [INTEGER]  NOT NULL
+				,[ProcedureId]          [INTEGER]  NOT NULL
+				,[EventDay]             [DATE]     NOT NULL
+				,[EventTime]            [DATETIME] NOT NULL
+				,[execution_count]      [INTEGER]  NULL
+				,[total_worker_time]    [INTEGER]  NULL
+				,[total_elapsed_time]   [INTEGER]  NULL
+				,[total_logical_reads]  [INTEGER]  NULL
+				,[total_logical_writes] [INTEGER]  NULL
+			);
+		</sql-select-text>
+	</sql-select>
+	<sql-select id="0352" name="idx_h_InstanceExecProcedure_EventDay">
+		<sql-select-text>
+			CREATE INDEX IF NOT EXISTS [idx_h_InstanceExecProcedure_EventDay] ON [h_InstanceExecProcedure]
+			(
+				 [h_ServerInstance_id]
+				,[EventDay] DESC
+			);
+		</sql-select-text>
+	</sql-select>
+	<sql-select id="0353" name="idxh_InstanceExecProcedure_EventTime">
+		<sql-select-text>
+			CREATE INDEX IF NOT EXISTS [idx_h_InstanceExecProcedure_EventTime] ON [h_InstanceExecProcedure]
+			(
+				 [h_ServerInstance_id]
+				,[EventTime] DESC
+			);
+		</sql-select-text>
+	</sql-select>
+	<sql-select id="0354" name="idx_h_InstanceExecProcedure_ProcedureId_EventDay">
+		<sql-select-text>
+			CREATE INDEX IF NOT EXISTS [idx_h_InstanceExecProcedure_ProcedureId_EventDay] ON [h_InstanceExecProcedure]
+			(
+				 [h_ServerInstance_id]
+				,[DatabaseId]
+				,[ProcedureId]
+				,[EventDay] DESC
+			);
+		</sql-select-text>
+	</sql-select>
+	<sql-select id="0355" name="idxh_InstanceExecProcedure_ProcedureId_EventTime">
+		<sql-select-text>
+			CREATE INDEX IF NOT EXISTS [idxh_InstanceExecProcedure_ProcedureId_EventTime] ON [h_InstanceExecProcedure]
+			(
+				 [h_ServerInstance_id]
+				,[DatabaseId]
+				,[ProcedureId]
+				,[EventTime] DESC
+			);
+		</sql-select-text>
+	</sql-select>
+
+	<sql-select id="0361" name="h_InstanceNetworkInformationInfo">
+		<sql-select-text>
+			CREATE TABLE IF NOT EXISTS [h_InstanceNetworkInformationInfo]
+			(
+				 [DateCreated]         [DATETIME] NOT NULL DEFAULT (DATETIME('now'))
+				,[DateUpdated]         [DATETIME] NOT NULL DEFAULT (DATETIME('now'))
+				,[d_Query_id]          [INTEGER]  NOT NULL
+				,[h_ServerInstance_id] [INTEGER]  NOT NULL
+				,[EventDay]            [DATE]     NOT NULL
+				,[EventTime]           [DATETIME] NOT NULL
+				,[RoundtripTime]       [INTEGER]  NULL
+			);
+		</sql-select-text>
+	</sql-select>
+	<sql-select id="0362" name="idx_h_InstanceNetworkInformationInfo">
+		<sql-select-text>
+			CREATE INDEX IF NOT EXISTS [idx_h_InstanceNetworkInformationInfo] ON [h_InstanceNetworkInformationInfo]
+			(
+				[h_ServerInstance_id]
+			);
+		</sql-select-text>
+	</sql-select>
+</sqlquery>
+</root>

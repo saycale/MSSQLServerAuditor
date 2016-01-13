@@ -1,0 +1,89 @@
+﻿<?xml version="1.0" encoding="UTF-8"?>
+<root xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+<sqlquery type="MSSQL">
+	<sql-select name="GetTablesWithTextColumns">
+		<description>
+			Find all columns that are text/ntext instead of varchar(max)
+		</description>
+		<reference>
+			http://blogs.lessthandot.com/index.php/DataMgmt/DBProgramming/don-t-use-text-datatype-for-sql-2005-and
+		</reference>
+		<sql-select-text MinSupportedVersion="8.*" MaxSupportedVersion="8.*" signature="">
+			SET NOCOUNT ON;
+			SET DEADLOCK_PRIORITY LOW;
+
+			SELECT
+				 tSU.[name]   AS [SchemaName]
+				,tSO.[name]   AS [ObjectName]
+				,tSO.[xtype]  AS [ObjectType]
+				,tSO.[crdate] AS [ObjectCreateDate]
+			FROM
+				[dbo].[sysobjects] tSO
+				INNER JOIN [dbo].[sysusers] tSU ON
+					tSU.[uid] = tSO.[uid]
+				INNER JOIN [dbo].[syscolumns] AS tSC ON
+						tSC.[id] = tSO.[id]
+				INNER JOIN [dbo].[systypes] AS tST ON
+					tST.[xusertype] = tSC.[xusertype]
+					AND tST.[name] IN (
+						 N'text'
+						,N'ntext'
+						,N'image'
+					)
+			WHERE
+				tSO.[xtype] IN (
+					 N'U'
+					,N'V'
+				)
+				AND OBJECTPROPERTY(tSO.[id], N'IsMSShipped') = 0
+			GROUP BY
+				 tSU.[name]
+				,tSO.[name]
+				,tSO.[xtype]
+				,tSO.[crdate]
+			ORDER BY
+				 tSU.[name]
+				,tSO.[name]
+			;
+		</sql-select-text>
+		<sql-select-text MinSupportedVersion="9.*" MaxSupportedVersion="*" signature="">
+			SET NOCOUNT ON;
+			SET DEADLOCK_PRIORITY LOW;
+
+			SELECT
+				 tSS.[name]        AS [SchemaName]
+				,tSO.[name]        AS [ObjectName]
+				,tSO.[type_desc]   AS [ObjectType]
+				,tSO.[create_date] AS [ObjectCreateDate]
+			FROM
+				[sys].[objects] tSO
+				INNER JOIN [sys].[schemas] tSS ON
+					tSS.[schema_id] = tSO.[schema_id]
+				INNER JOIN [sys].[columns] AS tSC ON
+					tSC.[object_id] = tSO.[object_id]
+				INNER JOIN [sys].[types] AS tST ON
+					tST.[user_type_id] = tSC.[user_type_id]
+					AND tST.[name] IN (
+						 N'text'
+						,N'ntext'
+						,N'image'
+					)
+			WHERE
+				tSO.[type_desc] IN (
+					 N'USER_TABLE'
+					,N'VIEW'
+				)
+				AND OBJECTPROPERTY(tSO.[object_id], N'IsMSShipped') = 0
+			GROUP BY
+				 tSS.[name]
+				,tSO.[name]
+				,tSO.[type_desc]
+				,tSO.[create_date]
+			ORDER BY
+				 tSS.[name]
+				,tSO.[name]
+			;
+		</sql-select-text>
+	</sql-select>
+</sqlquery>
+</root>

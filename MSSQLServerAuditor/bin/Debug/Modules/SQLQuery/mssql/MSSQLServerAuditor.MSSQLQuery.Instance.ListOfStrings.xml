@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<root xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+<sqlquery type="MSSQL">
+	<sql-select name="GetListOfStrings">
+		<sql-select-text MinSupportedVersion="*" MaxSupportedVersion="*" signature="">
+			SELECT
+				N'Name01' AS [Name]
+			UNION ALL
+			SELECT
+				N'Name02' AS [Name]
+			UNION ALL
+			SELECT
+				N'Name03' AS [Name]
+			UNION ALL
+			SELECT
+				N'Name04' AS [Name]
+			UNION ALL
+			SELECT
+				N'Name05$' AS [Name]
+			UNION ALL
+			SELECT
+				N'Name06' AS [Name]
+			UNION ALL
+			SELECT
+				N'Name07' AS [Name]
+			UNION ALL
+			SELECT
+				N'Name08$' AS [Name]
+			;
+		</sql-select-text>
+	</sql-select>
+</sqlquery>
+</root>

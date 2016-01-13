@@ -1,0 +1,1404 @@
+﻿<?xml version="1.0" encoding="UTF-8"?>
+<root xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+	<local>
+		<frmLicenseErrors>
+			<Caption>
+				<i18n name="en">Instance errors</i18n>
+				<i18n name="ru">Ошибки подключения</i18n>
+				<i18n name="de">Verbindungsfehler</i18n>
+				<i18n name="fr">Erreurs de connexion</i18n>
+			</Caption>
+			<instanceDataGridViewTextBoxColumn>
+				<i18n name="en">Instance</i18n>
+				<i18n name="ru">Экземпляр</i18n>
+				<i18n name="de">Aufschläger</i18n>
+			</instanceDataGridViewTextBoxColumn>
+			<problemsTextDataGridViewTextBoxColumn>
+				<i18n name="en">Errors</i18n>
+				<i18n name="ru">Ошибки</i18n>
+				<i18n name="de">Fehler</i18n>
+			</problemsTextDataGridViewTextBoxColumn>
+			<oKbutton>
+				<i18n name="en">OK</i18n>
+				<i18n name="ru">OK</i18n>
+			</oKbutton>
+		</frmLicenseErrors>
+
+		<licenseProblems>
+			<CantConnect>
+				<i18n name="en">Can't connect to instance</i18n>
+				<i18n name="ru">Не удалось подключиться к экземпляру базы данных</i18n>
+			</CantConnect>
+			<Expired>
+				<i18n name="en">License expired</i18n>
+				<i18n name="ru">Срок действия лицензии истёк</i18n>
+			</Expired>
+			<WrongHost>
+				<i18n name="en">Wrong host</i18n>
+				<i18n name="ru">Неверно указан сервер</i18n>
+			</WrongHost>
+			<WrongUser>
+				<i18n name="en">Wrong user name</i18n>
+				<i18n name="ru">Неверно указано имя пользователя</i18n>
+			</WrongUser>
+			<LicenseNotDefined>
+				<i18n name="en">License is not defined</i18n>
+				<i18n name="ru">Лицензия не определена</i18n>
+			</LicenseNotDefined>
+			<WrongSignature>
+				<i18n name="en">Wrong signature</i18n>
+				<i18n name="ru">Неверная подпись у лицензии</i18n>
+			</WrongSignature>
+			<ExpiredBuildDate>
+				<i18n name="en">Validity of the license for the program build time has expired</i18n>
+				<i18n name="ru">Срок действия лицензии для времени сборки программы истёк</i18n>
+			</ExpiredBuildDate>
+		</licenseProblems>
+
+		<frmAboutBox>
+			<captionText>
+				<i18n name="en">About {0}</i18n>
+				<i18n name="ru">О {0}</i18n>
+			</captionText>
+			<labelProductName>
+				<i18n name="en">Product name:</i18n>
+				<i18n name="ru">Продукт:</i18n>
+			</labelProductName>
+			<labelRelease>
+				<i18n name="en">Edition:</i18n>
+				<i18n name="ru">Редакция:</i18n>
+			</labelRelease>
+			<labelVersion>
+				<i18n name="en">Version:</i18n>
+				<i18n name="ru">Версия:</i18n>
+			</labelVersion>
+			<labelCopyright>
+				<i18n name="en">Copyright:</i18n>
+				<i18n name="ru">Правообладатель:</i18n>
+			</labelCopyright>
+			<labelCompanyName>
+				<i18n name="en">Company Name:</i18n>
+				<i18n name="ru">Разработчик:</i18n>
+			</labelCompanyName>
+			<labelEmail>
+				<i18n name="en">Support E-mail:</i18n>
+				<i18n name="ru">Тех. поддержка:</i18n>
+			</labelEmail>
+			<labelURL>
+				<i18n name="en">Web site:</i18n>
+				<i18n name="ru">Веб. сайт:</i18n>
+			</labelURL>
+			<labelSQLiteFolder>
+				<i18n name="en">SQLite Folder:</i18n>
+				<i18n name="ru">Папка SQLite:</i18n>
+			</labelSQLiteFolder>
+			<labelUserDocsAppFolder>
+				<i18n name="en">UserDocsApp Folder:</i18n>
+				<i18n name="ru">Папка UserDocsApp:</i18n>
+			</labelUserDocsAppFolder>
+			<labelProcessId>
+				<i18n name="en">Process Id:</i18n>
+				<i18n name="ru">Идентификатор процесса:</i18n>
+			</labelProcessId>
+		</frmAboutBox>
+
+		<frmUserSettingsNode>
+			<captionText>
+				<i18n name="en">Node settings</i18n>
+				<i18n name="ru">Настройки узла</i18n>
+			</captionText>
+			<lblNodeColor>
+				<i18n name="en">Font color</i18n>
+				<i18n name="ru">Цвет шрифта</i18n>
+			</lblNodeColor>
+			<lblNodeName>
+				<i18n name="en">Node Name</i18n>
+				<i18n name="ru">Имя узла</i18n>
+			</lblNodeName>
+			<lblNodeIcon>
+				<i18n name="en">Node Icon</i18n>
+				<i18n name="ru">Иконка узла</i18n>
+			</lblNodeIcon>
+			<chkDeactivateNode>
+				<i18n name="en">Deactivate Node</i18n>
+				<i18n name="ru">Деактивировать узел</i18n>
+			</chkDeactivateNode>
+			<btnCancel>
+				<i18n name="en">Cancel</i18n>
+				<i18n name="ru">Отмена</i18n>
+			</btnCancel>
+			<btnOk>
+				<i18n name="en">OK</i18n>
+				<i18n name="ru">OK</i18n>
+			</btnOk>
+		</frmUserSettingsNode>
+
+		<frmUserSettingsParameters>
+			<captionText>
+				<i18n name="en">Node Queries</i18n>
+				<i18n name="ru">Запросы для узла</i18n>
+			</captionText>
+			<lblQueries>
+				<i18n name="en">Queries:</i18n>
+				<i18n name="ru">Запросы:</i18n>
+			</lblQueries>
+			<lblParameters>
+				<i18n name="en">Parameters:</i18n>
+				<i18n name="ru">Параметры:</i18n>
+			</lblParameters>
+			<ParameterColumn>
+				<i18n name="en">Parameter</i18n>
+				<i18n name="ru">Параметр</i18n>
+			</ParameterColumn>
+			<TypeColumn>
+				<i18n name="en">Type</i18n>
+				<i18n name="ru">Тип</i18n>
+			</TypeColumn>
+			<DefaultColumn>
+				<i18n name="en">Default</i18n>
+				<i18n name="ru">По умолчанию</i18n>
+			</DefaultColumn>
+			<ValueColumn>
+				<i18n name="en">Value</i18n>
+				<i18n name="ru">Значение</i18n>
+			</ValueColumn>
+			<btnCancel>
+				<i18n name="en">Cancel</i18n>
+				<i18n name="ru">Отмена</i18n>
+			</btnCancel>
+			<btnApply>
+				<i18n name="en">Apply</i18n>
+				<i18n name="ru">Применить</i18n>
+			</btnApply>
+			<btnAdd>
+				<i18n name="en">Add</i18n>
+				<i18n name="ru">Добавить</i18n>
+			</btnAdd>
+			<btnRemove>
+				<i18n name="en">Remove</i18n>
+				<i18n name="ru">Удалить</i18n>
+			</btnRemove>
+		</frmUserSettingsParameters>
+		<frmNewScheduleId>
+			<Caption>
+				<i18n name="en">New schedule</i18n>
+				<i18n name="ru">Новое расписание</i18n>
+			</Caption>
+			<lbScheduleId>
+				<i18n name="en">Schedule ID:</i18n>
+				<i18n name="ru">ID расписания:</i18n>
+			</lbScheduleId>
+			<btnCancel>
+				<i18n name="en">Cancel</i18n>
+				<i18n name="ru">Отмена</i18n>
+			</btnCancel>
+			<errThisIdAlreadyExists>
+				<i18n name="en">This ID is already exists</i18n>
+				<i18n name="ru">Такой ID уже существует</i18n>
+			</errThisIdAlreadyExists>
+		</frmNewScheduleId>
+		<frmUserSettingSchedule>
+			<captionText>
+				<i18n name="en">AutoUpdate Settings node</i18n>
+				<i18n name="ru">Настройки автообновления узла</i18n>
+			</captionText>
+			<cancelButton>
+				<i18n name="en">Cancel</i18n>
+				<i18n name="ru">Отмена</i18n>
+			</cancelButton>
+			<addButton>
+				<i18n name="en">Add</i18n>
+				<i18n name="ru">Добавить</i18n>
+			</addButton>
+		</frmUserSettingSchedule>
+		<UserSettingScheduleControl>
+			<captionText>
+				<i18n name="en">AutoUpdate Settings node</i18n>
+				<i18n name="ru">Настройки автообновления узла</i18n>
+			</captionText>
+			<enabled>
+				<i18n name="en">Enabled</i18n>
+				<i18n name="ru">Включено</i18n>
+			</enabled>
+			<frequencyType>
+				<i18n name="en">Recurs every:</i18n>
+				<i18n name="ru">Повторять каждые:</i18n>
+			</frequencyType>
+			<frequencyInterval>
+				<i18n name="en">Frequency interval</i18n>
+				<i18n name="ru">Интервал частоты</i18n>
+			</frequencyInterval>
+			<startDateTime>
+				<i18n name="en">Starting at:</i18n>
+				<i18n name="ru">Начиная с:</i18n>
+			</startDateTime>
+			<endDateTime>
+				<i18n name="en">Ending at:</i18n>
+				<i18n name="ru">Завершение в:</i18n>
+			</endDateTime>
+			<сancel>
+				<i18n name="en">Cancel</i18n>
+				<i18n name="ru">Отмена</i18n>
+			</сancel>
+
+			<Second>
+				<i18n name="en">Seconds</i18n>
+				<i18n name="ru">Секунды</i18n>
+			</Second>
+			<Minute>
+				<i18n name="en">Minutes</i18n>
+				<i18n name="ru">Минуты</i18n>
+			</Minute>
+			<Hour>
+				<i18n name="en">Hours</i18n>
+				<i18n name="ru">Часы</i18n>
+			</Hour>
+			<Day>
+				<i18n name="en">Days</i18n>
+				<i18n name="ru">Дни</i18n>
+			</Day>
+			<Month>
+				<i18n name="en">Months</i18n>
+				<i18n name="ru">Месяцы</i18n>
+			</Month>
+			<Year>
+				<i18n name="en">Years</i18n>
+				<i18n name="ru">Годы</i18n>
+			</Year>
+			<dayLabel>
+				<i18n name="en">day</i18n>
+				<i18n name="ru">день</i18n>
+			</dayLabel>
+			<ofMonthLabel>
+				<i18n name="en">of month</i18n>
+				<i18n name="ru">месяца</i18n>
+			</ofMonthLabel>
+			<Recurring>
+				<i18n name="en">Recurring</i18n>
+				<i18n name="ru">Периодическое</i18n>
+			</Recurring>
+			<One_time>
+				<i18n name="en">One time</i18n>
+				<i18n name="ru">Один раз</i18n>
+			</One_time>
+			<Daily>
+				<i18n name="en">Daily</i18n>
+				<i18n name="ru">По дням</i18n>
+			</Daily>
+			<Weekly>
+				<i18n name="en">Weekly</i18n>
+				<i18n name="ru">По неделям</i18n>
+			</Weekly>
+			<Monthly>
+				<i18n name="en">Monthly</i18n>
+				<i18n name="ru">По месяцам</i18n>
+			</Monthly>
+			<lbName>
+				<i18n name="en">Name:</i18n>
+				<i18n name="ru">Название:</i18n>
+			</lbName>
+			<lbScheduleType>
+				<i18n name="en">Schedule type:</i18n>
+				<i18n name="ru">Тип расписания:</i18n>
+			</lbScheduleType>
+			<lbOneTimeheader>
+				<i18n name="en">One-time occurency</i18n>
+				<i18n name="ru">Единовременно</i18n>
+			</lbOneTimeheader>
+			<lbDateOnce>
+				<i18n name="en">Date:</i18n>
+				<i18n name="ru">Дата:</i18n>
+			</lbDateOnce>
+			<lbTimeOnce>
+				<i18n name="en">Time:</i18n>
+				<i18n name="ru">Время:</i18n>
+			</lbTimeOnce>
+			<label1>
+				<i18n name="en">Frequency</i18n>
+				<i18n name="ru">Частота</i18n>
+			</label1>
+			<lbOccurs>
+				<i18n name="en">Occurs:</i18n>
+				<i18n name="ru">Происходит:</i18n>
+			</lbOccurs>
+			<lbDailyFreequency>
+				<i18n name="en">Daily аreequency</i18n>
+				<i18n name="ru">Дневная частота</i18n>
+			</lbDailyFreequency>
+			<rbOccyrsType>
+				<i18n name="en">Occurs once at:</i18n>
+				<i18n name="ru">Происходит один раз в:</i18n>
+			</rbOccyrsType>
+			<rbOccyrsTypeEvery>
+				<i18n name="en">Occurs every:</i18n>
+				<i18n name="ru">Происходит каждый:</i18n>
+			</rbOccyrsTypeEvery>
+			<label4>
+				<i18n name="en">Duration</i18n>
+				<i18n name="ru">Продолжительность</i18n>
+			</label4>
+			<lbStartDate>
+				<i18n name="en">Start date:</i18n>
+				<i18n name="ru">Дата начала:</i18n>
+			</lbStartDate>
+			<radioButton1>
+				<i18n name="en">End date:</i18n>
+				<i18n name="ru">Дата окончания:</i18n>
+			</radioButton1>
+			<radioButton2>
+				<i18n name="en">No end date:</i18n>
+				<i18n name="ru">Нет даты окончания</i18n>
+			</radioButton2>
+			<cbMonday>
+				<i18n name="en">Monday</i18n>
+				<i18n name="ru">Пн.</i18n>
+			</cbMonday>
+			<cbTuesday>
+				<i18n name="en">Tuesday</i18n>
+				<i18n name="ru">Вт.</i18n>
+			</cbTuesday>
+			<cbWednesday>
+				<i18n name="en">Wednes</i18n>
+				<i18n name="ru">Ср.</i18n>
+			</cbWednesday>
+			<cbThursday>
+				<i18n name="en">Thursday</i18n>
+				<i18n name="ru">Чт.</i18n>
+			</cbThursday>
+			<cbFriday>
+				<i18n name="en">Friday</i18n>
+				<i18n name="ru">Пт.</i18n>
+			</cbFriday>
+			<cbSaturday>
+				<i18n name="en">Saturday</i18n>
+				<i18n name="ru">Сб.</i18n>
+			</cbSaturday>
+			<cbSunday>
+				<i18n name="en">Sunday</i18n>
+				<i18n name="ru">Вс.</i18n>
+			</cbSunday>
+			<cbEmailNotification>
+				<i18n name="en">E-mail Notification</i18n>
+				<i18n name="ru">Уведомление по E-mail</i18n>
+			</cbEmailNotification>
+			<lbEmailAddress>
+				<i18n name="en">Address</i18n>
+				<i18n name="ru">Адрес</i18n>
+			</lbEmailAddress>
+		</UserSettingScheduleControl>
+
+		<frmComponents>
+			<captionText>
+				<i18n name="en">Components {0}</i18n>
+				<i18n name="ru">Компоненты {0}</i18n>
+			</captionText>
+			<descriptionStringPattern>
+				<i18n name="en">Modules Loaded:
+-----------------------------------------------------
+
+{0}
+
+{1}
+
+.Net Frameworks installed:
+-----------------------------------------------------
+{2}
+
+ADO Database Runtime: {3}
+
+Microsoft Internet Explorer: {4}</i18n>
+				<i18n name="ru">Загружено модулей:
+-----------------------------------------------------
+
+{0}
+
+{1}
+
+Установленные версии .Net Framework:
+-----------------------------------------------------
+{2}
+
+ADO Database Runtime: {3}
+
+Microsoft Internet Explorer: {4}</i18n>
+			</descriptionStringPattern>
+			<frameworkVersionErrorPattern>
+				<i18n name="en">Could not obtain using System.Win32.Registry due to:
+
+{0}</i18n>
+				<i18n name="ru">Не удалось получить, используя System.Win32.Registry из-за:
+
+{0}</i18n>
+			</frameworkVersionErrorPattern>
+		</frmComponents>
+		<frmAboutLicense>
+			<captionText>
+				<i18n name="en">Ask for a license</i18n>
+				<i18n name="ru">Запрос лицензии</i18n>
+			</captionText>
+			<hostText>
+				<i18n name="en">Computer name: {0}</i18n>
+				<i18n name="ru">Имя компьютера: {0}</i18n>
+			</hostText>
+			<userText>
+				<i18n name="en">User name: {0}</i18n>
+				<i18n name="ru">Имя пользователя: {0}</i18n>
+			</userText>
+			<buyNewLicense>
+				<i18n name="en">Order the license</i18n>
+				<i18n name="ru">Заказать новую лицензию</i18n>
+			</buyNewLicense>
+		</frmAboutLicense>
+		<frmSettings>
+			<Caption>
+				<i18n name="en">Settings</i18n>
+				<i18n name="ru">Настройки</i18n>
+			</Caption>
+			<cbShowStatusPanel>
+				<i18n name="en">
+					Show status panel
+				</i18n>
+				<i18n name="ru">
+					Показывать панель статуса
+				</i18n>
+			</cbShowStatusPanel>
+			<cbShowAddressLine>
+				<i18n name="en">
+					Show address line
+				</i18n>
+				<i18n name="ru">
+					Показывать адресную строку
+				</i18n>
+			</cbShowAddressLine>
+			<cbCreateTabsForConnection>
+				<i18n name="en">
+					Arrange connections in tabs
+				</i18n>
+				<i18n name="ru">
+					Подключения в отдельных вкладках
+				</i18n>
+			</cbCreateTabsForConnection>
+			<cbShowSingleConnectionTab>
+				<i18n name="en">
+					Show single connection tab
+				</i18n>
+				<i18n name="ru">
+					Показывать вкладку единственного открытого подключения
+				</i18n>
+			</cbShowSingleConnectionTab>
+			<cbShowCloseTabConfirm>
+				<i18n name="en">Show confirmation on tab close</i18n>
+				<i18n name="ru">
+					Показывать диалог закрытия вкладки
+				</i18n>
+			</cbShowCloseTabConfirm>
+			<chbDisplayRowCountsInTree>
+				<i18n name="en">
+					Display report's row counts for tree nodes
+				</i18n>
+				<i18n name="ru">
+					Отображать количество записей отчетов для узлов дерева
+				</i18n>
+			</chbDisplayRowCountsInTree>
+			<chbHideZeroRowsDatabasesInTree>
+				<i18n name="en">
+					Hide data base nodes with no rows in reports
+				</i18n>
+				<i18n name="ru">
+					Скрывать узлы баз данных с нулевым количеством записей в отчете
+				</i18n>
+			</chbHideZeroRowsDatabasesInTree>
+			<btnSaveSettings>
+				<i18n name="en">
+					Save settings
+				</i18n>
+				<i18n name="ru">
+					Сохранить настройки
+				</i18n>
+			</btnSaveSettings>
+			<lbInterfaceLang>
+				<i18n name="en">
+					Interface language
+				</i18n>
+				<i18n name="ru">
+					Язык интерфейса
+				</i18n>
+			</lbInterfaceLang>
+			<lbReportLang>
+				<i18n name="en">
+					Report language
+				</i18n>
+				<i18n name="ru">
+					Язык отчётов
+				</i18n>
+			</lbReportLang>
+			<lbPublicKey>
+				<i18n name="en">
+					Public key
+				</i18n>
+				<i18n name="ru">
+					Открытый ключ
+				</i18n>
+			</lbPublicKey>
+			<lbTimeout>
+				<i18n name="en">
+					Connection Timeout (s):
+				</i18n>
+				<i18n name="ru">
+					Таймаут соединения (секунд):
+				</i18n>
+			</lbTimeout>
+			<lbTimeoutSecond>
+				<i18n name="en">seconds</i18n>
+				<i18n name="ru">секунд</i18n>
+			</lbTimeoutSecond>
+			<lbMaxThreadCount>
+				<i18n name="en">Max threads count:</i18n>
+				<i18n name="ru">Максимальное число потоков:</i18n>
+			</lbMaxThreadCount>
+			<btnOk>
+				<i18n name="en">OK</i18n>
+				<i18n name="ru">OK</i18n>
+			</btnOk>
+			<btnCancel>
+				<i18n name="en">Cancel</i18n>
+				<i18n name="ru">Отмена</i18n>
+			</btnCancel>
+			<cbShowXML>
+				<i18n name="en">
+					Show tab with debug XML
+				</i18n>
+				<i18n name="ru">
+					Отображать вкладку с отладочным XML
+				</i18n>
+			</cbShowXML>
+		</frmSettings>
+		<frmConnectionSelection>
+			<Caption>
+				<i18n name="en">Select connection</i18n>
+				<i18n name="ru">Выберите соединение</i18n>
+			</Caption>
+			<lbCurrentConnections>
+				<i18n name="en">Current</i18n>
+				<i18n name="ru">Текущие подключения</i18n>
+			</lbCurrentConnections>
+			<lbSelectConnection>
+				<i18n name="en">Connections</i18n>
+				<i18n name="ru">Соединения</i18n>
+			</lbSelectConnection>
+			<nameDataGridViewTextBoxColumn>
+				<i18n name="en">Name</i18n>
+				<i18n name="ru">Имя</i18n>
+			</nameDataGridViewTextBoxColumn>
+			<instanceDataGridViewTextBoxColumn>
+				<i18n name="en">Instance</i18n>
+				<i18n name="ru">Экземпляр</i18n>
+			</instanceDataGridViewTextBoxColumn>
+			<authenticationDataGridViewTextBoxColumn>
+				<i18n name="en">Authentication</i18n>
+				<i18n name="ru">Аутентификация</i18n>
+			</authenticationDataGridViewTextBoxColumn>
+			<nameDataGridViewTextBoxColumn1>
+				<i18n name="en">Name</i18n>
+				<i18n name="ru">Имя</i18n>
+			</nameDataGridViewTextBoxColumn1>
+			<templateDataGridViewTextBoxColumn>
+				<i18n name="en">Template</i18n>
+				<i18n name="ru">Шаблон</i18n>
+			</templateDataGridViewTextBoxColumn>
+			<instancesCountDataGridViewTextBoxColumn>
+				<i18n name="en">Count</i18n>
+				<i18n name="ru">Кол-во</i18n>
+			</instancesCountDataGridViewTextBoxColumn>
+			<expiryDataGridViewTextBoxColumn>
+				<i18n name="en">License</i18n>
+				<i18n name="ru">Лицензия до</i18n>
+			</expiryDataGridViewTextBoxColumn>
+			<Buildexpirydate>
+				<i18n name="en">Build License expiry</i18n>
+				<i18n name="ru">Дата истечения лицензии по релизу</i18n>
+			</Buildexpirydate>
+			<btnAddTemplate>
+				<i18n name="en">Add template</i18n>
+				<i18n name="ru">Добавить шаблон</i18n>
+			</btnAddTemplate>
+			<btnOk>
+				<i18n name="en">OK</i18n>
+				<i18n name="ru">OK</i18n>
+			</btnOk>
+			<btnCancel>
+				<i18n name="en">Cancel</i18n>
+				<i18n name="ru">Отмена</i18n>
+			</btnCancel>
+		</frmConnectionSelection>
+		<frmMain>
+			<mnuUpdateNode>
+				<i18n name="en">Update Node</i18n>
+				<i18n name="ru">Обновить узел</i18n>
+			</mnuUpdateNode>
+			<mnuUpdateHierarcially>
+				<i18n name="en">Update Hierarchically</i18n>
+				<i18n name="ru">Обновить вложенные узлы</i18n>
+			</mnuUpdateHierarcially>
+			<mnuRefreshTree>
+				<i18n name="en">Refresh Tree</i18n>
+				<i18n name="ru">Перестроить</i18n>
+			</mnuRefreshTree>
+			<mnuNodeSettings>
+				<i18n name="en">Node Settings</i18n>
+				<i18n name="ru">Настройки узла</i18n>
+			</mnuNodeSettings>
+			<mnuSettingsParameters>
+				<i18n name="en">Queries Settings</i18n>
+				<i18n name="ru">Настройки запросов</i18n>
+			</mnuSettingsParameters>
+			<mnuScheduleSettings>
+				<i18n name="en">Scheduler settings node</i18n>
+				<i18n name="ru">Настройки планировщика узла</i18n>
+			</mnuScheduleSettings>
+			<mnuCollapseHierarchically>
+				<i18n name="en">Collapse hierarcially</i18n>
+				<i18n name="ru">Закрыть вложенные узлы</i18n>
+			</mnuCollapseHierarchically>
+			<mnuExpandHierarchically>
+				<i18n name="en">Expand hierarcially</i18n>
+				<i18n name="ru">Открыть вложенные узлы</i18n>
+			</mnuExpandHierarchically>
+			<mnuSettings>
+				<i18n name="en">Settings</i18n>
+				<i18n name="ru">Настройки</i18n>
+			</mnuSettings>
+			<mnuHideMainMenu>
+				<i18n name="en">Hide main menu</i18n>
+				<i18n name="ru">Скрыть главное меню</i18n>
+			</mnuHideMainMenu>
+			<hideStatusPanelItem>
+				<i18n name="en">Hide status panel</i18n>
+				<i18n name="ru">Скрыть панель статуса</i18n>
+			</hideStatusPanelItem>
+			<unhideReportsTreeMenuItem>
+				<i18n name="en">Unhide tree of reports</i18n>
+				<i18n name="ru">Показать дерево отчетов</i18n>
+			</unhideReportsTreeMenuItem>
+			<mnuShowMainMenu>
+				<i18n name="en">Make main menu visible</i18n>
+				<i18n name="ru">Отобразить главное меню</i18n>
+			</mnuShowMainMenu>
+			<mnuSaveRaw>
+				<i18n name="en">Save</i18n>
+				<i18n name="ru">Сохранить</i18n>
+			</mnuSaveRaw>
+			<mnuSaveAllRaw>
+				<i18n name="en">Save all</i18n>
+				<i18n name="ru">Сохранить все</i18n>
+			</mnuSaveAllRaw>
+			<mnuOpenRaw>
+				<i18n name="en">Open...</i18n>
+				<i18n name="ru">Открыть...</i18n>
+			</mnuOpenRaw>
+			<mnuOptions>
+				<i18n name="en">Options...</i18n>
+				<i18n name="ru">Конфигурация...</i18n>
+			</mnuOptions>
+			<hideReportsTreeMenuItem>
+				<i18n name="en">Hide tree of reports</i18n>
+				<i18n name="ru">Скрыть дерево отчетов</i18n>
+			</hideReportsTreeMenuItem>
+			<showReportsTreeMenuItem>
+				<i18n name="en">Display tree of reports</i18n>
+				<i18n name="ru">Отобразить дерево отчетов</i18n>
+			</showReportsTreeMenuItem>
+			<showStatusPanelItem>
+				<i18n name="en">Display status panel</i18n>
+				<i18n name="ru">Отобразить панель статуса</i18n>
+			</showStatusPanelItem>
+			<mnuNewTab>
+				<i18n name="en">
+					New connection...
+				</i18n>
+				<i18n name="ru">
+					Новое соединение...
+				</i18n>
+			</mnuNewTab>
+			<mnuNewDirectConnection>
+				<i18n name="en">
+					New connection (direct)...
+				</i18n>
+				<i18n name="ru">
+					Новое соединение (прямое)...
+				</i18n>
+			</mnuNewDirectConnection>
+			<mnuFile>
+				<i18n name="en">
+					File
+				</i18n>
+				<i18n name="ru">
+					Файл
+				</i18n>
+			</mnuFile>
+			<mnuClose>
+				<i18n name="en">
+					Exit
+				</i18n>
+				<i18n name="ru">
+					Выход
+				</i18n>
+			</mnuClose>
+			<mnuConnectionProperties>
+				<i18n name="en">
+					Properties...
+				</i18n>
+				<i18n name="ru">
+					Свойства...
+				</i18n>
+			</mnuConnectionProperties>
+			<mnuCloseConnection>
+				<i18n name="en">
+					Close
+				</i18n>
+				<i18n name="ru">
+					Закрыть
+				</i18n>
+			</mnuCloseConnection>
+			<mnuLicenses>
+				<i18n name="en">
+					Licenses
+				</i18n>
+				<i18n name="ru">
+					Лицензии
+				</i18n>
+			</mnuLicenses>
+			<mnuAddLicense>
+				<i18n name="en">
+					Add license from file...
+				</i18n>
+				<i18n name="ru">
+					Добавить лицензию из файла...
+				</i18n>
+			</mnuAddLicense>
+			<mnuRemoveLicense>
+				<i18n name="en">
+					Remove license...
+				</i18n>
+				<i18n name="ru">
+					Удалить лицензию...
+				</i18n>
+			</mnuRemoveLicense>
+			<msgNoLicenseFound>
+				<i18n name="en">
+					Selected file contains no licenses or file format is invalid.
+				</i18n>
+				<i18n name="ru">
+					Выбранный файл не содержит сведений о лицензиях.
+				</i18n>
+			</msgNoLicenseFound>
+			<msgLicenseSuccessfulyAdded>
+				<i18n name="en">
+					License(s) was successfuly added.
+				</i18n>
+				<i18n name="ru">
+					Лицензия(и) добавлены.
+				</i18n>
+			</msgLicenseSuccessfulyAdded>
+			<msgLicenseWillBeRemoved>
+				<i18n name="en">
+					License will be removed permanently.
+				</i18n>
+				<i18n name="ru">
+					Лицензия будет удалена.
+				</i18n>
+			</msgLicenseWillBeRemoved>
+			<mnuHelp>
+				<i18n name="en">
+					Help
+				</i18n>
+				<i18n name="ru">
+					Помощь
+				</i18n>
+			</mnuHelp>
+			<mnuAbout>
+				<i18n name="en">
+					About
+				</i18n>
+				<i18n name="ru">
+					О программе
+				</i18n>
+			</mnuAbout>
+			<mnuComponents>
+				<i18n name="en">
+					Components
+				</i18n>
+				<i18n name="ru">
+					Компоненты
+				</i18n>
+			</mnuComponents>
+			<mnuOptionLicense>
+				<i18n name="en">
+					Ask for a license...
+				</i18n>
+				<i18n name="ru">
+					Заказать лицензию...
+				</i18n>
+			</mnuOptionLicense>
+			<lbSerialization>
+				<i18n name="en">
+					Serialization
+				</i18n>
+				<i18n name="ru">
+					Сохранение
+				</i18n>
+			</lbSerialization>
+		</frmMain>
+		<ProgressForm>
+			<btnCancel>
+				<i18n name="en">
+					Cancel
+				</i18n>
+				<i18n name="ru">
+					Отмена
+				</i18n>
+			</btnCancel>
+			<lbWait>
+				<i18n name="en">
+					Please wait...
+				</i18n>
+				<i18n name="ru">
+					Пожалуйста, подождите...
+				</i18n>
+			</lbWait>
+			<lbCancellingOperation>
+				<i18n name="en">
+					Cancelling operation...
+				</i18n>
+				<i18n name="ru">
+					Отмена операции...
+				</i18n>
+			</lbCancellingOperation>
+		</ProgressForm>
+		<frmTab>
+			<btnRefresh>
+				<i18n name="en">
+					Refresh
+				</i18n>
+				<i18n name="ru">
+					Обновить
+				</i18n>
+			</btnRefresh>
+			<btnClose>
+				<i18n name="en">
+					Close window
+				</i18n>
+				<i18n name="ru">
+					Закрыть окно
+				</i18n>
+			</btnClose>
+			<tabNameChart>
+				<i18n name="en">
+					Chart
+				</i18n>
+				<i18n name="ru">
+					График
+				</i18n>
+			</tabNameChart>
+		</frmTab>
+		<frmNewConn>
+			<lbServer>
+				<i18n name="en">
+					Server
+				</i18n>
+				<i18n name="ru">
+					Сервер
+				</i18n>
+			</lbServer>
+			<lbLogin>
+				<i18n name="en">
+					Login
+				</i18n>
+				<i18n name="ru">
+					Логин
+				</i18n>
+			</lbLogin>
+			<lbPassword>
+				<i18n name="en">
+					Password
+				</i18n>
+				<i18n name="ru">
+					Пароль
+				</i18n>
+			</lbPassword>
+			<btnCancel>
+				<i18n name="en">
+					Cancel
+				</i18n>
+				<i18n name="ru">
+					Отмена
+				</i18n>
+			</btnCancel>
+			<Caption>
+				<i18n name="en">
+					New connection
+				</i18n>
+				<i18n name="ru">
+					Новое соединение
+				</i18n>
+			</Caption>
+			<cbWinAuth>
+				<i18n name="en">
+					Windows authentication
+				</i18n>
+				<i18n name="ru">
+					Аутентификация Windows
+				</i18n>
+			</cbWinAuth>
+		</frmNewConn>
+
+		<EditDirectConnectionDialog>
+			<Caption>
+				<i18n name="en">Connection properties</i18n>
+				<i18n name="ru">Свойства подключения</i18n>
+			</Caption>
+		</EditDirectConnectionDialog>
+		<CreateDirectConnectionDialog>
+			<Caption>
+				<i18n name="en">Add new connection</i18n>
+				<i18n name="ru">Добавить новое подключение</i18n>
+			</Caption>
+		</CreateDirectConnectionDialog>
+		<DirectConnectionDialog>
+			<Caption>
+				<i18n name="en">Direct connection</i18n>
+				<i18n name="ru">Прямое подключение</i18n>
+			</Caption>
+			<grpServerInfo>
+				<i18n name="en">Server information</i18n>
+				<i18n name="ru">Информация о сервере</i18n>
+			</grpServerInfo>
+			<grpTemplate>
+				<i18n name="en">Template</i18n>
+				<i18n name="ru">Шаблон</i18n>
+			</grpTemplate>
+			<grpModuleTypes>
+				<i18n name="en">Module type</i18n>
+				<i18n name="ru">Тип модуля</i18n>
+			</grpModuleTypes>
+			<grpDataBaseType>
+				<i18n name="en">Data Source type</i18n>
+				<i18n name="ru">Тип источника данных</i18n>
+			</grpDataBaseType>
+			<btnCancel>
+				<i18n name="en">Cancel</i18n>
+				<i18n name="ru">Отмена</i18n>
+			</btnCancel>
+			<btnSelectConnection>
+				<i18n name="en">Select...</i18n>
+				<i18n name="ru">Выбрать...</i18n>
+			</btnSelectConnection>
+			<optSelectExistTemplate>
+				<i18n name="en">Select template</i18n>
+				<i18n name="ru">Выбрать шаблон</i18n>
+			</optSelectExistTemplate>
+			<optOpenTemplateFromFile>
+				<i18n name="en">Open from file</i18n>
+				<i18n name="ru">Открыть из файла</i18n>
+			</optOpenTemplateFromFile>
+			<MSSQLName>
+				<i18n name="en">MS SQL</i18n>
+				<i18n name="ru">MS SQL</i18n>
+			</MSSQLName>
+			<TeradataName>
+				<i18n name="en">Teradata</i18n>
+				<i18n name="ru">Teradata</i18n>
+			</TeradataName>
+			<ActiveDirectoryName>
+				<i18n name="en">Active Directory</i18n>
+				<i18n name="ru">Active Directory</i18n>
+			</ActiveDirectoryName>
+			<EventLogName>
+				<i18n name="en">Event Log</i18n>
+				<i18n name="ru">Event Log</i18n>
+			</EventLogName>
+			<NetworkInformationName>
+				<i18n name="en">Network Information</i18n>
+				<i18n name="ru">Network Information</i18n>
+			</NetworkInformationName>
+			<SelectTemplateError>
+				<i18n name="en">Please select template</i18n>
+				<i18n name="ru">Пожалуйста, выберите шаблон</i18n>
+			</SelectTemplateError>
+			<SelectTemplateFileError>
+				<i18n name="en">Please set the path to template file</i18n>
+				<i18n name="ru">Пожалуйста, укажите путь к файлу шаблона</i18n>
+			</SelectTemplateFileError>
+			<SelectTemplateFileNotExistError>
+				<i18n name="en">Template file not exist</i18n>
+				<i18n name="ru">Файл шаблона не существует</i18n>
+			</SelectTemplateFileNotExistError>
+			<SelectServerError>
+				<i18n name="en">Please select server</i18n>
+				<i18n name="ru">Пожалуйста, выберите экземпляр сервера баз данных</i18n>
+			</SelectServerError>
+			<SelectDataBaseError>
+				<i18n name="en">Please select database type</i18n>
+				<i18n name="ru">Пожалуйста, выберите тип сервера</i18n>
+			</SelectDataBaseError>
+			<templateFileFilter>
+				<i18n name="en">Template files (*.xml)|*.xml</i18n>
+				<i18n name="ru">Файлы шаблонов (*.xml)|*.xml</i18n>
+			</templateFileFilter>
+		</DirectConnectionDialog>
+
+		<NonSqlDataConnectionDialog>
+			<Caption>
+				<i18n name="en">Connection properties</i18n>
+				<i18n name="ru">Свойства соединения</i18n>
+			</Caption>
+			<gbConnectionString>
+				<i18n name="en">Server name:</i18n>
+				<i18n name="ru">Имя сервера:</i18n>
+			</gbConnectionString>
+			<btCancel>
+				<i18n name="en">Cancel</i18n>
+				<i18n name="ru">Отмена</i18n>
+			</btCancel>
+		</NonSqlDataConnectionDialog>
+
+		<InternalSqliteConnectionDialog>
+			<Caption>
+				<i18n name="en">Internal SQLite connection</i18n>
+				<i18n name="ru">Внутреннее SQLite соединение</i18n>
+			</Caption>
+			<btnCancel>
+				<i18n name="en">Cancel</i18n>
+				<i18n name="ru">Отмена</i18n>
+			</btnCancel>
+			<lblDataType>
+				<i18n name="en">Data source type:</i18n>
+				<i18n name="ru">Тип источника подключения:</i18n>
+			</lblDataType>
+			<lblTemplate>
+				<i18n name="en">Template:</i18n>
+				<i18n name="ru">Шаблон:</i18n>
+			</lblTemplate>
+			<lblLogin>
+				<i18n name="en">Login:</i18n>
+				<i18n name="ru">Логин:</i18n>
+			</lblLogin>
+			<lblConnectionGroup>
+				<i18n name="en">Connection group:</i18n>
+				<i18n name="ru">Подключение:</i18n>
+			</lblConnectionGroup>
+			<lblServerInstance>
+				<i18n name="en">Server instance:</i18n>
+				<i18n name="ru">Имя сервера:</i18n>
+			</lblServerInstance>
+		</InternalSqliteConnectionDialog>
+
+		<NetworkInformationConnectionDialog>
+			<Caption>
+				<i18n name="en">Network information connection</i18n>
+				<i18n name="ru">Сетевое соединение</i18n>
+			</Caption>
+			<btnCancel>
+				<i18n name="en">Cancel</i18n>
+				<i18n name="ru">Отмена</i18n>
+			</btnCancel>
+			<lblHost>
+				<i18n name="en">Host:</i18n>
+				<i18n name="ru">Удаленный хост:</i18n>
+			</lblHost>
+			<lblProtocol>
+				<i18n name="en">Protocol:</i18n>
+				<i18n name="ru">Протокол:</i18n>
+			</lblProtocol>
+			<lblPort>
+				<i18n name="en">Port:</i18n>
+				<i18n name="ru">Порт:</i18n>
+			</lblPort>
+			<lblTimeout>
+				<i18n name="en">Timeout:</i18n>
+				<i18n name="ru">Тайм-аут:</i18n>
+			</lblTimeout>
+		</NetworkInformationConnectionDialog>
+
+		<GraphControl>
+			<menuRestore>
+				<i18n name="en">Restore</i18n>
+				<i18n name="ru">Восстановить</i18n>
+			</menuRestore>
+			<marginSettings>
+				<i18n name="en">Margin settings</i18n>
+				<i18n name="ru">Поля графика</i18n>
+			</marginSettings>
+			<menuHideAll>
+				<i18n name="en">Hide all</i18n>
+				<i18n name="ru">Скрыть все</i18n>
+			</menuHideAll>
+			<menuHide>
+				<i18n name="en">
+					Hide
+				</i18n>
+				<i18n name="ru">
+					Скрыть
+				</i18n>
+			</menuHide>
+			<legendShow>
+				<i18n name="en">
+					Legend
+				</i18n>
+				<i18n name="ru">
+					Легенда
+				</i18n>
+			</legendShow>
+			<menuSelect>
+				<i18n name="en">
+					Select
+				</i18n>
+				<i18n name="ru">
+					Выбрать
+				</i18n>
+			</menuSelect>
+			<menuAll>
+				<i18n name="en">
+					All
+				</i18n>
+				<i18n name="ru">
+					Все
+				</i18n>
+			</menuAll>
+		</GraphControl>
+		<TableControl>
+			<menuRestore>
+				<i18n name="en">Restore</i18n>
+				<i18n name="ru">Восстановить</i18n>
+			</menuRestore>
+			<menuHideAll>
+				<i18n name="en">Hide all</i18n>
+				<i18n name="ru">Скрыть все</i18n>
+			</menuHideAll>
+			<menuHide>
+				<i18n name="en">
+					Hide
+				</i18n>
+				<i18n name="ru">
+					Скрыть
+				</i18n>
+			</menuHide>
+			<menuSelect>
+				<i18n name="en">
+					Select
+				</i18n>
+				<i18n name="ru">
+					Выбрать
+				</i18n>
+			</menuSelect>
+			<menuAll>
+				<i18n name="en">
+					All
+				</i18n>
+				<i18n name="ru">
+					Все
+				</i18n>
+			</menuAll>
+		</TableControl>
+		<CloseableTabControl>
+			<shouldClose>
+				<i18n name="en">
+					Are you sure?
+				</i18n>
+				<i18n name="ru">
+					Вы уверены?
+				</i18n>
+			</shouldClose>
+			<tabClose>
+				<i18n name="en">
+					Tab close
+				</i18n>
+				<i18n name="ru">
+					Закрытие вкладки
+				</i18n>
+			</tabClose>
+		</CloseableTabControl>
+		<frmExceptionBox>
+			<Caption>
+				<i18n name="en">
+					Exception
+				</i18n>
+				<i18n name="ru">
+					Исключение
+				</i18n>
+			</Caption>
+			<btnClose>
+				<i18n name="en">
+					Resume
+				</i18n>
+				<i18n name="ru">
+					Продолжить
+				</i18n>
+			</btnClose>
+			<btnDetails>
+				<i18n name="en">
+					Details
+				</i18n>
+				<i18n name="ru">
+					Сведения
+				</i18n>
+			</btnDetails>
+			<lblDescription>
+				<i18n name="en">
+					Unhandled exception has occurred in a component in your application. If you click Continue, the application will ignore this error and attempt to continue.
+				</i18n>
+				<i18n name="ru">
+					Необрабатываемое исключение в приложении. При нажатии "Продолжить" ошибка будет проигнорирована и работа будет продолжена.
+				</i18n>
+			</lblDescription>
+		</frmExceptionBox>
+
+		<frmStoredConnectionSelector>
+			<Caption>
+				<i18n name="en">
+					Select stored connections
+				</i18n>
+				<i18n name="ru">
+					Выберите подключения
+				</i18n>
+			</Caption>
+			<btnOk>
+				<i18n name="en">OK</i18n>
+				<i18n name="ru">OK</i18n>
+			</btnOk>
+			<btnCancel>
+				<i18n name="en">Cancel</i18n>
+				<i18n name="ru">Отмена</i18n>
+			</btnCancel>
+		</frmStoredConnectionSelector>
+
+		<OpenConnectionDialog>
+			<Caption>
+				<i18n name="en">
+					Select connection group
+				</i18n>
+				<i18n name="ru">
+					Выберите подключение
+				</i18n>
+			</Caption>
+			<btOk>
+				<i18n name="en">OK</i18n>
+				<i18n name="ru">OK</i18n>
+			</btOk>
+			<btCancel>
+				<i18n name="en">Cancel</i18n>
+				<i18n name="ru">Отмена</i18n>
+			</btCancel>
+			<gbServerInfo>
+				<i18n name="en">ConnectionGroup</i18n>
+				<i18n name="ru">Подключение</i18n>
+			</gbServerInfo>
+			<gbDataBaseType>
+				<i18n name="en">Data Source type</i18n>
+				<i18n name="ru">Тип источника данных</i18n>
+			</gbDataBaseType>
+			<gbTemplate>
+				<i18n name="en">Template</i18n>
+				<i18n name="ru">Шаблон</i18n>
+			</gbTemplate>
+		</OpenConnectionDialog>
+
+		<frmSaveDialog>
+			<Caption>
+				<i18n name="en">
+					Save
+				</i18n>
+				<i18n name="ru">
+					Сохранение
+				</i18n>
+			</Caption>
+			<btOk>
+				<i18n name="en">OK</i18n>
+				<i18n name="ru">OK</i18n>
+			</btOk>
+			<btCancel>
+				<i18n name="en">Cancel</i18n>
+				<i18n name="ru">Отмена</i18n>
+			</btCancel>
+
+			<lbFolder>
+				<i18n name="en">Folder</i18n>
+				<i18n name="ru">Папка</i18n>
+			</lbFolder>
+			<btBrowse>
+				<i18n name="en">Browse</i18n>
+				<i18n name="ru">Обзор</i18n>
+			</btBrowse>
+			<gbScope>
+				<i18n name="en">Scope</i18n>
+				<i18n name="ru">Включать</i18n>
+			</gbScope>
+			<rbCurrent>
+				<i18n name="en">Current</i18n>
+				<i18n name="ru">Текущее</i18n>
+			</rbCurrent>
+			<rbAll>
+				<i18n name="en">All</i18n>
+				<i18n name="ru">Все</i18n>
+			</rbAll>
+			<gbFile>
+				<i18n name="en">Files</i18n>
+				<i18n name="ru">Файлы</i18n>
+			</gbFile>
+			<chbCurrent>
+				<i18n name="en">Current</i18n>
+				<i18n name="ru">Оперативный</i18n>
+			</chbCurrent>
+			<chbHistoric>
+				<i18n name="en">Historic</i18n>
+				<i18n name="ru">Исторический</i18n>
+			</chbHistoric>
+		</frmSaveDialog>
+
+		<common>
+			<operationCancellationRequested>
+				<i18n name="en">Operation cancellation requested</i18n>
+				<i18n name="ru">Запрошена отмена операции</i18n>
+			</operationCancellationRequested>
+			<operationCancelled>
+				<i18n name="en">Operation cancelled</i18n>
+				<i18n name="ru">Операция прервана</i18n>
+			</operationCancelled>
+			<notAvailablenodeDescription>
+				<i18n name="en">The node isn't available for this database.</i18n>
+				<i18n name="ru">Элемент недоступен для текущей базы данных.</i18n>
+			</notAvailablenodeDescription>
+			<nodeConnectionDescription>
+				<i18n name="en">Loading node...</i18n>
+				<i18n name="ru">Загрузка элемента...</i18n>
+			</nodeConnectionDescription>
+			<NodesQueryingTreeNodeText>
+				<i18n name="en">Loading...</i18n>
+				<i18n name="ru">Загрузка...</i18n>
+			</NodesQueryingTreeNodeText>
+			<queriesRunning>
+				<i18n name ="en">Running queries - {0} (of {1} requested):</i18n>
+				<i18n name ="ru">Выполняющиеся запросы - {0} (из {1} запрошенных):</i18n>
+			</queriesRunning>
+			<queuedQueries>
+				<i18n name ="en">Queued queries:</i18n>
+				<i18n name ="ru">Запросы, ожидающие запуска:</i18n>
+			</queuedQueries>
+		</common>
+
+		<exceptions>
+			<querynotfound>
+				<i18n name="en">Query {0} not found.</i18n>
+				<i18n name="ru">Запрос {0} не найден.</i18n>
+			</querynotfound>
+			<wrongQueriesSignatures>
+				<i18n name="en">The following queries has wrong signatures</i18n>
+				<i18n name="ru">Подпись следующих запросов не верна</i18n>
+			</wrongQueriesSignatures>
+			<saveMsdProblem>
+				<i18n name="en">Unable to save data. See log for details.</i18n>
+				<i18n name="ru">Невозможно сохранить данные. См. лог для подробностей.</i18n>
+			</saveMsdProblem>
+		</exceptions>
+	</local>
+</root>

@@ -1,0 +1,17 @@
+﻿<?xml version="1.0" encoding="UTF-8"?>
+<root xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+<sqlquery type="TDSQL">
+	<sql-select name="GetDbInfo">
+		<sql-select-text MinSupportedVersion="*" MaxSupportedVersion="*" signature="">
+			SELECT
+				 tDI.InfoKey  AS InfoKey
+				,tDI.InfoData AS InfoData
+			FROM
+				dbc.dbcinfo tDI
+			ORDER BY
+				tDI.InfoKey;
+		</sql-select-text>
+	</sql-select>
+</sqlquery>
+</root>
+

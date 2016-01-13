@@ -1,0 +1,483 @@
+﻿using System;
+using System.Collections.Generic;
+using System.IO;
+using System.Linq;
+using System.Security.Cryptography;
+using System.Threading;
+using System.Windows.Forms;
+using MSSQLServerAuditor.Licenser;
+using MSSQLServerAuditor.Licenser.Model;
+using MSSQLServerAuditor.Licenser.Model.Loaders;
+using MSSQLServerAuditor.Model.Internationalization;
+using MSSQLServerAuditor.Model.Loaders;
+using MSSQLServerAuditor.Utils;
+
+namespace AuditorLicenser
+{
+    using MSSQLServerAuditor.Licenser.Gui;
+
+    public partial class frmMain : Form, ILogger
+    {
+        private readonly LocaleManager _lM;
+        private readonly LicenserModel _model;
+
+        public frmMain()
+        {
+            InitializeComponent();
+
+            //this.PrepareView();
+
+            _lM = new LocaleManager(() => Settings.UserOnes.UiLanguage, Path.Combine(Application.StartupPath, "AuditorLicenser.i18n.xml"))
+            {
+                FormIfOmited = this
+            };
+
+            _model = new LicenserModel(_lM);
+
+            Text += " - " + Application.ProductVersion;
+
+            _model.SetLogger(this);
+
+            ApplyLocalization();
+
+            Settings.UserOnesChanged += (s, e) => ApplyLocalization();
+
+            fileAppPath.IsCorrectFile = name =>
+            {
+                var isValid = File.Exists(name) && Path.GetExtension(name) == ".exe";
+                if (isValid)
+                {
+                    _model.Settings.AppPath = fileAppPath.Text;
+                    MSSQLAuditorVersion.Text = _lM.GetText("AppVersion") + _model.MSSQLAuditorVersion;
+                }
+                return isValid;
+            };
+
+            txtLoadConfFileName.IsCorrectFile = delegate(string name)
+            {
+                try
+                {
+                    LicSettingsLoader.LoadFromXml(name);
+                }
+                catch { return false; }
+                return true;
+            };
+
+            txtLangFileName.IsCorrectFile = delegate(string name)
+            {
+                try { new LocaleManager(null, name); }
+                catch { return false; }
+                return true;
+            };
+
+            txtSysSettingsFileName.IsCorrectFile = delegate(string name)
+            {
+                try { SettingsLoader.LoadFromXml(null, name); }
+                catch { return false; }
+                return true;
+            };
+
+            txtUserSettingsFileName.IsCorrectFile = delegate(string name)
+            {
+                try { SettingsLoader.LoadFromXml(name, null); }
+                catch { return false; }
+                return true;
+            };
+        }
+
+        private void PrepareView()
+        {
+            if (AppVersionHelper.IsNotTrial())
+            {
+                lbAdditionalSql.Visible = false;
+                tbAdditionalSql.Visible = false;
+
+                lblAdditionalTemplate.Visible = false;
+            }
+        }
+
+        private void createCfgRb_CheckedChanged(object sender, System.EventArgs e)
+        {
+            txtCreateConfFileName.Enabled = createCfgRb.Checked;
+            txtLoadConfFileName.Enabled = loadCfgRb.Checked;
+            doConfigurationButton.Enabled = true;
+        }
+
+        private void button1_Click(object sender, System.EventArgs e)
+        {
+            try
+            {
+                WriteToLog( _lM.GetText("InitializingConfiguration"));
+  
+                if (createCfgRb.Checked)
+                    _model.CreateSettingsAndSave(txtCreateConfFileName.Text);
+
+                if (loadCfgRb.Checked)
+                    _model.LoadSettingsFromFile(txtLoadConfFileName.Text);
+
+                UpdateTemplateFilesList();
+
+                txtDstFolder.Text = _model.Settings.DstFolder;
+                txtNetFolder.Text = _model.Settings.NetFolder;
+                txtNetVersion.Text = _model.Settings.NetPlatform;
+                txtSysSettingsFileName.Text = _model.Settings.SystemSettingsFile;
+                txtUserSettingsFileName.Text = _model.Settings.UserSettingsFile;
+                txtLangFileName.Text = _model.Settings.LanguageFile;
+                txtWixFileName.Text = _model.Settings.WixFileName;
+                txtWixBanner.Text = _model.Settings.WixBannerFileName;
+                txtWixFolder.Text = _model.Settings.WixFolder;
+                txtSrcFolder.Text = _model.Settings.SrcFolder;
+                txtOutputMsi.Text = _model.Settings.OutputMsi;
+
+                tbDirName.Text = _model.Settings.DirectoryName;
+                tbFileName.Text = _model.Settings.ExeFileName;
+                tbShorcName.Text = _model.Settings.ShorcName;
+
+                txtSignPriKey.Text = _model.Settings.PrivateKeySign;
+                txtSignPubKey.Text = _model.Settings.PublicKeySign;
+                txtEncPriKey.Text = _model.Settings.PrivateKeyDecrypt;
+                txtEncPubKey.Text = _model.Settings.PublicKeyDecrypt;
+                txtDnGuardFolder.Text = _model.Settings.DnGuardFolder;
+                dnGuardExeNameTextBox.Text = _model.Settings.DnGuardExeName ?? "DNGuardCMD.exe";
+                chbDnGuardUse.Checked = _model.Settings.UseDnGuard;
+
+                fileAppPath.Text = _model.Settings.AppPath;
+                fileAppPath.ProcessValidate();
+                this.ShowAdditionalTemplates();
+
+                tbAdditionalSql.Text = _model.Settings.AdditionalSql;
+
+                platformComboBox.SelectedIndex = _model.Settings.DnGuardX64Opt ? 1 : 0;
+                dnGuardOptionsTextBox.Text = _model.Settings.DnGuardOptions ?? _model.GetDefaultDnGuardOptions();
+
+                fsLicenseFolder.Text = _model.Settings.LicenseFolder;
+                tbLicenseFileName.Text = _model.Settings.LicenseFileName;
+                tbProgramName.Text = _model.Settings.ProgramName;
+
+                tbProgramType.Text = _model.Settings.ProgramId;
+
+                WriteToLog( _lM.GetText("InitializingConfigurationComplete") );
+            }
+            catch (Exception ex)
+            {
+                WriteToLog(ex.ToString());
+            }
+        }
+
+        private void UpdateTemplateFilesList()
+        {
+            var wasSelected = templeateFilesListBox.SelectedIndex;
+
+            templeateFilesListBox.BeginUpdate();
+            try
+            {
+                templeateFilesListBox.Items.Clear();
+                templeateFilesListBox.Items.AddRange(_model.Settings.TemplateFiles.Cast<object>().ToArray());
+            }
+            finally
+            {
+                templeateFilesListBox.EndUpdate();
+            }
+
+            templeateFilesListBox.SelectedIndex = Math.Min(wasSelected, templeateFilesListBox.Items.Count - 1);
+            removeTemplateButton.Enabled = templeateFilesListBox.SelectedItem != null;
+        }
+
+        private void button2_Click(object sender, System.EventArgs e)
+        {
+            try
+            {
+                WriteToLog(_lM.GetText("ProcessingConfiguration"));
+                _model.Settings.TemplateFiles = templeateFilesListBox.Items.OfType<string>().ToList();
+                _model.Settings.DstFolder = txtDstFolder.Text;
+                _model.Settings.LanguageFile = txtLangFileName.Text;
+                _model.Settings.SystemSettingsFile = txtSysSettingsFileName.Text;
+                _model.Settings.UserSettingsFile = txtUserSettingsFileName.Text;
+                _model.Settings.SrcFolder = txtSrcFolder.Text;
+                _model.Settings.AdditionalSql = tbAdditionalSql.Text;
+                _model.Settings.AppPath = fileAppPath.Text;
+                _model.Settings.DirectoryName = tbDirName.Text;
+                _model.Settings.ShorcName = tbShorcName.Text;
+                _model.Settings.ExeFileName = tbFileName.Text;
+                _model.Settings.LicenseFolder = fsLicenseFolder.Text;
+                _model.Settings.LicenseFileName = tbLicenseFileName.Text;
+                _model.Settings.ProgramName = tbProgramName.Text;
+                _model.Settings.ProgramId = tbProgramType.Text;
+
+                _model.SaveSettings();
+                _model.ExecuteSign();
+                _model.CopyAdditionalFiles(_model.Settings.LanguageFile, _model.Settings.SystemSettingsFile, _model.Settings.UserSettingsFile);
+                _model.CopyLicenseFiles(_model.Settings.LicenseFolder, _model.Settings.LicenseFileName);
+
+                _model.CopyDirectory(Path.Combine(_model.Settings.SrcFolder, "Js"), Path.Combine(_model.Settings.DstFolder, "Js"));
+                _model.CopyDirectory(Path.Combine(_model.Settings.SrcFolder, "Images"), Path.Combine(_model.Settings.DstFolder, "Images"));
+
+                WriteToLog(_lM.GetText("ProcessingConfigurationComplete"));
+            }
+            catch (Exception exception)
+            {
+                WriteToLog(exception.Message);
+            }
+        }
+
+        public void WriteToLog(string st)
+        {
+            logTextBox.Text += st + Environment.NewLine;
+            logTextBox.SelectionStart = logTextBox.Text.Length;
+            logTextBox.ScrollToCaret();
+            Refresh();
+        }
+
+        /// <summary>
+        /// The write to log.
+        /// </summary>
+        /// <param name="template">The template.</param>
+        /// <param name="parameters">The parameters.</param>
+        public void WriteToLog(string template, params object[] parameters)
+        {
+            this.WriteToLog(string.Format(template, parameters));
+        }
+
+        private void button3_Click(object sender, EventArgs e)
+        {
+            try
+            {
+                WriteToLog(_lM.GetText("BuildingApplication"));
+                _model.Settings.NetFolder = txtNetFolder.Text;
+                _model.Settings.NetPlatform = txtNetVersion.Text;
+                _model.Settings.DnGuardFolder = txtDnGuardFolder.Text;
+                _model.Settings.DnGuardExeName = dnGuardExeNameTextBox.Text;
+                _model.Settings.UseDnGuard = chbDnGuardUse.Checked;
+                _model.Settings.DnGuardX64Opt = platformComboBox.SelectedIndex == 1;
+                _model.Settings.DnGuardOptions = dnGuardOptionsTextBox.Text;
+                _model.SaveSettings();
+  
+                var fileName = _model.ExecuteExeCombine();
+
+                WriteToLog(_lM.GetText("BuildingApplicationComplete") + fileName);
+            }
+            catch (Exception ex)
+            {
+                WriteToLog(ex.ToString());
+            }
+        }
+
+        private void button4_Click(object sender, EventArgs e)
+        {
+            try
+            {
+                WriteToLog( _lM.GetText("BuildingInstallPack"));
+                _model.Settings.WixFileName = txtWixFileName.Text;
+                _model.Settings.WixBannerFileName = txtWixBanner.Text;
+                _model.Settings.WixFolder = txtWixFolder.Text;
+                _model.Settings.OutputMsi = txtOutputMsi.Text;
+                _model.SaveSettings();
+
+                string distrib = _model.ProcessWixFile();
+                if (File.Exists(distrib))
+                {
+                    WriteToLog( _lM.GetText("BuildingInstallPackComplete") + Path.GetFullPath(distrib));
+                    MessageBox.Show(_lM.GetText("BuildingInstallPackComplete") + ".", Text, MessageBoxButtons.OK,
+                        MessageBoxIcon.Information);
+                }
+                else
+                {
+                    WriteToLog(_lM.GetText("BuildingInstallPackFailed"));
+                }
+            }
+            catch (Exception ex)
+            {
+                WriteToLog(ex.ToString());
+            }
+        }
+
+        private void button5_Click(object sender, EventArgs e)
+        {
+            WriteToLog( _lM.GetText("ApplyingKeys") );
+            var provider = new RSACryptoServiceProvider();
+            bool correct = true;
+            try { provider.FromXmlString(txtSignPriKey.Text); }
+            catch (Exception exception)
+            {
+                MessageBox.Show(_lM.GetText("ReadingPrivateSigningKeyFaild") + "\n" + exception.Message);
+                correct = false;
+            }
+            try { provider.FromXmlString(txtSignPubKey.Text); }
+            catch (Exception exception)
+            {
+                MessageBox.Show(_lM.GetText("ReadingPublicSigningKeyFaild") + "\n" + exception.Message);
+                correct = false;
+            }
+            try { provider.FromXmlString(txtEncPriKey.Text); }
+            catch (Exception exception)
+            {
+                MessageBox.Show(_lM.GetText("ReadingPrivateCryptKeyFaild") + "\n" + exception.Message);
+                correct = false;
+            }
+            try { provider.FromXmlString(txtEncPubKey.Text); }
+            catch (Exception exception)
+            {
+                MessageBox.Show(_lM.GetText("ReadingPublicCryptKeyFaild") + "\n" + exception.Message);
+                correct = false;
+            }
+
+            if (correct)
+            {
+                _model.Settings.PrivateKeySign = txtSignPriKey.Text;
+                _model.Settings.PublicKeySign = txtSignPubKey.Text;
+                _model.Settings.PrivateKeyDecrypt = txtEncPriKey.Text;
+                _model.Settings.PublicKeyDecrypt = txtEncPubKey.Text;
+                _model.SaveSettings();
+                WriteToLog(_lM.GetText("ApplyingKeysSuccess"));
+            }
+        }
+
+        private void button6_Click(object sender, EventArgs e)
+        {
+            RSACryptoServiceProvider rsa =new RSACryptoServiceProvider();
+            txtSignPriKey.Text = rsa.ToXmlString(true);
+            txtSignPubKey.Text = rsa.ToXmlString(false);
+        }
+
+        private void button7_Click(object sender, EventArgs e)
+        {
+            RSACryptoServiceProvider rsa = new RSACryptoServiceProvider();
+            txtEncPriKey.Text = rsa.ToXmlString(true);
+            txtEncPubKey.Text = rsa.ToXmlString(false);
+        }
+
+        private void chbDnGuardUse_CheckedChanged(object sender, EventArgs e)
+        {
+            platformComboBox.Enabled = chbDnGuardUse.Checked;
+            resetDnGuardOptionsButton.Enabled = chbDnGuardUse.Checked;
+            dnGuardOptionsTextBox.Enabled = chbDnGuardUse.Checked;
+        }
+
+        private void frmMain_Load(object sender, EventArgs e)
+        {
+            platformComboBox.SelectedIndex = 0;
+            chbDnGuardUse_CheckedChanged(null, new EventArgs());
+        }
+
+        private void resetDnGuardOptionsButton_Click(object sender, EventArgs e)
+        {
+            dnGuardOptionsTextBox.Text = _model.GetDefaultDnGuardOptions();
+        }
+
+        private void subscribeLicenseButton_Click(object sender, EventArgs e)
+        {
+            _model.SignLicense(licenseToSignFileSelector.Text, signedLicenseOutFileSelector.Text);
+            WriteToLog( _lM.GetText("LicenseHasBeenSigned"));
+        }
+
+
+        private void ApplyLocalization()
+        {
+            _lM.LocalizeDeep(this, this.Controls);
+            toolTip1.SetToolTip(settingsButton, _lM.GetText("SettingsButtonTooltip"));
+        }
+
+        private void button1_Click_1(object sender, EventArgs e)
+        {
+            var form = new SettingsForm {Settings = Settings.UserOnes.Clone()};
+            if (form.ShowDialog() != DialogResult.OK)
+                return;
+
+            Settings.AssignUserOnes(form.Settings);
+        }
+
+        private void templeateFilesListBox_SelectedIndexChanged(object sender, EventArgs e)
+        {
+            removeTemplateButton.Enabled = templeateFilesListBox.SelectedItem != null;
+        }
+
+        private void addTemplateButton_Click(object sender, EventArgs e)
+        {
+            using (var dialog = new OpenFileDialog() {Filter = "MSSQLServerAuditor template files (&.xml)|*.xml", Multiselect = true})
+            {
+                if (dialog.ShowDialog() != DialogResult.OK)
+                    return;
+
+                foreach (var file in addTemplateFileAsRelativePathCheckBox.Checked
+                    ? dialog.FileNames.Select(fn => MakeRelativePath(Directory.GetCurrentDirectory(), fn))
+                    :dialog.FileNames)
+                {
+                    if (!_model.Settings.TemplateFiles.Contains(file))
+                        _model.Settings.TemplateFiles.Add(file);
+                }
+  
+                UpdateTemplateFilesList();
+            }
+        }
+
+        private void removeTemplateButton_Click(object sender, EventArgs e)
+        {
+            if (templeateFilesListBox.SelectedItem == null)
+                return;
+
+            _model.Settings.TemplateFiles.Remove((string) templeateFilesListBox.SelectedItem);
+            UpdateTemplateFilesList();
+        }
+
+        /// <summary>
+        /// Creates a relative path from one file or folder to another.
+        /// </summary>
+        /// <param name="fromPath">Contains the directory that defines the start of the relative path.</param>
+        /// <param name="toPath">Contains the path that defines the endpoint of the relative path.</param>
+        /// <param name="dontEscape">Boolean indicating whether to add uri safe escapes to the relative path</param>
+        /// <returns>The relative path from the start directory to the end path.</returns>
+        /// <exception cref="ArgumentNullException"></exception>
+        public static String MakeRelativePath(String fromPath, String toPath)
+        {
+            if (String.IsNullOrEmpty(fromPath)) throw new ArgumentNullException("fromPath");
+            if (String.IsNullOrEmpty(toPath)) throw new ArgumentNullException("toPath");
+
+            if (fromPath.Last() != '\\')
+                fromPath = fromPath + "\\";
+
+            Uri fromUri = new Uri(fromPath);
+            Uri toUri = new Uri(toPath);
+
+            Uri relativeUri = fromUri.MakeRelativeUri(toUri);
+            String relativePath = Uri.UnescapeDataString(relativeUri.ToString());
+
+            return relativePath.Replace('/', Path.DirectorySeparatorChar);
+        }
+
+        private void label1_Click(object sender, EventArgs e)
+        {
+
+        }
+
+        private void btAdditionalTemplates_Click(object sender, EventArgs e)
+        {
+            if (this._model.Settings == null)
+            {
+                MessageBox.Show("Создайте или загрузите файл конфигурации");
+                return;
+            }
+
+            var templateSelector = new AdditionalTemplateSelector();
+            templateSelector.Settings = this._model.Settings;
+
+            templateSelector.ShowDialog();
+
+            this.ShowAdditionalTemplates();
+        }
+
+        private void ShowAdditionalTemplates()
+        {
+            String strResult = String.Empty;
+
+            if (this._model.Settings != null)
+            {
+                foreach (var template in this._model.Settings.AdditionalTemplates)
+                {
+                    strResult += template.Locale + " ";
+                }
+
+                this.tbAdditionalTemplates.Text = strResult;
+            }
+        }
+    }
+}

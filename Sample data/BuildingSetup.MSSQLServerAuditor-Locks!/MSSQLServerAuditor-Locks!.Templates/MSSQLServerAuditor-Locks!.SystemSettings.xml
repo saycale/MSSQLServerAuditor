@@ -1,0 +1,53 @@
+﻿<?xml version="1.0" encoding="UTF-8"?>
+<root xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+<settings>
+	<sqltimeout>90</sqltimeout>
+
+	<available_ui_lang>en</available_ui_lang>
+	<available_ui_lang>ru</available_ui_lang>
+
+	<available_report_lang>en</available_report_lang>
+	<available_report_lang>ru</available_report_lang>
+
+	<interface_lang>en</interface_lang>
+	<report_lang>en</report_lang>
+
+	<SupportEmail>support@mssqlserverauditor.com</SupportEmail>
+	<SupportSubject>MSSQLServerAuditor</SupportSubject>
+	<SupportTemplateMail>{0}{1}{2}</SupportTemplateMail>
+	
+	<LoggingEnabled>false</LoggingEnabled>
+	<LogDirectory>Logs</LogDirectory>
+
+	<LicenseDirectory>Licenses</LicenseDirectory>
+
+	<MaximumDBRequestsThreadCount>10</MaximumDBRequestsThreadCount>
+
+	<TemplateFile Key="myBasicTemplate" Value="MSSQLServerAuditor.Template.xml">
+		<i18n name="en">
+	            Basic Template
+        	</i18n>
+	        <i18n name="ru">
+        	    Базовый шаблон
+	        </i18n>
+	</TemplateFile>
+
+	<TemplateFile Key="DMVTemplate" Value="MSSQLServerAuditor.Template.DMV.xml">
+		<i18n name="en">
+	            DMV Template
+        	</i18n>
+	        <i18n name="ru">
+        	    DMV шаблон
+	        </i18n>
+	</TemplateFile>
+
+	<TemplateFile Key="GroupTemplate" Value="MSSQLServerAuditor.TemplateGroup.xml">
+		<i18n name="en">
+	            Group Template
+        	</i18n>
+	        <i18n name="ru">
+        	    Шаблон для групп
+	        </i18n>
+	</TemplateFile>
+</settings>
+</root>

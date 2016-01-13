@@ -1,0 +1,68 @@
+﻿<?xml version="1.0" encoding="UTF-8"?>
+<MSSQLServerAuditorTemplate id="ping" type="NetworkInformation" xmlns:xi="http://www.w3.org/2003/XInclude" version="1.0">
+	<i18n name="en">
+		Network Information
+	</i18n>
+	<i18n name="ru">
+		Сетевой статус
+	</i18n>
+
+	<MainWindowTitle>
+		<i18n name="en">
+			$ConnectionName$ $ModuleName$ $ApplicationProductName$ $ApplicationProductVersion$
+		</i18n>
+		<i18n name="ru">
+			$ConnectionName$ $ModuleName$ $ApplicationProductName$ $ApplicationProductVersion$
+		</i18n>
+	</MainWindowTitle>
+
+	<TreeTitle>
+		<i18n name="en">
+			$ConnectionName$ : $ModuleName$
+		</i18n>
+		<i18n name="ru">
+			$ConnectionName$ : $ModuleName$
+		</i18n>
+	</TreeTitle>
+
+	<template id="1000000" name="GetNetworkInformationStatus" file="networkinformation\MSSQLServerAuditor.NetworkInformation.xsl" icon="doc">
+		<i18n name="en">
+			NetworkInformation
+		</i18n>
+		<i18n name="ru">
+			Сетевой статус
+		</i18n>
+
+		<sql-select name="GetNetworkInformationInfo" id="0" file="SQLQuery\networkinformation\NetworkInformation.InstanceInfo.xml" hierarchy="">
+		</sql-select>
+
+		<RefreshSchedules>
+			<RefreshSchedule>
+				<Enabled>false</Enabled>
+				<Id>001</Id>
+				<Name>GetNetworkInformationInfo</Name>
+				<OccursOnceDateTime>1900-01-01T00:00:00</OccursOnceDateTime>
+				<OccursOnceDateTimeEnabled>false</OccursOnceDateTimeEnabled>
+				<ReccurPeriod>
+					<TimeUnit>Daily</TimeUnit>
+					<TimeUnitCount>1</TimeUnitCount>
+				</ReccurPeriod>
+				<DailyFrequency>
+					<OccursOnce>false</OccursOnce>
+					<OccursOnceTime>PT0S</OccursOnceTime>
+					<PeriodTimeUnit>Minute</PeriodTimeUnit>
+					<PeriodTimeUnitCount>5</PeriodTimeUnitCount>
+					<StartingAt>PT00H00M30S</StartingAt>
+					<EndingAt>PT23H59M59S</EndingAt>
+				</DailyFrequency>
+				<ActiveWeekDays />
+				<DayOfMonth>
+					<DayNumber>1</DayNumber>
+				</DayOfMonth>
+				<StartDate>1900-01-01T00:00:00</StartDate>
+				<EndDate>1900-01-01T00:00:00</EndDate>
+				<HasEndDate>false</HasEndDate>
+			</RefreshSchedule>
+		</RefreshSchedules>
+	</template>
+</MSSQLServerAuditorTemplate>

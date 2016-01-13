@@ -1,0 +1,45 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<root xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
+	<settings>
+		<extsettings />
+		<interface_lang>en</interface_lang>
+		<report_lang>en</report_lang>
+		<sqltimeout>90</sqltimeout>
+		<MaximumDBRequestsThreadCount>10</MaximumDBRequestsThreadCount>
+		<showstatuspanel>true</showstatuspanel>
+		<showmainmenu>true</showmainmenu>
+		<showaddressline>false</showaddressline>
+		<showsinglecnntab>true</showsinglecnntab>
+		<showclosetabconfirm>false</showclosetabconfirm>
+		<WarnAboutUnsignedQuery>true</WarnAboutUnsignedQuery>
+		<TemplateDirectory>Modules</TemplateDirectory>
+
+		<MainWindowState>
+			<Location>
+				<X>10</X>
+				<Y>10</Y>
+			</Location>
+			<Size>
+				<Width>780</Width>
+				<Height>580</Height>
+			</Size>
+			<WindowState>Normal</WindowState>
+		</MainWindowState>
+
+		<EmailNotificationSettings>
+			<RecipientEmailAddress>info@mssqlserverauditor.com</RecipientEmailAddress>
+			<ChartSettings ImageWidth="1024" ImageHeight="768" ImageResolution="120.0" />
+
+			<SmtpSettings>
+				<ServerAddress>mail.mssqlserverauditor.com</ServerAddress>
+				<Port>26</Port>
+				<AuthenticationRequired>true</AuthenticationRequired>
+				<SSL>false</SSL>
+				<SmtpCredentials UserName="test@mssqlserverauditor.com" Password="***" />
+				<SenderEmailAddress>test@mssqlserverauditor.com</SenderEmailAddress>
+			</SmtpSettings>
+		</EmailNotificationSettings>
+
+		<SystemSettings />
+	</settings>
+</root>

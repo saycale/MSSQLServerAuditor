@@ -1,0 +1,138 @@
+﻿<?xml version="1.0" encoding="UTF-8"?>
+<root xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+<sqlquery type="MSSQL">
+	<sql-select name="DatabaseInfo">
+		<sql-select-text MinSupportedVersion="*" MaxSupportedVersion="8.*" signature="">
+			SET NOCOUNT ON;
+			SET DEADLOCK_PRIORITY LOW;
+
+			DECLARE
+				 @MasterCompatibilityLevel [INTEGER]
+				,@MasterCollation          [NVARCHAR](128)
+			;
+
+			SELECT TOP 1
+				 @MasterCompatibilityLevel = tSD.[cmptlevel]
+				,@MasterCollation          = CONVERT([NVARCHAR](128), DatabasePropertyEx(tSD.[name], N'Collation'))
+			FROM
+				[master].[dbo].[sysdatabases] tSD
+			WHERE
+				tSD.[name] = N'master';
+
+			SELECT
+				 tSD.[name]                                                AS [DatabaseName]
+				,NULL                                                      AS [DatabaseSourceName]
+				,tSD.[cmptlevel]                                           AS [DatabaseCompatibilityLevel]
+				,@MasterCompatibilityLevel                                 AS [MasterCompatibilityLevel]
+				,suser_sname(tSD.[sid])                                    AS [DatabaseOwner]
+				,tSD.[crdate]                                              AS [DatabaseCreationDate]
+				,DatabasePropertyEx(tSD.[name], N'Collation')              AS [DatabaseCollation]
+				,@MasterCollation                                          AS [MasterCollation]
+				,DatabasePropertyEx(tSD.[name], N'Status')                 AS [DatabaseStatus]
+				,DatabasePropertyEx(tSD.[name], N'Recovery')               AS [DatabaseRecovery]
+				,DatabasePropertyEx(tSD.[name], N'Updateability')          AS [DatabaseUpdateability]
+				,DatabasePropertyEx(tSD.[name], N'IsInStandBy')            AS [DatabaseIsInStandBy]
+				,DatabasePropertyEx(tSD.[name], N'IsAutoClose')            AS [DatabaseIsAutoClose]
+				,DatabasePropertyEx(tSD.[name], N'IsAutoShrink')           AS [DatabaseIsAutoShrink]
+				,DatabasePropertyEx(tSD.[name], N'IsAutoCreateStatistics') AS [DatabaseIsAutoCreateStatistics]
+				,DatabasePropertyEx(tSD.[name], N'IsAutoUpdateStatistics') AS [DatabaseIsAutoUpdateStatistics]
+				,DatabasePropertyEx(tSD.[name], N'IsPublished')            AS [DatabaseIsPublished]
+				,DatabasePropertyEx(tSD.[name], N'IsSubscribed')           AS [DatabaseIsSubscribed]
+				,NULL                                                      AS [DatabaseIsEncrypted]
+			FROM
+				[master].[dbo].[sysdatabases] tSD
+			ORDER BY
+				tSD.[name];
+		</sql-select-text>
+		<sql-select-text MinSupportedVersion="9.*" MaxSupportedVersion="9.*" signature="">
+			SET NOCOUNT ON;
+			SET DEADLOCK_PRIORITY LOW;
+
+			DECLARE
+				 @MasterCompatibilityLevel [INTEGER]
+				,@MasterCollation          [NVARCHAR](128)
+			;
+
+			SELECT TOP 1
+				 @MasterCompatibilityLevel = tSD.[compatibility_level]
+				,@MasterCollation          = CONVERT([NVARCHAR](128), DatabasePropertyEx(tSD.[name], N'Collation'))
+			FROM
+				[master].[sys].[databases] tSD
+			WHERE
+				tSD.[name] = N'master';
+
+			SELECT
+				 tSD.[name]                                                AS [DatabaseName]
+				,tSDSnapshotSource.[name]                                  AS [DatabaseSourceName]
+				,tSD.[compatibility_level]                                 AS [DatabaseCompatibilityLevel]
+				,@MasterCompatibilityLevel                                 AS [MasterCompatibilityLevel]
+				,suser_sname(tSD.[owner_sid])                              AS [DatabaseOwner]
+				,tSD.[create_date]                                         AS [DatabaseCreationDate]
+				,DatabasePropertyEx(tSD.[name], N'Collation')              AS [DatabaseCollation]
+				,@MasterCollation                                          AS [MasterCollation]
+				,DatabasePropertyEx(tSD.[name], N'Status')                 AS [DatabaseStatus]
+				,DatabasePropertyEx(tSD.[name], N'Recovery')               AS [DatabaseRecovery]
+				,DatabasePropertyEx(tSD.[name], N'Updateability')          AS [DatabaseUpdateability]
+				,DatabasePropertyEx(tSD.[name], N'IsInStandBy')            AS [DatabaseIsInStandBy]
+				,DatabasePropertyEx(tSD.[name], N'IsAutoClose')            AS [DatabaseIsAutoClose]
+				,DatabasePropertyEx(tSD.[name], N'IsAutoShrink')           AS [DatabaseIsAutoShrink]
+				,DatabasePropertyEx(tSD.[name], N'IsAutoCreateStatistics') AS [DatabaseIsAutoCreateStatistics]
+				,DatabasePropertyEx(tSD.[name], N'IsAutoUpdateStatistics') AS [DatabaseIsAutoUpdateStatistics]
+				,DatabasePropertyEx(tSD.[name], N'IsPublished')            AS [DatabaseIsPublished]
+				,DatabasePropertyEx(tSD.[name], N'IsSubscribed')           AS [DatabaseIsSubscribed]
+				,NULL                                                      AS [DatabaseIsEncrypted]
+			FROM
+				[master].[sys].[databases] tSD
+				LEFT OUTER JOIN [master].[sys].[databases] tSDSnapshotSource ON
+					tSD.[source_database_id] = tSDSnapshotSource.[database_id]
+			ORDER BY
+				tSD.[name];
+		</sql-select-text>
+		<sql-select-text MinSupportedVersion="10.*" MaxSupportedVersion="*" signature="">
+			SET NOCOUNT ON;
+			SET DEADLOCK_PRIORITY LOW;
+
+			DECLARE
+				 @MasterCompatibilityLevel [INTEGER]
+				,@MasterCollation          [NVARCHAR](128)
+			;
+
+			SELECT TOP 1
+				 @MasterCompatibilityLevel = tSD.[compatibility_level]
+				,@MasterCollation          = CONVERT([NVARCHAR](128), DatabasePropertyEx(tSD.[name], N'Collation'))
+			FROM
+				[master].[sys].[databases] tSD
+			WHERE
+				tSD.[name] = N'master';
+
+			SELECT
+				 tSD.[name]                                                AS [DatabaseName]
+				,tSDSnapshotSource.[name]                                  AS [DatabaseSourceName]
+				,tSD.[compatibility_level]                                 AS [DatabaseCompatibilityLevel]
+				,@MasterCompatibilityLevel                                 AS [MasterCompatibilityLevel]
+				,suser_sname(tSD.[owner_sid])                              AS [DatabaseOwner]
+				,tSD.[create_date]                                         AS [DatabaseCreationDate]
+				,DatabasePropertyEx(tSD.[name], N'Collation')              AS [DatabaseCollation]
+				,@MasterCollation                                          AS [MasterCollation]
+				,DatabasePropertyEx(tSD.[name], N'Status')                 AS [DatabaseStatus]
+				,DatabasePropertyEx(tSD.[name], N'Recovery')               AS [DatabaseRecovery]
+				,DatabasePropertyEx(tSD.[name], N'Updateability')          AS [DatabaseUpdateability]
+				,DatabasePropertyEx(tSD.[name], N'IsInStandBy')            AS [DatabaseIsInStandBy]
+				,DatabasePropertyEx(tSD.[name], N'IsAutoClose')            AS [DatabaseIsAutoClose]
+				,DatabasePropertyEx(tSD.[name], N'IsAutoShrink')           AS [DatabaseIsAutoShrink]
+				,DatabasePropertyEx(tSD.[name], N'IsAutoCreateStatistics') AS [DatabaseIsAutoCreateStatistics]
+				,DatabasePropertyEx(tSD.[name], N'IsAutoUpdateStatistics') AS [DatabaseIsAutoUpdateStatistics]
+				,DatabasePropertyEx(tSD.[name], N'IsPublished')            AS [DatabaseIsPublished]
+				,DatabasePropertyEx(tSD.[name], N'IsSubscribed')           AS [DatabaseIsSubscribed]
+				,tSD.[is_encrypted]                                        AS [DatabaseIsEncrypted]
+			FROM
+				[master].[sys].[databases] tSD
+				LEFT OUTER JOIN [master].[sys].[databases] tSDSnapshotSource ON
+					tSD.[source_database_id] = tSDSnapshotSource.[database_id]
+			ORDER BY
+				tSD.[name];
+		</sql-select-text>
+	</sql-select>
+</sqlquery>
+</root>
+

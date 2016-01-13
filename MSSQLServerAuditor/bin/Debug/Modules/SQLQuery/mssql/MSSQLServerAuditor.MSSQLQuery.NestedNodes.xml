@@ -1,0 +1,109 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<root xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+<sqlquery type="MSSQL">
+	<sql-select name="GetListOfNestedNodes">
+		<sql-select-text MinSupportedVersion="8.*" MaxSupportedVersion="*" signature="">
+			SET NOCOUNT ON;
+			SET DEADLOCK_PRIORITY LOW;
+
+			DECLARE
+				 @myintIndex      [INTEGER]
+				,@myintIndexMAX   [INTEGER]
+				,@myNodeId        [INTEGER]
+				,@NodeOrderById   [INTEGER]
+				,@myNodeName      [NVARCHAR](128)
+				,@myNodeFontColor [NVARCHAR](128)
+			;
+
+			CREATE TABLE #t
+			(
+				 [NodeId]        [INTEGER]
+				,[NodeOrderById] [INTEGER]
+				,[NodeName]      [NVARCHAR](128)
+			);
+
+			IF (ISNULL(@IsRandomGeneratedFirstNumber, 0) = 1)
+			BEGIN
+				SET @myintIndex = 1 + ISNULL(@MaxNumberOfGeneratedNodes, 0) * RAND();
+			END
+			ELSE
+			BEGIN
+				SET @myintIndex = 1;
+			END
+
+			SET @myintIndexMAX = @myintIndex + ISNULL(@MinNumberOfGeneratedNodes, 0) + (ISNULL(@MaxNumberOfGeneratedNodes, 0) - ISNULL(@MinNumberOfGeneratedNodes, 0)) * RAND();
+
+			WHILE (@myintIndex &lt; @myintIndexMAX)
+			BEGIN
+				SET @NodeOrderById = 1 + 100 * RAND();
+
+				IF (ISNULL(@IsSecondNodeWithEmptyName, 0) = 1) AND (@myintIndex IN (2))
+				BEGIN
+					SET @myNodeName      = NULL;
+
+					SET @myNodeFontColor = N'#808080';
+				END
+				ELSE
+				BEGIN
+					SET @myNodeName = N'Node:' + CONVERT([NVARCHAR](128), @myintIndex)
+						+ N'['
+						+ CONVERT([NVARCHAR](128), ISNULL(@NodeOrderById, -1))
+						+ N']'
+						+ N'{'
+						+ CONVERT([NVARCHAR](128), ISNULL(@NodeId, -1))
+						+ N'-'
+						+ CONVERT([NVARCHAR](128), ISNULL(@ParentNodeId, -1))
+						+ N'}';
+
+					SET @myNodeFontColor = N'#000000';
+				END
+
+				SET @myNodeId = @myintIndex;
+
+				INSERT INTO #t
+				(
+					 [NodeId]
+					,[NodeOrderById]
+					,[NodeName]
+				)
+				VALUES
+				(
+					 @myNodeId
+					,@NodeOrderById
+					,@myNodeName
+				);
+
+				WAITFOR DELAY @WaitForDelay;
+
+				SET @myintIndex = @myintIndex + 1 + (ISNULL(@MaxNumberOfGeneratedNodes, 0) - ISNULL(@MinNumberOfGeneratedNodes, 0)) * RAND();
+			END
+
+			SELECT
+				 t.[NodeId]       AS [NodeUId]
+				,t.[NodeName]     AS [NodeUName]
+				,1                AS [NodeEnabled]
+				,N'NodeIcon'      AS [NodeUIcon]
+				,@myNodeFontColor AS [NodeFontColor]
+				,N'normal'        AS [NodeFontStyle]
+				,t.[NodeId]       AS [NodeId]
+				,t.[NodeName]     AS [NodeName]
+				,@NodeId          AS [ParentNodeId]
+			FROM
+				#t t
+			ORDER BY
+				t.[NodeOrderById] ASC
+			;
+		</sql-select-text>
+		<sql-select-parameters>
+			<sql-select-parameter name="@MinNumberOfGeneratedNodes" type="Int" />
+			<sql-select-parameter name="@MaxNumberOfGeneratedNodes" type="Int" />
+			<sql-select-parameter name="@WaitForDelay" type="NVarChar" />
+			<sql-select-parameter name="@IsRandomGeneratedFirstNumber" type="Bit" />
+			<sql-select-parameter name="@IsSecondNodeWithEmptyName" type="Bit" />
+			<sql-select-parameter name="@NodeId" type="Int" />
+			<sql-select-parameter name="@ParentNodeId" type="Int" />
+			<sql-select-parameter name="@NodeName" type="NVarChar" />
+		</sql-select-parameters>
+	</sql-select>
+</sqlquery>
+</root>

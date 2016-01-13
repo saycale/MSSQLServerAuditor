@@ -1,0 +1,45 @@
+﻿<?xml version="1.0" encoding="UTF-8"?>
+<root xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+<sqlquery type="MSSQL">
+	<sql-select name="GetTDECertificateNotBackedUpRecently">
+		<name>
+			TDE Certificate Not Backed Up Recently
+		</name>
+		<description>
+			The certificate is used to encrypt database, but there certificate was not backuped up recently or backup is not up to date.
+		</description>
+		<reference>
+			http://BrentOzar.com/go/tde
+		</reference>
+		<sql-select-text MinSupportedVersion="10.*" MaxSupportedVersion="*" signature="">
+			SET NOCOUNT ON;
+			SET DEADLOCK_PRIORITY LOW;
+
+			SELECT
+				 tSD.[name]                     AS [DatabaseName]
+				,tSC.[name]                     AS [CertificateName]
+				,tSC.[pvt_key_last_backup_date] AS [LatestCertificateBackupDate]
+				,CASE
+					WHEN (tSC.[pvt_key_last_backup_date] IS NULL) THEN
+						1
+					WHEN (tSC.[pvt_key_last_backup_date] &lt;= DATEADD(dd, -1 * ISNULL(@intDaysTDEBackupThreshold, 30), GETDATE())) THEN
+						1
+					ELSE
+						0
+				END                             AS [CertificateBackupStatus]
+			FROM
+				[sys].[certificates] tSC
+				INNER JOIN [sys].[dm_database_encryption_keys] tDEK ON
+					tDEK.[encryptor_thumbprint] = tSC.[thumbprint]
+				LEFT OUTER JOIN [sys].[databases] tSD ON
+					tSD.[database_id] = tDEK.[database_id]
+			ORDER BY
+				tSD.[name];
+		</sql-select-text>
+		<sql-select-parameters>
+			<sql-select-parameter name="@intDaysTDEBackupThreshold" type="Int" />
+		</sql-select-parameters>
+	</sql-select>
+</sqlquery>
+</root>
+

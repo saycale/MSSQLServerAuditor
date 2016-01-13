@@ -1,0 +1,23 @@
+--- BusinessLogic/EmailNotificationTask.cs
++++ BusinessLogic/EmailNotificationTask.cs
+@@ -60,13 +60,17 @@
+ 		public void onQueryResult(Task<MultyQueryResultInfo> task)
+ 		{
+ 			MultyQueryResultInfo queriesResult = task.Result;
+-			System.Drawing.Size  clientSize    = this._smtpSettings.EmailNotificationSettings.chartSettings.ClientSize;
++			if (this._EmailNotificationSettings == null)
++			{
++				log.ErrorFormat("job:'{0}'; EmailNotificationSettings node of UserSettings.xml is absent or empty", this._job);
++			}
++			System.Drawing.Size clientSize = this._EmailNotificationSettings.chartSettings.ClientSize;
+ 			float                DpiResolution = 92.0F; //default value
+ 			float                floatOut      = 0.0F;
+ 
+-			if (!string.IsNullOrEmpty(this._smtpSettings.EmailNotificationSettings.chartSettings.ImageResolution))
++			if (!string.IsNullOrEmpty(this._EmailNotificationSettings.chartSettings.ImageResolution))
+ 			{
+-				if (float.TryParse(this._smtpSettings.EmailNotificationSettings.chartSettings.ImageResolution, out floatOut))
++				if (float.TryParse(this._EmailNotificationSettings.chartSettings.ImageResolution, out floatOut))
+ 				{
+ 					DpiResolution = floatOut;
+ 				}

@@ -1,0 +1,1649 @@
+﻿<?xml version="1.0" encoding="UTF-8"?>
+<MSSQLServerAuditorTemplate id="mssql" type="MSSQL" xmlns:xi="http://www.w3.org/2003/XInclude" version="1.0">
+	<i18n name="en">
+		MSSQL: Basic Template
+	</i18n>
+	<i18n name="ru">
+		MSSQL: Базовый шаблон
+	</i18n>
+
+	<MainWindowTitle>
+		<i18n name="en">
+			$ConnectionName$ $ModuleName$ $ApplicationProductName$ $ApplicationProductVersion$
+		</i18n>
+		<i18n name="ru">
+			$ConnectionName$ $ModuleName$ $ApplicationProductName$ $ApplicationProductVersion$
+		</i18n>
+	</MainWindowTitle>
+
+	<TreeTitle>
+		<i18n name="en">
+			$ConnectionName$ : $ModuleName$
+		</i18n>
+		<i18n name="ru">
+			$ConnectionName$ : $ModuleName$
+		</i18n>
+	</TreeTitle>
+
+	<template id="01000" name="Monitoring" IsHideTabs="false" file="mssql\Instance\MSSQLServerAuditor.xsl" icon="database_lightning" showIfEmpty="true" showNumberOfRecords="true">
+		<i18n name="en" >
+			Monitoring
+		</i18n>
+		<i18n name="ru">
+			Monitoring
+		</i18n>
+
+		<template id="00100" name="UpMonitor" IsHideTabs="false" file="mssql\Instance\MSSQLServerAuditor.UpMonitor.xsl" icon="doc" showIfEmpty="true" showNumberOfRecords="true">
+			<i18n name="en">
+				SQL Server Monitoring
+			</i18n>
+			<i18n name="ru">
+				Активные процессы
+			</i18n>
+
+			<sql-select id="0" name="UpMonitor" file="SQLQuery\mssql\MSSQLQuery.UpMonitor.xml" hierarchy="">
+				<parameter name="@total_snapshots" value="15"/>
+			</sql-select>
+		</template>
+	</template>
+
+	<template id="02000" name="Activity" IsHideTabs="false" file="mssql\Instance\MSSQLServerAuditor.xsl" icon="database_lightning" showIfEmpty="true" showNumberOfRecords="true">
+		<i18n name="en">
+			Activity
+		</i18n>
+		<i18n name="ru">
+			Активность
+		</i18n>
+
+		<template id="00100" name="InstanceConnections" IsHideTabs="false" file="mssql\Instance\Audit\Connections\MSSQLServerAuditor.Connections.xsl" icon="doc" showIfEmpty="true" showNumberOfRecords="true">
+			<i18n name="en">
+				Connections
+			</i18n>
+			<i18n name="ru">
+				Подключения
+			</i18n>
+
+			<sql-select id="0" name="GetInstanceConnections" file="SQLQuery\mssql\MSSQLQuery.InstanceProcesses.xml" hierarchy="">
+			</sql-select>
+		</template>
+
+		<template id="00200" name="InstanceProcesses" IsHideTabs="false" file="mssql\Instance\Audit\Processes\MSSQLServerAuditor.xsl" icon="doc" showIfEmpty="true" showNumberOfRecords="true">
+			<i18n name="en">
+				Processes
+			</i18n>
+			<i18n name="ru">
+				Все процессы
+			</i18n>
+
+			<sql-select id="0" name="GetInstanceProcesses" file="SQLQuery\mssql\MSSQLQuery.InstanceProcesses.xml" hierarchy="Users">
+				<parameter name="@boolIsShowUsersProcessesOnly" value="True"/>
+			</sql-select>
+			<sql-select id="1" name="GetInstanceProcesses" file="SQLQuery\mssql\MSSQLQuery.InstanceProcesses.xml" hierarchy="All">
+				<parameter name="@boolIsShowUsersProcessesOnly" value="False"/>
+			</sql-select>
+		</template>
+
+		<template id="00300" name="InstanceCPUUtilization" IsHideTabs="false" file="mssql\Instance\Audit\Processes\CPU\MSSQLServerAuditor.InstanceCPUUtilization.xsl" icon="doc" showIfEmpty="true" showNumberOfRecords="true">
+			<i18n name="en">
+				CPU Utilization
+			</i18n>
+			<i18n name="ru">
+				Использование процессора
+			</i18n>
+
+			<sql-select id="CPU_Current" name="GetInstanceCPUUtilization" file="SQLQuery\mssql\DynamicManagementViews\MSSQLQuery.InstanceCPUInfo.xml" hierarchy="">
+			</sql-select>
+		</template>
+
+		<template id="00400" name="InstanceMemoryUtilization" IsHideTabs="false" file="mssql\Instance\Audit\Processes\CPU\MSSQLServerAuditor.InstanceMemoryUtilization.xsl" icon="doc" showIfEmpty="true" showNumberOfRecords="true">
+			<i18n name="en">
+				Memory Utilization
+			</i18n>
+			<i18n name="ru">
+				Оперативная память
+			</i18n>
+
+			<sql-select id="0" name="GetInstanceMemoryUtilization" file="SQLQuery\mssql\DynamicManagementViews\MSSQLQuery.InstanceMemoryInfo.xml" hierarchy="">
+			</sql-select>
+		</template>
+
+	</template>
+
+	<template id="02500" name="Server" IsHideTabs="false" file="" icon="server_database" showIfEmpty="true" showNumberOfRecords="true">
+		<i18n name="en">
+			Server
+		</i18n>
+		<i18n name="ru">
+			Сервер
+		</i18n>
+
+		<template id="00010" name="ServerDisks" IsHideTabs="false" file="mssql\Instance\Audit\Server\MSSQLServerAuditor.Disks.xsl" icon="doc" showIfEmpty="true" showNumberOfRecords="true">
+			<i18n name="en">
+				Volumes
+			</i18n>
+			<i18n name="ru">
+				Диски
+			</i18n>
+
+			<sql-select id="0" name="GetServerDisks" file="SQLQuery\mssql\DynamicManagementViews\MSSQLQuery.Server.Disks.xml" hierarchy="">
+			</sql-select>
+		</template>
+	</template>
+
+	<template id="03000" name="Instance" IsHideTabs="false" file="mssql\Instance\MSSQLServerAuditor.xsl" icon="server_database" showIfEmpty="true" showNumberOfRecords="true">
+		<i18n name="en">
+			Instance
+		</i18n>
+		<i18n name="ru">
+			Экземпляр
+		</i18n>
+
+		<template id="00100" name="Audit" IsHideTabs="false" file="" icon="folder" showIfEmpty="true" showNumberOfRecords="true">
+			<i18n name="en">
+				Audit
+			</i18n>
+			<i18n name="ru">
+				Аудит
+			</i18n>
+
+			<template id="00010" name="InstanceProperties" IsHideTabs="false" file="mssql\Instance\Audit\MSSQLServerAuditor.xsl" icon="doc" showIfEmpty="true" showNumberOfRecords="true">
+				<i18n name="en">
+					Instance properties
+				</i18n>
+				<i18n name="ru">
+					Параметры экземпляра
+				</i18n>
+
+				<sql-select id="0" name="GetServerInfo" file="SQLQuery\mssql\MSSQLQuery.InstanceInfo.xml" hierarchy="">
+				</sql-select>
+			</template>
+
+			<template id="00020" name="InstanceConfiguration" IsHideTabs="false" file="mssql\Instance\Audit\MSSQLServerAuditor.InstanceConfiguration.xsl" icon="doc" showIfEmpty="true" showNumberOfRecords="true">
+				<i18n name="en">
+					Instance configuration
+				</i18n>
+				<i18n name="ru">
+					Конфигурация экземпляра
+				</i18n>
+
+				<sql-select id="0" name="GetInstanceConfiguration" file="SQLQuery\mssql\MSSQLQuery.InstanceConfiguration.xml" hierarchy="">
+				</sql-select>
+			</template>
+
+			<template id="00030" name="InstanceJobs" IsHideTabs="false" file="mssql\Instance\Audit\Jobs\MSSQLServerAuditor.xsl" icon="doc" showIfEmpty="true" showNumberOfRecords="true">
+				<i18n name="en">
+					SQL Agent Jobs
+				</i18n>
+				<i18n name="ru">
+					Регулярные задания
+				</i18n>
+
+				<sql-select id="0" name="GetJobsList" file="SQLQuery\mssql\MSSQLQuery.Job.xml" hierarchy="">
+				</sql-select>
+			</template>
+
+			<template id="00040" name="LinkedServers" IsHideTabs="false" file="mssql\Instance\MSSQLServerAuditor.LinkedServers.xsl" icon="doc" showIfEmpty="true" showNumberOfRecords="true">
+				<i18n name="en">
+					Linked Servers
+				</i18n>
+				<i18n name="ru">
+					Связанные сервера
+				</i18n>
+
+				<sql-select id="0" name="GetLinkedServers" file="SQLQuery\mssql\MSSQLQuery.LinkedServers.xml" hierarchy="">
+				</sql-select>
+			</template>
+		</template>
+
+		<template id="00200" name="Security" IsHideTabs="false" file="mssql\Instance\Security\MSSQLServerAuditor.xsl" icon="folder" showIfEmpty="true" showNumberOfRecords="true">
+			<i18n name="en">
+				Security
+			</i18n>
+			<i18n name="ru">
+				Безопасность
+			</i18n>
+
+			<template id="00010" name="Logins" IsHideTabs="false" file="mssql\Instance\Security\Logins\MSSQLServerAuditor.xsl" icon="doc" showIfEmpty="true" showNumberOfRecords="true">
+				<i18n name="en">
+					Logins
+				</i18n>
+				<i18n name="ru">
+					Логины
+				</i18n>
+
+				<sql-select id="0" name="LoginsList" file="SQLQuery\mssql\MSSQLQuery.LoginsList.xml" hierarchy="">
+				</sql-select>
+			</template>
+		</template>
+
+		<template id="00300" name="Perfomance" IsHideTabs="false" file="" icon="folder" showIfEmpty="true" showNumberOfRecords="true">
+			<i18n name="en">
+				Perfomance
+			</i18n>
+			<i18n name="ru">
+				Производительность
+			</i18n>
+
+			<template id="00010" name="InstanceIOStatus" IsHideTabs="false" file="mssql\Instance\Perfomance\MSSQLServerAuditor.InstanceIOStatus.xsl" icon="doc" showIfEmpty="true" showNumberOfRecords="true">
+				<i18n name="en">
+					IOStatus
+				</i18n>
+				<i18n name="ru">
+					Чтение и запись
+				</i18n>
+
+				<sql-select id="0" name="GetInstanceIOStatus" file="SQLQuery\mssql\DynamicManagementViews\MSSQLQuery.DMV.Instance.IOStatus.xml" hierarchy="">
+				</sql-select>
+			</template>
+		</template>
+
+		<template id="00400" name="InstanceJobs" IsHideTabs="false" file="" icon="folder" showIfEmpty="true" showNumberOfRecords="true">
+			<i18n name="en">
+				SQL Agent Jobs
+			</i18n>
+			<i18n name="ru">
+				Регулярные задания
+			</i18n>
+
+			<template id="00010" name="InstanceJobsTables" IsHideTabs="false" file="" icon="folder" showIfEmpty="true" showNumberOfRecords="true">
+				<i18n name="en">
+					Tables
+				</i18n>
+				<i18n name="ru">
+					Таблицы
+				</i18n>
+
+				<template id="00001" name="InstanceJobsTablesToday" IsHideTabs="false" file="mssql\Instance\Audit\Jobs\MSSQLServerAuditor.JobsHistoryTables.xsl" icon="doc" showIfEmpty="true" showNumberOfRecords="true">
+					<i18n name="en">
+						Today
+					</i18n>
+					<i18n name="ru">
+						Сегодня
+					</i18n>
+
+					<sql-select id="0" name="GetJobsExecutionHistory" file="SQLQuery\mssql\MSSQLQuery.Job.xml" hierarchy="">
+						<parameter name="@intDaysInHistory"     value="1"    />
+						<parameter name="@isShowJobsIssuesOnly" value="False"/>
+						<parameter name="@StartTime"                         />
+						<parameter name="@EndTime"                           />
+						<parameter name="@JobName"                           />
+					</sql-select>
+				</template>
+
+				<template id="00002" name="InstanceJobsTablesLastTwoDays" IsHideTabs="false" file="mssql\Instance\Audit\Jobs\MSSQLServerAuditor.JobsHistoryTables.xsl" icon="doc" showIfEmpty="true" showNumberOfRecords="true">
+					<i18n name="en">
+						Last Two Days
+					</i18n>
+					<i18n name="ru">
+						Последние два дня
+					</i18n>
+
+					<sql-select id="0" name="GetJobsExecutionHistory" file="SQLQuery\mssql\MSSQLQuery.Job.xml" hierarchy="">
+						<parameter name="@intDaysInHistory"     value="2"    />
+						<parameter name="@isShowJobsIssuesOnly" value="False"/>
+						<parameter name="@StartTime"                         />
+						<parameter name="@EndTime"                           />
+						<parameter name="@JobName"                           />
+					</sql-select>
+				</template>
+
+				<template id="00003" name="InstanceJobsTablesLastWeek" IsHideTabs="false" file="mssql\Instance\Audit\Jobs\MSSQLServerAuditor.JobsHistoryTables.xsl" icon="doc" showIfEmpty="true" showNumberOfRecords="true">
+					<i18n name="en">
+						Last Week
+					</i18n>
+					<i18n name="ru">
+						Неделя
+					</i18n>
+
+					<sql-select id="0" name="GetJobsExecutionHistory" file="SQLQuery\mssql\MSSQLQuery.Job.xml" hierarchy="">
+						<parameter name="@intWeeksInHistory"    value="1"    />
+						<parameter name="@isShowJobsIssuesOnly" value="False"/>
+						<parameter name="@StartTime"                         />
+						<parameter name="@EndTime"                           />
+						<parameter name="@JobName"                           />
+					</sql-select>
+				</template>
+
+				<template id="00004" name="InstanceJobsTablesLastTwoWeeks" IsHideTabs="false" file="mssql\Instance\Audit\Jobs\MSSQLServerAuditor.JobsHistoryTables.xsl" icon="doc" showIfEmpty="true" showNumberOfRecords="true">
+					<i18n name="en">
+						Last Two Weeks
+					</i18n>
+					<i18n name="ru">
+						Две недели
+					</i18n>
+
+					<sql-select id="0" name="GetJobsExecutionHistory" file="SQLQuery\mssql\MSSQLQuery.Job.xml" hierarchy="">
+						<parameter name="@intWeeksInHistory"    value="2"    />
+						<parameter name="@isShowJobsIssuesOnly" value="False"/>
+						<parameter name="@StartTime"                         />
+						<parameter name="@EndTime"                           />
+						<parameter name="@JobName"                           />
+					</sql-select>
+				</template>
+
+				<template id="00005" name="InstanceJobsTablesLastMonth" IsHideTabs="false" file="mssql\Instance\Audit\Jobs\MSSQLServerAuditor.JobsHistoryTables.xsl" icon="doc" showIfEmpty="true" showNumberOfRecords="true">
+					<i18n name="en">
+						Last Month
+					</i18n>
+					<i18n name="ru">
+						Месяц
+					</i18n>
+
+					<sql-select id="0" file="SQLQuery\mssql\MSSQLQuery.Job.xml" name="GetJobsExecutionHistory" hierarchy="">
+						<parameter name="@intMonthesInHistory"  value="1"    />
+						<parameter name="@isShowJobsIssuesOnly" value="False"/>
+						<parameter name="@StartTime"                         />
+						<parameter name="@EndTime"                           />
+						<parameter name="@JobName"                           />
+					</sql-select>
+				</template>
+			</template>
+
+			<template id="00020" name="InstanceJobsGraphs" IsHideTabs="false" file="" icon="folder" showIfEmpty="true" showNumberOfRecords="true">
+				<i18n name="en">
+					Graphs
+				</i18n>
+				<i18n name="ru">
+					Графики
+				</i18n>
+
+				<template id="00001" name="InstanceJobsTablesToday" IsHideTabs="false" file="mssql\Instance\Audit\Jobs\MSSQLServerAuditor.JobsHistoryGraphs.xsl" icon="doc" showIfEmpty="true" showNumberOfRecords="true">
+					<i18n name="en">
+						Today
+					</i18n>
+					<i18n name="ru">
+						Сегодня
+					</i18n>
+
+					<sql-select id="0" name="GetJobsExecutionHistory" file="SQLQuery\mssql\MSSQLQuery.Job.xml" hierarchy="">
+						<parameter name="@intDaysInHistory"     value="1"    />
+						<parameter name="@isShowJobsIssuesOnly" value="False"/>
+						<parameter name="@StartTime"                         />
+						<parameter name="@EndTime"                           />
+						<parameter name="@JobName"                           />
+					</sql-select>
+				</template>
+
+				<template id="00002" name="InstanceJobsTablesLastTwoDays" IsHideTabs="false" file="mssql\Instance\Audit\Jobs\MSSQLServerAuditor.JobsHistoryGraphs.xsl" icon="doc" showIfEmpty="true" showNumberOfRecords="true">
+					<i18n name="en">
+						Last Two Days
+					</i18n>
+					<i18n name="ru">
+						Последние два дня
+					</i18n>
+
+					<sql-select id="0" name="GetJobsExecutionHistory" file="SQLQuery\mssql\MSSQLQuery.Job.xml" hierarchy="">
+						<parameter name="@intDaysInHistory"     value="2"    />
+						<parameter name="@isShowJobsIssuesOnly" value="False"/>
+						<parameter name="@StartTime"                         />
+						<parameter name="@EndTime"                           />
+						<parameter name="@JobName"                           />
+					</sql-select>
+				</template>
+
+				<template id="00003" name="InstanceJobsTablesLastWeek" IsHideTabs="false" file="mssql\Instance\Audit\Jobs\MSSQLServerAuditor.JobsHistoryGraphs.xsl" icon="doc" showIfEmpty="true" showNumberOfRecords="true">
+					<i18n name="en">
+						Last Week
+					</i18n>
+					<i18n name="ru">
+						Неделя
+					</i18n>
+
+					<sql-select id="0" name="GetJobsExecutionHistory" file="SQLQuery\mssql\MSSQLQuery.Job.xml" hierarchy="">
+						<parameter name="@intWeeksInHistory"    value="1"    />
+						<parameter name="@isShowJobsIssuesOnly" value="False"/>
+						<parameter name="@StartTime"                         />
+						<parameter name="@EndTime"                           />
+						<parameter name="@JobName"                           />
+					</sql-select>
+				</template>
+
+				<template id="00004" name="InstanceJobsTablesLastTwoWeeks" IsHideTabs="false" file="mssql\Instance\Audit\Jobs\MSSQLServerAuditor.JobsHistoryGraphs.xsl" icon="doc" showIfEmpty="true" showNumberOfRecords="true">
+					<i18n name="en">
+						Last Two Weeks
+					</i18n>
+					<i18n name="ru">
+						Две недели
+					</i18n>
+
+					<sql-select id="0" name="GetJobsExecutionHistory" file="SQLQuery\mssql\MSSQLQuery.Job.xml" hierarchy="">
+						<parameter name="@intWeeksInHistory"    value="2"    />
+						<parameter name="@isShowJobsIssuesOnly" value="False"/>
+						<parameter name="@StartTime"                         />
+						<parameter name="@EndTime"                           />
+						<parameter name="@JobName"                           />
+					</sql-select>
+				</template>
+
+				<template id="00005" name="InstanceJobsTablesLastMonth" IsHideTabs="false" file="mssql\Instance\Audit\Jobs\MSSQLServerAuditor.JobsHistoryGraphs.xsl" icon="doc" showIfEmpty="true" showNumberOfRecords="true">
+					<i18n name="en">
+						Last Month
+					</i18n>
+					<i18n name="ru">
+						Месяц
+					</i18n>
+
+					<sql-select id="0" name="GetJobsExecutionHistory" file="SQLQuery\mssql\MSSQLQuery.Job.xml" hierarchy="">
+						<parameter name="@intMonthesInHistory"  value="1"    />
+						<parameter name="@isShowJobsIssuesOnly" value="False"/>
+						<parameter name="@StartTime"                         />
+						<parameter name="@EndTime"                           />
+						<parameter name="@JobName"                           />
+					</sql-select>
+				</template>
+			</template>
+		</template>
+	</template>
+
+	<template id="04000" name="InstanceDatabases" IsHideTabs="false" file="mssql\Instance\Databases\MSSQLServerAuditor.xsl" icon="database_green" showIfEmpty="true" showNumberOfRecords="false">
+		<i18n name="en">
+			Instance Database
+		</i18n>
+		<i18n name="ru">
+			Базы данных экземпляра
+		</i18n>
+
+		<sql-select id="0" name="GetDatabasesCount" file="SQLQuery\mssql\MSSQLQuery.DatabasesCount.xml" hierarchy="">
+		</sql-select>
+
+		<template id="00100" name="Databases Statistics" file="" icon="folder" showIfEmpty="true" showNumberOfRecords="true">
+			<i18n name="en">
+				Statistics
+			</i18n>
+			<i18n name="ru">
+				Статистика
+			</i18n>
+
+			<template id="00010" name="CompatibilityLevel" IsHideTabs="false" file="mssql\Instance\Databases\CompatibilityLevel\MSSQLServerAuditor.xsl" icon="doc" showIfEmpty="true" showNumberOfRecords="true">
+				<i18n name="en">
+					Compatibility Level
+				</i18n>
+				<i18n name="ru">
+					Совместимость
+				</i18n>
+
+				<sql-select id="0" name="DatabaseInfo" file="SQLQuery\mssql\MSSQLQuery.DatabaseInfo.xml" hierarchy="">
+				</sql-select>
+			</template>
+
+			<template id="00020" name="InstanceDatabasesSize" IsHideTabs="false" file="mssql\Instance\Databases\Size\MSSQLServerAuditor.InstanceDatabasesSize.xsl" icon="doc" showIfEmpty="true" showNumberOfRecords="true">
+				<i18n name="en">
+					Size
+				</i18n>
+				<i18n name="ru">
+					Размер
+				</i18n>
+
+				<sql-select id="0" file="SQLQuery\mssql\MSSQLQuery.Instance.DatabasesSize.xml" name="GetInstanceDatabasesSize" hierarchy="">
+				</sql-select>
+
+				<group-select id="1" name="GetListOfDatabases" file="SQLQuery\mssql\MSSQLQuery.Database.xml" defaultDataBaseField="DatabaseName">
+					<parameter name="@IsIncludeTempdb" value="True"/>
+					<parameter name="@IsIncludeSystemDatabases" value="True"/>
+					<parameter name="@IsIncludeUserDatabases" value="True"/>
+					<parameter name="@IsIncludeSnapshotDatabases" value="True"/>
+				</group-select>
+
+				<template id="00021" group-select-id="1" name="DatabaseSize" file="mssql\Instance\Databases\Size\MSSQLServerAuditor.xsl" icon="doc" showIfEmpty="true" showNumberOfRecords="true">
+					<sql-select id="0" file="SQLQuery\mssql\MSSQLQuery.Database.Size.xml" name="GetDatabaseSize" hierarchy="">
+					</sql-select>
+				</template>
+			</template>
+
+			<template id="00030" name="ObjectsCount" IsHideTabs="false" file="" icon="doc" showIfEmpty="true" showNumberOfRecords="true">
+				<i18n name="en">
+					Objects
+				</i18n>
+				<i18n name="ru">
+					Объекты
+				</i18n>
+
+				<group-select id="1" name="GetListOfDatabases" file="SQLQuery\mssql\MSSQLQuery.Database.xml" defaultDataBaseField="DatabaseName">
+					<parameter name="@IsIncludeTempdb" value="False"/>
+					<parameter name="@IsIncludeSystemDatabases" value="True"/>
+					<parameter name="@IsIncludeUserDatabases" value="True"/>
+					<parameter name="@IsIncludeSnapshotDatabases" value="True"/>
+				</group-select>
+
+				<template id="00031" group-select-id="1" name="DatabaseObjectsCount" file="mssql\Instance\Databases\Objects\MSSQLServerAuditor.xsl" icon="doc" showIfEmpty="false" showNumberOfRecords="true" hideEmptyResultDatabases="true">
+					<sql-select id="0" file="SQLQuery\mssql\MSSQLQuery.DatabaseObjectsCount.xml" name="GetDatabaseObjectsCount" hierarchy="">
+					</sql-select>
+				</template>
+			</template>
+
+			<template id="00040" name="TopBigTables" IsHideTabs="false" file="" icon="doc" showIfEmpty="true" showNumberOfRecords="true">
+				<i18n name="en">
+					Top50 big tables
+				</i18n>
+				<i18n name="ru">
+					Тор 50 больших таблиц
+				</i18n>
+
+				<group-select id="1" name="GetListOfDatabases" file="SQLQuery\mssql\MSSQLQuery.Database.xml" defaultDataBaseField="DatabaseName">
+					<parameter name="@IsIncludeTempdb" value="False"/>
+					<parameter name="@IsIncludeSystemDatabases" value="True"/>
+					<parameter name="@IsIncludeUserDatabases" value="True"/>
+					<parameter name="@IsIncludeSnapshotDatabases" value="True"/>
+				</group-select>
+
+				<template id="00041" group-select-id="1" name="DataTopBigTables" file="mssql\Instance\Databases\Tables\MSSQLServerAuditor.TopBigTables.xsl" icon="doc" showIfEmpty="false" showNumberOfRecords="true" hideEmptyResultDatabases="true">
+					<sql-select id="0" file="SQLQuery\mssql\MSSQLQuery.TopBigTables.xml" name="GetTopBigTables" hierarchy="">
+						<parameter name="@intNumberOfRowsToShow" value="50"/>
+					</sql-select>
+				</template>
+			</template>
+
+			<template id="00050" name="CDC" IsHideTabs="false" file="" icon="doc" showIfEmpty="true" showNumberOfRecords="true">
+				<i18n name="en">
+					CDC
+				</i18n>
+				<i18n name="ru">
+					CDC
+				</i18n>
+
+				<group-select name="GetListOfCDCDatabases" id="1" file="SQLQuery\mssql\MSSQLQuery.Database.xml" defaultDataBaseField="DatabaseName">
+				</group-select>
+
+				<template id="00051" group-select-id="1" name="GetListOfDatabaseCDCTables" file="mssql\Instance\Databases\Objects\MSSQLServerAuditor.CDCTable.xsl" icon="doc" showIfEmpty="true" showNumberOfRecords="true">
+					<sql-select id="0" name="GetListOfDatabaseCDCTables" file="SQLQuery\mssql\MSSQLQuery.Database.CDCTables.xml" hierarchy="">
+					</sql-select>
+				</template>
+			</template>
+
+			<template id="00060" name="InstanceDatabasesFilesGrowth" IsHideTabs="false" file="mssql\Instance\Databases\Size\MSSQLServerAuditor.InstanceDatabasesFilesGrowth.xsl" icon="doc" showIfEmpty="true" showNumberOfRecords="true">
+				<i18n name="en">
+					Growth
+				</i18n>
+				<i18n name="ru">
+					Автоприращение
+				</i18n>
+
+				<group-select id="1" name="GetListOfDatabases" file="SQLQuery\mssql\MSSQLQuery.Database.xml" defaultDataBaseField="DatabaseName">
+					<parameter name="@IsIncludeTempdb"            value="True"/>
+					<parameter name="@IsIncludeSystemDatabases"   value="True"/>
+					<parameter name="@IsIncludeUserDatabases"     value="True"/>
+					<parameter name="@IsIncludeSnapshotDatabases" value="True"/>
+				</group-select>
+
+				<template id="00061" group-select-id="1" name="DatabaseFilesGrowth" file="mssql\Instance\Databases\Files\MSSQLServerAuditor.Database.FilesGrowth.xsl" icon="doc" showIfEmpty="true" showNumberOfRecords="true">
+					<sql-select id="0" file="SQLQuery\mssql\MSSQLQuery.Database.FilesGrowth.xml" name="GetDatabaseFilesGrowth" hierarchy="">
+					</sql-select>
+				</template>
+			</template>
+		</template>
+
+		<template id="00300" name="Restore" IsHideTabs="false" file="" icon="folder" showIfEmpty="true" showNumberOfRecords="true">
+			<i18n name="en">
+				Restore
+			</i18n>
+			<i18n name="ru">
+				Восстановление
+			</i18n>
+
+			<template id="00310" name="RestoreCurrentStatus" IsHideTabs="false" file="" icon="folder" showIfEmpty="true" showNumberOfRecords="true">
+				<i18n name="en">
+					Current Status
+				</i18n>
+				<i18n name="ru">
+					Текущий статус
+				</i18n>
+
+				<template id="00311" name="RestoreDatabasesFull" IsHideTabs="false" file="mssql\Instance\Databases\Restore\MSSQLServerAuditor.xsl" icon="doc" showIfEmpty="true" showNumberOfRecords="true">
+					<i18n name="en">
+						Full
+					</i18n>
+					<i18n name="ru">
+						Полное
+					</i18n>
+
+					<sql-select id="0" name="GetLastDatabaseRestore" file="SQLQuery\mssql\MSSQLQuery.DatabaseRestore.xml" hierarchy="">
+						<parameter name="@chRestoreType" value="D"/>
+						<parameter name="@isShowRestoreIssuesOnly" value="False"/>
+					</sql-select>
+				</template>
+
+				<template id="00312" name="RestoreDatabasesDifferencial" IsHideTabs="false" file="mssql\Instance\Databases\Restore\MSSQLServerAuditor.xsl" icon="doc" showIfEmpty="true" showNumberOfRecords="true">
+					<i18n name="en">
+						Incremental
+					</i18n>
+					<i18n name="ru">
+						Инкрементальное
+					</i18n>
+
+					<sql-select id="0" name="GetLastDatabaseRestore" file="SQLQuery\mssql\MSSQLQuery.DatabaseRestore.xml" hierarchy="">
+						<parameter name="@chRestoreType" value="I"/>
+					</sql-select>
+				</template>
+
+				<template id="00313" name="RestoreLogs" IsHideTabs="false" file="mssql\Instance\Databases\Restore\MSSQLServerAuditor.xsl" icon="doc" showIfEmpty="true" showNumberOfRecords="true">
+					<i18n name="en">
+						Transaction Logs
+					</i18n>
+					<i18n name="ru">
+						Журнал транзакций
+					</i18n>
+
+					<sql-select id="0" name="GetLastDatabaseRestore" file="SQLQuery\mssql\MSSQLQuery.DatabaseRestore.xml" hierarchy="">
+						<parameter name="@chRestoreType" value="L"/>
+					</sql-select>
+				</template>
+			</template>
+
+			<template id="00320" name="RestoreHistory" IsHideTabs="false" file="" icon="folder" showIfEmpty="true" showNumberOfRecords="true">
+				<i18n name="en">
+					Restore History
+				</i18n>
+				<i18n name="ru">
+					История восстановления
+				</i18n>
+
+				<template id="00321" name="RestoreDatabasesFull" IsHideTabs="false" file="mssql\Instance\Databases\Restore\MSSQLServerAuditor.DatabaseRestoreHistory.xsl" icon="doc" showIfEmpty="true" showNumberOfRecords="true">
+					<i18n name="en">
+						Full
+					</i18n>
+					<i18n name="ru">
+						Полное
+					</i18n>
+					<sql-select id="0" name="GetDatabaseRestoreHistory" file="SQLQuery\mssql\MSSQLQuery.DatabaseRestoreHistory.xml" hierarchy="">
+						<parameter name="@chRestoreType" value="D"/>
+						<parameter name="@DatabaseName"/>
+					</sql-select>
+				</template>
+
+				<template id="00322" name="RestoreDatabasesDifferencial" IsHideTabs="false" file="mssql\Instance\Databases\Restore\MSSQLServerAuditor.DatabaseRestoreHistory.xsl" icon="doc" showIfEmpty="true" showNumberOfRecords="true">
+					<i18n name="en">
+						Incremental
+					</i18n>
+					<i18n name="ru">
+						Инкрементальное
+					</i18n>
+					<sql-select id="0" name="GetDatabaseRestoreHistory" file="SQLQuery\mssql\MSSQLQuery.DatabaseRestoreHistory.xml" hierarchy="">
+						<parameter name="@chRestoreType" value="I"/>
+						<parameter name="@DatabaseName"/>
+					</sql-select>
+				</template>
+
+				<template id="00323" name="RestoreLogs" IsHideTabs="false" file="mssql\Instance\Databases\Restore\MSSQLServerAuditor.DatabaseRestoreHistory.xsl" icon="doc" showIfEmpty="true" showNumberOfRecords="true">
+					<i18n name="en">
+						Transaction Logs
+					</i18n>
+					<i18n name="ru">
+						Журнал транзакций
+					</i18n>
+					<sql-select id="0" name="GetDatabaseRestoreHistory" file="SQLQuery\mssql\MSSQLQuery.DatabaseRestoreHistory.xml" hierarchy="">
+						<parameter name="@chRestoreType" value="L"/>
+						<parameter name="@DatabaseName"/>
+					</sql-select>
+				</template>
+			</template>
+		</template>
+
+		<template id="00400" name="Indexes" IsHideTabs="false" file="mssql\Instance\Databases\Indexes\MSSQLServerAuditor.xsl" icon="folder" showIfEmpty="true" showNumberOfRecords="true">
+			<i18n name="en">
+				Indexes
+			</i18n>
+			<i18n name="ru">
+				Индексы
+			</i18n>
+
+			<template id="00410" name="OverlappingIndexes" IsHideTabs="false" file="mssql\Instance\Databases\Indexes\OverlappingIndexes\MSSQLServerAuditor.RA.xsl" icon="doc" showIfEmpty="false" showNumberOfRecords="true" hideEmptyResultDatabases="true">
+				<i18n name="en">
+					Overlapping Indexes
+				</i18n>
+				<i18n name="ru">
+					Перекрывающиеся индексы
+				</i18n>
+
+				<group-select id="1" name="GetListOfDatabases" file="SQLQuery\mssql\MSSQLQuery.Database.xml" defaultDataBaseField="DatabaseName">
+					<parameter name="@IsIncludeTempdb" value="False"/>
+					<parameter name="@IsIncludeSystemDatabases" value="False"/>
+					<parameter name="@IsIncludeUserDatabases" value="True"/>
+					<parameter name="@IsIncludeSnapshotDatabases" value="True"/>
+				</group-select>
+
+				<template id="00411" group-select-id="1" name="DatabaseOverlappingIndexes" file="mssql\Instance\Databases\Indexes\OverlappingIndexes\MSSQLServerAuditor.xsl" icon="doc" showIfEmpty="false" showNumberOfRecords="true" hideEmptyResultDatabases="true">
+					<sql-select id="0" name="GetDatabaseOverlappingIndexes" file="SQLQuery\mssql\MSSQLQuery.DatabaseOverlappingIndexes.xml" hierarchy="">
+					</sql-select>
+				</template>
+			</template>
+
+			<template id="00420" name="UnusedIndexes" IsHideTabs="false" file="mssql\Instance\Databases\Indexes\UnusedIndexes\MSSQLServerAuditor.RA.xsl" icon="doc" showIfEmpty="false" showNumberOfRecords="true" hideEmptyResultDatabases="true">
+				<i18n name="en">
+					Unused Indexes
+				</i18n>
+				<i18n name="ru">
+					Не используются
+				</i18n>
+
+				<group-select id="1" name="GetListOfDatabases" file="SQLQuery\mssql\MSSQLQuery.Database.xml" defaultDataBaseField="DatabaseName">
+					<parameter name="@IsIncludeTempdb" value="False"/>
+					<parameter name="@IsIncludeSystemDatabases" value="False"/>
+					<parameter name="@IsIncludeUserDatabases" value="True"/>
+					<parameter name="@IsIncludeSnapshotDatabases" value="True"/>
+				</group-select>
+
+				<template id="00421" group-select-id="1" name="DatabaseUnusedIndexes" file="mssql\Instance\Databases\Indexes\UnusedIndexes\MSSQLServerAuditor.xsl" icon="doc" showIfEmpty="false" showNumberOfRecords="true" hideEmptyResultDatabases="true">
+					<sql-select id="0" name="GetDatabaseUnusedIndexes" file="SQLQuery\mssql\MSSQLQuery.DatabaseUnusedIndexes.xml" hierarchy="">
+					</sql-select>
+				</template>
+			</template>
+
+			<!--
+			<template id="00450" name="IndexesFillFactor" IsHideTabs="false" file="mssql\Instance\Databases\Indexes\IndexesFillFactor\MSSQLServerAuditor.RA.xsl" icon="doc" showIfEmpty="true" showNumberOfRecords="true" hideEmptyResultDatabases="true">
+				<i18n name="en">
+					Indexes Fill Factor
+				</i18n>
+				<i18n name="ru">
+					Заполнение
+				</i18n>
+
+				<group-select id="1" name="GetListOfDatabases" file="SQLQuery\mssql\MSSQLQuery.Database.xml" defaultDataBaseField="DatabaseName">
+					<parameter name="@IsIncludeTempdb" value="False"/>
+					<parameter name="@IsIncludeSystemDatabases" value="False"/>
+					<parameter name="@IsIncludeUserDatabases" value="True"/>
+					<parameter name="@IsIncludeSnapshotDatabases" value="True"/>
+				</group-select>
+
+				<template id="00451" group-select-id="1" name="DatabaseIndexesFillFactor" file="mssql\Instance\Databases\Indexes\IndexesFillFactor\MSSQLServerAuditor.xsl" icon="doc" showIfEmpty="false" showNumberOfRecords="true" hideEmptyResultDatabases="true">
+					<sql-select id="0" name="GetIndexesFillFactor" file="SQLQuery\mssql\MSSQLQuery.GetIndexesFillFactor.xml" hierarchy="">
+					</sql-select>
+					<sql-select id="1" name="GetIndexesFillFactorSummary" file="SQLQuery\mssql\MSSQLQuery.GetIndexesFillFactor.xml" hierarchy="">
+					</sql-select>
+				</template>
+			</template>
+			-->
+
+			<!--
+			<template id="00460" name="IndexesStatistic" IsHideTabs="false" file="mssql\Instance\Databases\Indexes\IndexesStatistic\MSSQLServerAuditor.RA.xsl" icon="doc" showIfEmpty="true" showNumberOfRecords="true" hideEmptyResultDatabases="true">
+				<i18n name="en">
+					Indexes Statistic
+				</i18n>
+				<i18n name="ru">
+					Статистика
+				</i18n>
+
+				<group-select name="GetListOfDatabases" id="1" file="SQLQuery\mssql\MSSQLQuery.Database.xml" defaultDataBaseField="DatabaseName">
+					<parameter name="@IsIncludeTempdb" value="False"/>
+					<parameter name="@IsIncludeSystemDatabases" value="False"/>
+					<parameter name="@IsIncludeUserDatabases" value="True"/>
+					<parameter name="@IsIncludeSnapshotDatabases" value="True"/>
+				</group-select>
+
+				<template id="00461" group-select-id="1" name="DatabaseIndexesStatistic" file="mssql\Instance\Databases\Indexes\IndexesStatistic\MSSQLServerAuditor.xsl" icon="doc" showIfEmpty="false" showNumberOfRecords="true" hideEmptyResultDatabases="true">
+					<sql-select id="0" name="GetIndexesStatisticStatus" file="SQLQuery\mssql\MSSQLQuery.GetIndexesStatisticStatus.xml" hierarchy="">
+					</sql-select>
+				</template>
+			</template>
+			-->
+
+			<template id="00470" name="IndexesFragmentation" IsHideTabs="false" file="mssql\Instance\Databases\Indexes\IndexesFragmentation\MSSQLServerAuditor.RA.xsl" icon="doc" showIfEmpty="true" showNumberOfRecords="true" hideEmptyResultDatabases="true">
+				<i18n name="en">
+					Fragmentation
+				</i18n>
+				<i18n name="ru">
+					Фрагментация
+				</i18n>
+
+				<group-select name="GetListOfDatabases" id="1" file="SQLQuery\mssql\MSSQLQuery.Database.xml" defaultDataBaseField="DatabaseName">
+					<parameter name="@IsIncludeTempdb"            value="False"/>
+					<parameter name="@IsIncludeSystemDatabases"   value="False"/>
+					<parameter name="@IsIncludeUserDatabases"     value="True"/>
+					<parameter name="@IsIncludeSnapshotDatabases" value="False"/>
+				</group-select>
+
+				<template id="00471" group-select-id="1" name="IndexesFragmentationStatistic" file="mssql\Instance\Databases\Indexes\FragmentedIndexes\IndexesFragmentationStatistic.Graph.xsl" icon="doc" showIfEmpty="false" showNumberOfRecords="true" hideEmptyResultDatabases="true">
+					<sql-select id="0" name="GetIndexesFragmentationStatistic" file="SQLQuery\mssql\MSSQLQuery.FragmentedIndexes.xml" hierarchy="">
+					</sql-select>
+				</template>
+			</template>
+
+			<template id="00480" name="IndexesStatisticUpdate" IsHideTabs="false" file="mssql\Instance\Databases\Indexes\IndexesStatistic\MSSQLServerAuditor.RA.xsl" icon="doc" showIfEmpty="true" showNumberOfRecords="true" hideEmptyResultDatabases="true">
+				<i18n name="en">
+					Statistics Update
+				</i18n>
+				<i18n name="ru">
+					Обновление статистики
+				</i18n>
+
+				<group-select name="GetListOfDatabases" id="1" file="SQLQuery\mssql\MSSQLQuery.Database.xml" defaultDataBaseField="DatabaseName">
+					<parameter name="@IsIncludeTempdb"            value="False"/>
+					<parameter name="@IsIncludeSystemDatabases"   value="False"/>
+					<parameter name="@IsIncludeUserDatabases"     value="True"/>
+					<parameter name="@IsIncludeSnapshotDatabases" value="False"/>
+				</group-select>
+
+				<template id="00481" group-select-id="1" name="IndexesStatisticUpdateStatusSummary" file="mssql\Instance\Databases\Indexes\IndexesStatistic\IndexesStatisticUpdateStatusSummary.Graph.xsl" icon="doc" showIfEmpty="false" showNumberOfRecords="true" hideEmptyResultDatabases="true">
+					<sql-select id="0" name="GetIndexesStatisticUpdateStatusSummary" file="SQLQuery\mssql\MSSQLQuery.GetIndexesStatisticStatus.xml" hierarchy="">
+					</sql-select>
+				</template>
+			</template>
+
+			<template id="00490" name="IndexesFillFactorSummaryStatistic" IsHideTabs="false" file="mssql\Instance\Databases\Indexes\IndexesFillFactor\MSSQLServerAuditor.RA.xsl" icon="doc" showIfEmpty="true" showNumberOfRecords="true" hideEmptyResultDatabases="true">
+				<i18n name="en">
+					Fill Factor
+				</i18n>
+				<i18n name="ru">
+					Фактор заполнения
+				</i18n>
+
+				<group-select name="GetListOfDatabases" id="1" file="SQLQuery\mssql\MSSQLQuery.Database.xml" defaultDataBaseField="DatabaseName">
+					<parameter name="@IsIncludeTempdb"            value="False"/>
+					<parameter name="@IsIncludeSystemDatabases"   value="False"/>
+					<parameter name="@IsIncludeUserDatabases"     value="True"/>
+					<parameter name="@IsIncludeSnapshotDatabases" value="False"/>
+				</group-select>
+
+				<template id="00491" group-select-id="1" name="IndexesFillFactorSummaryStatistic" file="mssql\Instance\Databases\Indexes\IndexesFillFactor\IndexesFillFactorSummaryStatistic.Graph.xsl" icon="doc" showIfEmpty="false" showNumberOfRecords="true" hideEmptyResultDatabases="true">
+					<sql-select id="0" name="GetIndexesFillFactorSummaryStatistic" file="SQLQuery\mssql\MSSQLQuery.GetIndexesFillFactor.xml" hierarchy="">
+					</sql-select>
+				</template>
+			</template>
+		</template>
+
+		<template id="00500" name="DatabasesSecurity" IsHideTabs="false" file="" icon="folder" showIfEmpty="true" showNumberOfRecords="true">
+			<i18n name="en">
+				Security
+			</i18n>
+			<i18n name="ru">
+				Безопасность
+			</i18n>
+
+			<template id="00010" name="Users" IsHideTabs="false" file="" icon="doc" showIfEmpty="true" showNumberOfRecords="true">
+				<i18n name="en">
+					Users
+				</i18n>
+				<i18n name="ru">
+					Пользователи
+				</i18n>
+
+				<group-select id="1" name="GetListOfDatabases" file="SQLQuery\mssql\MSSQLQuery.Database.xml" defaultDataBaseField="DatabaseName">
+					<parameter name="@IsIncludeTempdb" value="False"/>
+					<parameter name="@IsIncludeSystemDatabases" value="True"/>
+					<parameter name="@IsIncludeUserDatabases" value="True"/>
+					<parameter name="@IsIncludeSnapshotDatabases" value="True"/>
+				</group-select>
+
+				<template id="00001" group-select-id="1" name="DatabaseUsers" file="mssql\Instance\Security\Databases\Users\MSSQLServerAuditor.xsl" icon="doc" showIfEmpty="false" showNumberOfRecords="true" hideEmptyResultDatabases="true">
+					<sql-select id="0" name="GetUsersList" file="SQLQuery\mssql\MSSQLQuery.GetUsersList.xml" hierarchy="">
+						<parameter name="@isShowOrphahUsersOnly" value="False"/>
+						<parameter name="@isShowUserAliasesOnly" value="False"/>
+						<parameter name="@isShowMembersOfGroupsWithElevatedPermissionsOnly" value="False"/>
+					</sql-select>
+				</template>
+			</template>
+		</template>
+
+		<template id="00600" name="DatabasesPermissions" IsHideTabs="false" file="" icon="folder" showIfEmpty="true" showNumberOfRecords="true">
+			<i18n name="en">
+				Permissions
+			</i18n>
+			<i18n name="ru">
+				Права доступа
+			</i18n>
+
+			<group-select name="GetListOfDatabases" id="1" file="SQLQuery\mssql\MSSQLQuery.Database.xml" defaultDataBaseField="DatabaseName">
+				<parameter name="@IsIncludeTempdb" value="False"/>
+				<parameter name="@IsIncludeSystemDatabases" value="True"/>
+				<parameter name="@IsIncludeUserDatabases" value="True"/>
+				<parameter name="@IsIncludeSnapshotDatabases" value="True"/>
+			</group-select>
+
+			<template id="00010" group-select-id="1" name="UsersGroupsObjectsPermissions" file="" icon="doc" showIfEmpty="true" showNumberOfRecords="true">
+				<template id="00001" name="DatabaseUsersObjectsPermissions" IsHideTabs="false" file="mssql\Instance\Security\Databases\MSSQLServerAuditor.DatabaseObjectsPermissions.xsl" icon="doc" showIfEmpty="true" showNumberOfRecords="true">
+					<i18n name="en">
+						Users
+					</i18n>
+					<i18n name="ru">
+						Пользователи
+					</i18n>
+
+					<sql-select id="0" name="GetDatabaseObjectsPermissions" file="SQLQuery\mssql\MSSQLQuery.Security.DatabaseObjectsPermissions.xml" hierarchy="">
+						<parameter name="@isIncludeUsers" value="True"/>
+						<parameter name="@isIncludeGroups" value="False"/>
+					</sql-select>
+				</template>
+
+				<template id="00002" name="DatabaseGroupsObjectsPermissions" IsHideTabs="false" file="mssql\Instance\Security\Databases\MSSQLServerAuditor.DatabaseObjectsPermissions.xsl" icon="doc" showIfEmpty="true" showNumberOfRecords="true">
+					<i18n name="en">
+						Groups
+					</i18n>
+					<i18n name="ru">
+						Группы
+					</i18n>
+
+					<sql-select id="0" name="GetDatabaseObjectsPermissions" file="SQLQuery\mssql\MSSQLQuery.Security.DatabaseObjectsPermissions.xml" hierarchy="">
+						<parameter name="@isIncludeUsers" value="False"/>
+						<parameter name="@isIncludeGroups" value="True"/>
+					</sql-select>
+				</template>
+			</template>
+		</template>
+
+		<template id="00700" name="Databases Performance" file="" icon="folder" showIfEmpty="true" showNumberOfRecords="true">
+			<i18n name="en">
+				Performance
+			</i18n>
+			<i18n name="ru">
+				Производительность
+			</i18n>
+
+			<template id="00010" name="GetIOStatus" IsHideTabs="false" file="mssql\Instance\Databases\IOStatus\MSSQLServerAuditor.DatabaseIOStatus.RA.xsl" icon="doc" showIfEmpty="true" showNumberOfRecords="true" hideEmptyResultDatabases="false">
+				<i18n name="en">
+					IO Status
+				</i18n>
+				<i18n name="ru">
+					Чтение и запись
+				</i18n>
+
+				<group-select id="1" name="GetListOfDatabases" file="SQLQuery\mssql\MSSQLQuery.Database.xml" defaultDataBaseField="DatabaseName">
+					<parameter name="@IsIncludeTempdb" value="True"/>
+					<parameter name="@IsIncludeSystemDatabases" value="True"/>
+					<parameter name="@IsIncludeUserDatabases" value="True"/>
+					<parameter name="@IsIncludeSnapshotDatabases" value="True"/>
+				</group-select>
+
+				<template id="00001" group-select-id="1" name="GetDatabaseIOStatus" file="mssql\Instance\Databases\IOStatus\MSSQLServerAuditor.DatabaseIOStatus.xsl" icon="doc" showIfEmpty="false" showNumberOfRecords="true" hideEmptyResultDatabases="true">
+					<sql-select id="0" name="GetDatabaseIOStatus" file="SQLQuery\mssql\DynamicManagementViews\MSSQLQuery.DMV.Database.IOStatus.xml" hierarchy="">
+					</sql-select>
+				</template>
+			</template>
+		</template>
+
+		<template id="00800" name="Databases Reliability" file="" icon="folder" showIfEmpty="true" showNumberOfRecords="true">
+			<i18n name="en">
+				Databases Reliability
+			</i18n>
+			<i18n name="ru">
+				Надёжность баз данных
+			</i18n>
+
+			<template id="00010" name="DatabaseDBCCDBInfo" IsHideTabs="false" file="" icon="doc" showIfEmpty="true" showNumberOfRecords="true" hideEmptyResultDatabases="false">
+				<i18n name="en">
+					DBCC DBInfo
+				</i18n>
+				<i18n name="ru">
+					DBCC DBInfo
+				</i18n>
+
+				<group-select id="1" name="GetListOfDatabases" file="SQLQuery\mssql\MSSQLQuery.Database.xml" defaultDataBaseField="DatabaseName">
+					<parameter name="@IsIncludeTempdb" value="False"/>
+					<parameter name="@IsIncludeSystemDatabases" value="True"/>
+					<parameter name="@IsIncludeUserDatabases" value="True"/>
+					<parameter name="@IsIncludeSnapshotDatabases" value="False"/>
+				</group-select>
+
+				<template id="00001" group-select-id="1" name="GetDatabaseIOStatus" file="mssql\Instance\Databases\Reliability\MSSQLServerAuditor.DatabaseDBCCDBInfo.xsl" icon="doc" showIfEmpty="false" showNumberOfRecords="true" hideEmptyResultDatabases="true">
+					<sql-select id="0" name="GetDatabaseDBCCDBInfo" file="SQLQuery\mssql\MSSQLQuery.Database.DBCC.DBInfo.xml" hierarchy="">
+						<parameter name="@intDaysDBCCLastKnownGoodThreshold" value="14"/>
+					</sql-select>
+				</template>
+			</template>
+		</template>
+	</template>
+
+	<template id="05000" name="Issues" IsHideTabs="false" file="" icon="database_red" showIfEmpty="true" showNumberOfRecords="true">
+		<i18n name="en">
+			Issues and Problems
+		</i18n>
+		<i18n name="ru">
+			Ошибки и проблемы
+		</i18n>
+
+		<template id="00100" name="InstanceLogs" IsHideTabs="false" file="" icon="folder" showIfEmpty="true" showNumberOfRecords="true">
+			<i18n name="en">
+				SQL Server Logs
+			</i18n>
+			<i18n name="ru">
+				Логи SQL сервера
+			</i18n>
+
+			<group-select id="1" name="GetErrorLogNumbersList" file="SQLQuery\mssql\MSSQLQuery.ErrorLog.xml">
+			</group-select>
+
+			<template id="00010" group-select-id="1" name="ErrorLogProcessesList" file="" icon="doc" showIfEmpty="false" showNumberOfRecords="true" hideEmptyResultDatabases="true">
+				<group-select id="1" name="GetErrorLogProcessesList" file="SQLQuery\mssql\MSSQLQuery.ErrorLog.xml">
+					<parameter name="@intLogNumber"/>
+				</group-select>
+
+				<template id="00001" group-select-id="1" name="ErrorLogInfo" file="mssql\Instance\Audit\Log\MSSQLServerAuditor.xsl" icon="doc" showIfEmpty="false" showNumberOfRecords="true" hideEmptyResultDatabases="true">
+					<sql-select id="0" name="GetErrorLogInfo" file="SQLQuery\mssql\MSSQLQuery.ErrorLog.xml" hierarchy="">
+						<parameter name="@intLogNumber"/>
+						<parameter name="@LogMessageProcessInfo"/>
+					</sql-select>
+				</template>
+			</template>
+		</template>
+
+		<template id="00200" name="Maintenance" IsHideTabs="false" file="" icon="folder" showIfEmpty="true" showNumberOfRecords="true">
+			<i18n name="en">
+				Server maintenance
+			</i18n>
+			<i18n name="ru">
+				Регламентное обслуживание
+			</i18n>
+
+			<template id="00010" name="Jobs" IsHideTabs="false" file="" icon="folder" showIfEmpty="true" showNumberOfRecords="true">
+				<i18n name="en">
+					Jobs execution
+				</i18n>
+				<i18n name="ru">
+					Регулярные задания
+				</i18n>
+
+				<template id="00001" name="InstanceJobsTablesToday" IsHideTabs="false" file="mssql\Instance\Audit\Jobs\MSSQLServerAuditor.JobsHistoryTables.xsl" icon="doc" showIfEmpty="true" showNumberOfRecords="true">
+					<i18n name="en">
+						Today
+					</i18n>
+					<i18n name="ru">
+						Сегодня
+					</i18n>
+
+					<sql-select id="0" name="GetJobsExecutionHistory" file="SQLQuery\mssql\MSSQLQuery.Job.xml" hierarchy="">
+						<parameter name="@intDaysInHistory" value="1"/>
+						<parameter name="@isShowJobsIssuesOnly" value="True"/>
+						<parameter name="@StartTime"/>
+						<parameter name="@EndTime"/>
+					</sql-select>
+				</template>
+
+				<template id="00002" name="InstanceJobsTablesLastTwoDays" IsHideTabs="false" file="mssql\Instance\Audit\Jobs\MSSQLServerAuditor.JobsHistoryTables.xsl" icon="doc" showIfEmpty="true" showNumberOfRecords="true">
+					<i18n name="en">
+						Last Two Days
+					</i18n>
+					<i18n name="ru">
+						Последние два дня
+					</i18n>
+
+					<sql-select id="0" name="GetJobsExecutionHistory" file="SQLQuery\mssql\MSSQLQuery.Job.xml" hierarchy="">
+						<parameter name="@intDaysInHistory" value="2"/>
+						<parameter name="@isShowJobsIssuesOnly" value="True"/>
+						<parameter name="@StartTime"/>
+						<parameter name="@EndTime"/>
+					</sql-select>
+				</template>
+
+				<template id="00003" name="InstanceJobsTablesLastWeek" IsHideTabs="false" file="mssql\Instance\Audit\Jobs\MSSQLServerAuditor.JobsHistoryTables.xsl" icon="doc" showIfEmpty="true" showNumberOfRecords="true">
+					<i18n name="en">
+						Last Week
+					</i18n>
+					<i18n name="ru">
+						Неделя
+					</i18n>
+
+					<sql-select id="0" name="GetJobsExecutionHistory" file="SQLQuery\mssql\MSSQLQuery.Job.xml" hierarchy="">
+						<parameter name="@intWeeksInHistory" value="1"/>
+						<parameter name="@isShowJobsIssuesOnly" value="True"/>
+						<parameter name="@StartTime"/>
+						<parameter name="@EndTime"/>
+					</sql-select>
+				</template>
+
+				<template id="00004" name="InstanceJobsTablesLastTwoWeeks" IsHideTabs="false" file="mssql\Instance\Audit\Jobs\MSSQLServerAuditor.JobsHistoryTables.xsl" icon="doc" showIfEmpty="true" showNumberOfRecords="true">
+					<i18n name="en">
+						Last Two Weeks
+					</i18n>
+					<i18n name="ru">
+						Две недели
+					</i18n>
+
+					<sql-select id="0" name="GetJobsExecutionHistory" file="SQLQuery\mssql\MSSQLQuery.Job.xml" hierarchy="">
+						<parameter name="@intWeeksInHistory" value="2"/>
+						<parameter name="@isShowJobsIssuesOnly" value="True"/>
+						<parameter name="@StartTime"/>
+						<parameter name="@EndTime"/>
+					</sql-select>
+				</template>
+
+				<template id="00005" name="InstanceJobsTablesLastMonth" IsHideTabs="false" file="mssql\Instance\Audit\Jobs\MSSQLServerAuditor.JobsHistoryTables.xsl" icon="doc" showIfEmpty="true" showNumberOfRecords="true">
+					<i18n name="en">
+						Last Month
+					</i18n>
+					<i18n name="ru">
+						Месяц
+					</i18n>
+
+					<sql-select id="0" name="GetJobsExecutionHistory" file="SQLQuery\mssql\MSSQLQuery.Job.xml" hierarchy="">
+						<parameter name="@intMonthesInHistory" value="1"/>
+						<parameter name="@isShowJobsIssuesOnly" value="True"/>
+						<parameter name="@StartTime"/>
+						<parameter name="@EndTime"/>
+					</sql-select>
+				</template>
+			</template>
+
+			<template id="00030" name="RestoreLogs" IsHideTabs="false" file="mssql\Instance\Databases\Restore\MSSQLServerAuditor.xsl" icon="doc" showIfEmpty="true" showNumberOfRecords="true">
+				<i18n name="en">
+					Transaction Logs Restoration
+				</i18n>
+				<i18n name="ru">
+					Восстановление журнала транзакций
+				</i18n>
+
+				<sql-select id="0" name="GetLastDatabaseRestore" file="SQLQuery\mssql\MSSQLQuery.DatabaseRestore.xml" hierarchy="">
+					<parameter name="@chRestoreType" value="L"/>
+					<parameter name="@isShowRestoreIssuesOnly" value="True"/>
+				</sql-select>
+			</template>
+		</template>
+
+		<template id="00300" name="Configuration" IsHideTabs="false" file="" icon="folder" showIfEmpty="true" showNumberOfRecords="true">
+			<i18n name="en">
+				Configuration
+			</i18n>
+			<i18n name="ru">
+				Конфигурация
+			</i18n>
+
+			<template id="00010" name="GetDataLogFilesIssue" IsHideTabs="false" file="mssql\Instance\Databases\Configuration\MSSQLServerAuditor.DatabaseDataLogFilesIssue.RA.xsl" icon="doc" showIfEmpty="false" showNumberOfRecords="true" hideEmptyResultDatabases="true">
+				<i18n name="en">
+					Data/Log Files
+				</i18n>
+				<i18n name="ru">
+					Дата и Логи
+				</i18n>
+
+				<group-select id="1" name="GetListOfDatabases" file="SQLQuery\mssql\MSSQLQuery.Database.xml" defaultDataBaseField="DatabaseName">
+					<parameter name="@IsIncludeTempdb" value="False"/>
+					<parameter name="@IsIncludeSystemDatabases" value="False"/>
+					<parameter name="@IsIncludeUserDatabases" value="True"/>
+					<parameter name="@IsIncludeSnapshotDatabases" value="True"/>
+				</group-select>
+
+				<template id="00001" group-select-id="1" name="GetDatabaseDataLogFilesIssue" file="mssql\Instance\Databases\Configuration\MSSQLServerAuditor.DatabaseDataLogFilesIssue.xsl" icon="doc" showIfEmpty="false" showNumberOfRecords="true" hideEmptyResultDatabases="true">
+					<sql-select id="0" file="SQLQuery\mssql\MSSQLQuery.DatabaseDataLogFilesIssue.xml" name="GetDatabaseDataLogFilesIssue" hierarchy="">
+					</sql-select>
+				</template>
+			</template>
+
+			<template id="00020" name="GetDatabasesOnCDrive" IsHideTabs="false" file="mssql\Instance\Databases\Configuration\MSSQLServerAuditor.DatabasesOnCDrive.xsl" icon="doc" showIfEmpty="false" showNumberOfRecords="true" hideEmptyResultDatabases="true">
+				<i18n name="en">
+					DB on C: Drive
+				</i18n>
+				<i18n name="ru">
+					БД на диске C:
+				</i18n>
+				<sql-select id="0" name="GetDatabasesOnCDrive" file="SQLQuery\mssql\MSSQLQuery.Database.C-Drive.xml" hierarchy="">
+				</sql-select>
+			</template>
+		</template>
+
+		<template id="00700" name="Databases Security" file="" icon="folder" showIfEmpty="true" showNumberOfRecords="true">
+			<i18n name="en">
+				Databases Security
+			</i18n>
+			<i18n name="ru">
+				Безопасность баз данных
+			</i18n>
+
+			<template id="00020" name="UserAliases" IsHideTabs="false" file="mssql\Instance\Security\Databases\UserAliases\MSSQLServerAuditor.UserAliases.RA.xsl" icon="doc" showIfEmpty="true" showNumberOfRecords="true" hideEmptyResultDatabases="true">
+				<i18n name="en">
+					User Aliases
+				</i18n>
+				<i18n name="ru">
+					Ссылочные пользователи
+				</i18n>
+
+				<group-select name="GetListOfDatabases" id="1" file="SQLQuery\mssql\MSSQLQuery.Database.xml" defaultDataBaseField="DatabaseName">
+					<parameter name="@IsIncludeTempdb" value="False"/>
+					<parameter name="@IsIncludeSystemDatabases" value="False"/>
+					<parameter name="@IsIncludeUserDatabases" value="True"/>
+					<parameter name="@IsIncludeSnapshotDatabases" value="True"/>
+				</group-select>
+
+				<template id="00001" group-select-id="1" name="DatabaseUserAliases" file="mssql\Instance\Security\Databases\UserAliases\MSSQLServerAuditor.UserAliases.xsl" icon="doc" showIfEmpty="false" showNumberOfRecords="true" hideEmptyResultDatabases="true">
+					<sql-select id="0" name="GetUsersList" file="SQLQuery\mssql\MSSQLQuery.GetUsersList.xml" hierarchy="">
+						<parameter name="@isShowOrphahUsersOnly" value="False"/>
+						<parameter name="@isShowUserAliasesOnly" value="True"/>
+						<parameter name="@isShowMembersOfGroupsWithElevatedPermissionsOnly" value="False"/>
+					</sql-select>
+				</template>
+			</template>
+
+			<template id="00030" name="ElevatedPermissionsUsers" IsHideTabs="false" file="mssql\Instance\Security\Databases\Users\MSSQLServerAuditor.ElevatedPermissions.RA.xsl" icon="doc" showIfEmpty="true" showNumberOfRecords="true" hideEmptyResultDatabases="true">
+				<i18n name="en">
+					Elevated Permissions
+				</i18n>
+				<i18n name="ru">
+					Привелигированные пользователи
+				</i18n>
+
+				<group-select id="1" name="GetListOfDatabases" file="SQLQuery\mssql\MSSQLQuery.Database.xml" defaultDataBaseField="DatabaseName">
+					<parameter name="@IsIncludeTempdb" value="False"/>
+					<parameter name="@IsIncludeSystemDatabases" value="False"/>
+					<parameter name="@IsIncludeUserDatabases" value="True"/>
+					<parameter name="@IsIncludeSnapshotDatabases" value="False"/>
+				</group-select>
+
+				<template id="00001" group-select-id="1" name="DatabaseElevatedPermissionsUsers" file="mssql\Instance\Security\Databases\Users\MSSQLServerAuditor.xsl" icon="doc" showIfEmpty="false" showNumberOfRecords="true" hideEmptyResultDatabases="true">
+					<sql-select id="0" name="GetUsersList" file="SQLQuery\mssql\MSSQLQuery.GetUsersList.xml" hierarchy="">
+						<parameter name="@isShowOrphahUsersOnly" value="False"/>
+						<parameter name="@isShowUserAliasesOnly" value="False"/>
+						<parameter name="@isShowMembersOfGroupsWithElevatedPermissionsOnly" value="True"/>
+					</sql-select>
+				</template>
+			</template>
+
+			<template id="00040" name="OverlappingObjectPermissions" IsHideTabs="false" file="" icon="doc" showIfEmpty="true" showNumberOfRecords="true">
+				<i18n name="en">
+					Overlapping Permissions
+				</i18n>
+				<i18n name="ru">
+					Дублирование прав доступа
+				</i18n>
+
+				<group-select id="1" name="GetListOfDatabases" file="SQLQuery\mssql\MSSQLQuery.Database.xml" defaultDataBaseField="DatabaseName">
+					<parameter name="@IsIncludeTempdb" value="False"/>
+					<parameter name="@IsIncludeSystemDatabases" value="False"/>
+					<parameter name="@IsIncludeUserDatabases" value="True"/>
+					<parameter name="@IsIncludeSnapshotDatabases" value="True"/>
+				</group-select>
+
+				<template id="00001" group-select-id="1" name="DatabaseOverlappingObjectPermissions" file="mssql\Instance\Security\Databases\MSSQLServerAuditor.OverlappingObjectPermissions.xsl" icon="doc" showIfEmpty="false" showNumberOfRecords="true" hideEmptyResultDatabases="true">
+					<sql-select id="0" file="SQLQuery\mssql\MSSQLQuery.Security.OverlappingObjectPermissions.xml" name="GetOverlappingObjectPermissions" hierarchy="">
+					</sql-select>
+				</template>
+			</template>
+		</template>
+	</template>
+
+	<template id="06000" name="HighAvailability" IsHideTabs="false" file="" icon="database_link" showIfEmpty="true" showNumberOfRecords="true">
+		<i18n name="en">
+			High Availability Solutions
+		</i18n>
+		<i18n name="ru">
+			Высокая доступность
+		</i18n>
+
+		<template id="00100" name="LogShipping" IsHideTabs="false" file="" icon="folder" showIfEmpty="true" showNumberOfRecords="true">
+			<i18n name="en">
+				Log Shipping
+			</i18n>
+			<i18n name="ru">
+				Log Shipping
+			</i18n>
+		</template>
+
+		<template id="00200" name="Replication" IsHideTabs="false" file="" icon="folder" showIfEmpty="true" showNumberOfRecords="true">
+			<i18n name="en">
+				Replication
+			</i18n>
+			<i18n name="ru">
+				Репликация
+			</i18n>
+
+			<template id="00010" name="ReplicationMonitoring" IsHideTabs="false" file="" icon="doc" showIfEmpty="true" showNumberOfRecords="true">
+				<i18n name="en">
+					Replication Monitoring
+				</i18n>
+				<i18n name="ru">
+					Репликация:Мониторинг
+				</i18n>
+
+				<group-select id="1" name="GetListOfDatabases" file="SQLQuery\mssql\MSSQLQuery.Database.xml" defaultDataBaseField="DatabaseName">
+					<parameter name="@IsIncludeTempdb" value="False"/>
+					<parameter name="@IsIncludeSystemDatabases" value="True"/>
+					<parameter name="@IsIncludeUserDatabases" value="False"/>
+					<parameter name="@IsIncludeSnapshotDatabases" value="False"/>
+				</group-select>
+
+				<template id="00001" group-select-id="1" name="DatabaseReplicationMonitoring" file="mssql\Instance\HighAvailability\Replication\MSSQLServerAuditor.xsl" icon="doc" showIfEmpty="false" showNumberOfRecords="true" hideEmptyResultDatabases="true">
+					<sql-select id="0" name="GetReplicationStatus" file="SQLQuery\mssql\MSSQLQuery.ReplicationStatus.xml" hierarchy="">
+					</sql-select>
+				</template>
+			</template>
+
+			<template id="00020" name="ReplicationPublication" IsHideTabs="false" file="" icon="doc" showIfEmpty="true" showNumberOfRecords="true">
+				<i18n name="en">
+					Replication Publication
+				</i18n>
+				<i18n name="ru">
+					Репликация:Издатели
+				</i18n>
+
+				<group-select name="GetListOfDatabases" id="1" file="SQLQuery\mssql\MSSQLQuery.Database.xml" defaultDataBaseField="DatabaseName">
+					<parameter name="@IsIncludeTempdb" value="False"/>
+					<parameter name="@IsIncludeSystemDatabases" value="False"/>
+					<parameter name="@IsIncludeUserDatabases" value="True"/>
+					<parameter name="@IsIncludeSnapshotDatabases" value="False"/>
+				</group-select>
+
+				<template id="00001" group-select-id="1" name="DatabaseReplicationPublication" file="mssql\Instance\HighAvailability\Replication\MSSQLServerAuditor.ReplicationPublication.xsl" icon="doc" showIfEmpty="false" showNumberOfRecords="true" hideEmptyResultDatabases="true">
+					<sql-select id="0" name="GetReplicationPublications" file="SQLQuery\mssql\MSSQLQuery.ReplicationPublication.xml" hierarchy="">
+					</sql-select>
+				</template>
+			</template>
+
+			<template id="00030" name="ReplicationSubscription" IsHideTabs="false" file="" icon="doc" showIfEmpty="true" showNumberOfRecords="true">
+				<i18n name="en">
+					Replication Subscription
+				</i18n>
+				<i18n name="ru">
+					Репликация:Подписчики
+				</i18n>
+
+				<group-select name="GetListOfDatabases" id="1" file="SQLQuery\mssql\MSSQLQuery.Database.xml" defaultDataBaseField="DatabaseName">
+					<parameter name="@IsIncludeTempdb" value="False"/>
+					<parameter name="@IsIncludeSystemDatabases" value="False"/>
+					<parameter name="@IsIncludeUserDatabases" value="True"/>
+					<parameter name="@IsIncludeSnapshotDatabases" value="False"/>
+				</group-select>
+
+				<template id="00001" group-select-id="1" name="DatabaseReplicationSubscription" file="mssql\Instance\HighAvailability\Replication\MSSQLServerAuditor.ReplicationSubscription.xsl" icon="doc" showIfEmpty="false" showNumberOfRecords="true" hideEmptyResultDatabases="true">
+					<sql-select id="0" name="GetReplicationSubscriptions" file="SQLQuery\mssql\MSSQLQuery.ReplicationSubscription.xml" hierarchy="">
+					</sql-select>
+				</template>
+			</template>
+		</template>
+
+		<template id="00300" name="DatabaseMirroring" IsHideTabs="false" file="" icon="folder" showIfEmpty="true" showNumberOfRecords="true">
+			<i18n name="en">
+				Database mirroring
+			</i18n>
+			<i18n name="ru">
+				Зеркалирование баз данных
+			</i18n>
+
+			<template id="00010" name="DatabasesMirroringStatus" IsHideTabs="false" file="mssql\Instance\HighAvailability\Mirroring\MSSQLServerAuditor.xsl" icon="doc" showIfEmpty="true" showNumberOfRecords="true">
+				<i18n name="en">
+					Database mirroring
+				</i18n>
+				<i18n name="ru">
+					Зеркалирование баз данных
+				</i18n>
+
+				<sql-select id="0" name="GetDatabasesMirroringStatus" file="SQLQuery\mssql\MSSQLQuery.Database.MirroringStatus.xml" hierarchy="">
+					<parameter name="@isShowMirroringIssuesOnly" value="0"/>
+				</sql-select>
+			</template>
+		</template>
+
+		<template id="00400" name="AlwaysOn" IsHideTabs="false" file="" icon="folder" showIfEmpty="true" showNumberOfRecords="true">
+			<i18n name="en">
+				AlwaysOn
+			</i18n>
+			<i18n name="ru">
+				AlwaysOn
+			</i18n>
+		</template>
+
+		<template id="00500" name="Windows Server Failover Clustering" file="" icon="folder" showIfEmpty="true" showNumberOfRecords="true">
+			<i18n name="en">
+				Windows Server Failover Clustering
+			</i18n>
+			<i18n name="ru">
+				Windows Server Failover Clustering
+			</i18n>
+		</template>
+	</template>
+
+	<template id="07000" name="DMV" IsHideTabs="false" file="" icon="DynamicManagementViews" showIfEmpty="true" showNumberOfRecords="true">
+		<i18n name="en">
+			Dynamic Management Views
+		</i18n>
+		<i18n name="ru">
+			Динамические представления
+		</i18n>
+
+		<template id="00100" name="dm_exec_query_stats" IsHideTabs="false" file="mssql\Instance\Audit\Memory\MSSQLServerAuditor.InstanceMemoryStatus.Description.xsl" icon="folder" showIfEmpty="true" showNumberOfRecords="true">
+			<i18n name="en">
+				sys.dm_exec_query_stats
+			</i18n>
+			<i18n name="ru">
+				sys.dm_exec_query_stats
+			</i18n>
+
+			<template id="00010" name="ExpensiveQueries" IsHideTabs="false" file="" icon="folder" showIfEmpty="true" showNumberOfRecords="true">
+				<i18n name="en">
+					Most Expensive Queries
+				</i18n>
+				<i18n name="ru">
+					Самые дорогостоящие запросы
+				</i18n>
+
+				<template id="00001" name="ExpensiveQueriesByReads" IsHideTabs="false" file="mssql\Instance\Audit\Processes\MSSQLServerAuditor.InstanceMostExpensiveQueriesByReads.xsl" icon="doc" showIfEmpty="true" showNumberOfRecords="true">
+					<i18n name="en">
+						By Read
+					</i18n>
+					<i18n name="ru">
+						По чтению
+					</i18n>
+
+					<sql-select id="0" name="GetInstanceMostExpensiveQueriesByReads" file="SQLQuery\mssql\DynamicManagementViews\MSSQLQuery.InstanceMostExpensiveQueries.xml" hierarchy="">
+						<parameter name="@intNumberOfRowsToShow" value="100" />
+					</sql-select>
+				</template>
+
+				<template id="00002" name="ExpensiveQueriesByWrites" IsHideTabs="false" file="mssql\Instance\Audit\Processes\MSSQLServerAuditor.InstanceMostExpensiveQueriesByWrites.xsl" icon="doc" showIfEmpty="true" showNumberOfRecords="true">
+					<i18n name="en">
+						By Writes
+					</i18n>
+					<i18n name="ru">
+						По записи
+					</i18n>
+
+					<sql-select id="0" name="GetInstanceMostExpensiveQueriesByWrites" file="SQLQuery\mssql\DynamicManagementViews\MSSQLQuery.InstanceMostExpensiveQueries.xml" hierarchy="">
+						<parameter name="@intNumberOfRowsToShow" value="100" />
+					</sql-select>
+				</template>
+
+				<template id="00003" name="ExpensiveQueriesByTime" IsHideTabs="false" file="mssql\Instance\Audit\Processes\MSSQLServerAuditor.InstanceMostExpensiveQueriesByTime.xsl" icon="doc" showIfEmpty="true" showNumberOfRecords="true">
+					<i18n name="en">
+						By Time
+					</i18n>
+					<i18n name="ru">
+						По времени
+					</i18n>
+
+					<sql-select id="0" name="GetInstanceMostExpensiveQueriesByTime" file="SQLQuery\mssql\DynamicManagementViews\MSSQLQuery.InstanceMostExpensiveQueries.xml" hierarchy="">
+						<parameter name="@intNumberOfRowsToShow" value="100" />
+					</sql-select>
+				</template>
+			</template>
+
+			<template id="00020" name="ExpensiveProcedures" IsHideTabs="false" file="" icon="folder" showIfEmpty="true" showNumberOfRecords="true">
+				<i18n name="en">
+					Most Expensive Procedures
+				</i18n>
+				<i18n name="ru">
+					Самые дорогостоящие процедуры
+				</i18n>
+
+				<template id="00001" name="ExpensiveProceduresByReads" IsHideTabs="false" file="mssql\Instance\Audit\Processes\MSSQLServerAuditor.InstanceMostExpensiveProceduresByReads.xsl" icon="doc" showIfEmpty="true" showNumberOfRecords="true">
+					<i18n name="en">
+						By Read
+					</i18n>
+					<i18n name="ru">
+						По чтению
+					</i18n>
+
+					<sql-select id="0" name="GetInstanceMostExpensiveProceduresByReads" file="SQLQuery\mssql\DynamicManagementViews\MSSQLQuery.InstanceMostExpensiveProcedures.xml" hierarchy="">
+						<parameter name="@intNumberOfRowsToShow" value="100" />
+					</sql-select>
+				</template>
+
+				<template id="00002" name="ExpensiveProceduresByWrites" IsHideTabs="false" file="mssql\Instance\Audit\Processes\MSSQLServerAuditor.InstanceMostExpensiveProceduresByWrites.xsl" icon="doc" showIfEmpty="true" showNumberOfRecords="true">
+					<i18n name="en">
+						By Write
+					</i18n>
+					<i18n name="ru">
+						По записи
+					</i18n>
+
+					<sql-select id="0" name="GetInstanceMostExpensiveProceduresByWrites" file="SQLQuery\mssql\DynamicManagementViews\MSSQLQuery.InstanceMostExpensiveProcedures.xml" hierarchy="">
+						<parameter name="@intNumberOfRowsToShow" value="100" />
+					</sql-select>
+				</template>
+
+				<template id="00003" name="ExpensiveProceduresByTime" IsHideTabs="false" file="mssql\Instance\Audit\Processes\MSSQLServerAuditor.InstanceMostExpensiveProceduresByTime.xsl" icon="doc" showIfEmpty="true" showNumberOfRecords="true">
+					<i18n name="en">
+						By Time
+					</i18n>
+					<i18n name="ru">
+						По времени
+					</i18n>
+
+					<sql-select id="0" name="GetInstanceMostExpensiveProceduresByTime" file="SQLQuery\mssql\DynamicManagementViews\MSSQLQuery.InstanceMostExpensiveProcedures.xml" hierarchy="">
+						<parameter name="@intNumberOfRowsToShow" value="100" />
+					</sql-select>
+				</template>
+			</template>
+		</template>
+
+		<template id="00300" name="SQLServerOSRelated" IsHideTabs="false" file="" icon="folder" showIfEmpty="true" showNumberOfRecords="true">
+			<i18n name="en">
+				SQL Server Operating System Related
+			</i18n>
+			<i18n name="ru">
+				Операционная система
+			</i18n>
+
+			<template id="00010" name="sys.dm_os_sys_info" file="mssql\Instance\DynamicManagementViews\DynamicManagementView.xsl" icon="doc" showIfEmpty="true" showNumberOfRecords="true">
+				<i18n name="en">
+					sys.dm_os_sys_info
+				</i18n>
+				<i18n name="ru">
+					sys.dm_os_sys_info
+				</i18n>
+
+				<sql-select id="0" name="sys.dm_os_sys_info" file="SQLQuery\mssql\DynamicManagementViews\SQLServerOperatingSystemRelated\sys.dm_os_sys_info.xml" hierarchy="">
+				</sql-select>
+			</template>
+
+			<template id="00020" name="sys.dm_os_cluster_nodes" file="mssql\Instance\DynamicManagementViews\DynamicManagementView.xsl" icon="doc" showIfEmpty="true" showNumberOfRecords="true">
+				<i18n name="en">
+					sys.dm_os_cluster_nodes
+				</i18n>
+				<i18n name="ru">
+					sys.dm_os_cluster_nodes
+				</i18n>
+
+				<sql-select id="0" name="sys.dm_os_cluster_nodes" file="SQLQuery\mssql\DynamicManagementViews\SQLServerOperatingSystemRelated\sys.dm_os_cluster_nodes.xml" hierarchy="">
+				</sql-select>
+			</template>
+
+			<template id="00030" name="sys.dm_os_cluster_properties" file="mssql\Instance\DynamicManagementViews\DynamicManagementView.xsl" icon="doc" showIfEmpty="true" showNumberOfRecords="true">
+				<i18n name="en">
+					sys.dm_os_cluster_properties
+				</i18n>
+				<i18n name="ru">
+					sys.dm_os_cluster_properties
+				</i18n>
+
+				<sql-select id="0" name="sys.dm_os_cluster_properties" file="SQLQuery\mssql\DynamicManagementViews\SQLServerOperatingSystemRelated\sys.dm_os_cluster_properties.xml" hierarchy="">
+				</sql-select>
+			</template>
+
+			<template id="00040" name="sys.dm_os_dispatcher_pools" file="mssql\Instance\DynamicManagementViews\DynamicManagementView.xsl" icon="doc" showIfEmpty="true" showNumberOfRecords="true">
+				<i18n name="en">
+					sys.dm_os_dispatcher_pools
+				</i18n>
+				<i18n name="ru">
+					sys.dm_os_dispatcher_pools
+				</i18n>
+
+				<sql-select id="0" name="sys.dm_os_dispatcher_pools" file="SQLQuery\mssql\DynamicManagementViews\SQLServerOperatingSystemRelated\sys.dm_os_dispatcher_pools.xml" hierarchy="">
+				</sql-select>
+			</template>
+		</template>
+
+		<template id="00400" name="ExecutionRelated" IsHideTabs="false" file="" icon="folder" showIfEmpty="true" showNumberOfRecords="true">
+			<i18n name="en">
+				ExecutionRelated
+			</i18n>
+			<i18n name="ru">
+				Текущая работа
+			</i18n>
+
+			<template id="00010" name="ExecutionRelated.sys.dm_exec_sessions" file="mssql\Instance\DynamicManagementViews\DynamicManagementView.xsl" icon="doc" showIfEmpty="true" showNumberOfRecords="true">
+				<i18n name="en">
+					sys.dm_exec_sessions
+				</i18n>
+				<i18n name="ru">
+					sys.dm_exec_sessions
+				</i18n>
+
+				<sql-select id="0" name="sys.dm_exec_sessions" file="SQLQuery\mssql\DynamicManagementViews\ExecutionRelated\sys.dm_exec_sessions.xml" hierarchy="">
+				</sql-select>
+			</template>
+
+			<template id="00020" name="ExecutionRelated.sys.dm_exec_connections" file="mssql\Instance\DynamicManagementViews\DynamicManagementView.xsl" icon="doc" showIfEmpty="true" showNumberOfRecords="true">
+				<i18n name="en">
+					sys.dm_exec_connections
+				</i18n>
+				<i18n name="ru">
+					sys.dm_exec_connections
+				</i18n>
+
+				<sql-select id="0" name="sys.dm_exec_connections" file="SQLQuery\mssql\DynamicManagementViews\ExecutionRelated\sys.dm_exec_connections.xml" hierarchy="">
+				</sql-select>
+			</template>
+
+			<template id="00030" name="ExecutionRelated.sys.dm_exec_requests" file="mssql\Instance\DynamicManagementViews\DynamicManagementView.xsl" icon="doc" showIfEmpty="true" showNumberOfRecords="true">
+				<i18n name="en">
+					sys.dm_exec_requests
+				</i18n>
+				<i18n name="ru">
+					sys.dm_exec_requests
+				</i18n>
+
+				<sql-select id="0" name="sys.dm_exec_requests" file="SQLQuery\mssql\DynamicManagementViews\ExecutionRelated\sys.dm_exec_requests.xml" hierarchy="">
+				</sql-select>
+			</template>
+		</template>
+
+		<template id="00500" name="InstanceMemoryMap" IsHideTabs="false" file="" icon="doc" showIfEmpty="true" showNumberOfRecords="true">
+			<i18n name="en">
+				Memory Map
+			</i18n>
+			<i18n name="ru">
+				Карта памяти
+			</i18n>
+
+			<group-select name="GetInstanceMemoryMapObjects" id="1" file="SQLQuery\mssql\DynamicManagementViews\MSSQLQuery.InstanceMemoryMap.xml">
+			</group-select>
+
+			<template id="00010" group-select-id="1" file="">
+				<group-select id="1" name="GetInstanceMemoryMapObjectCounters" file="SQLQuery\mssql\DynamicManagementViews\MSSQLQuery.InstanceMemoryMap.xml">
+					<parameter name="@ObjectName"/>
+				</group-select>
+
+				<template id="00001" group-select-id="1" file="mssql\Instance\Audit\Processes\Memory\MSSQLServerAuditor.InstanceMemoryMap.xsl">
+					<sql-select id="0" name="GetInstanceMemoryMap" file="SQLQuery\mssql\DynamicManagementViews\MSSQLQuery.InstanceMemoryMap.xml" hierarchy="">
+						<parameter name="@ObjectName"/>
+						<parameter name="@CounterName"/>
+					</sql-select>
+				</template>
+			</template>
+		</template>
+	</template>
+
+	<template id="08000" name="Issues" IsHideTabs="false" file="" icon="database_key" showIfEmpty="true" showNumberOfRecords="true">
+		<i18n name="en">
+			Licensing
+		</i18n>
+		<i18n name="ru">
+			Лицензии
+		</i18n>
+
+		<template id="00100" name="EnterpriseEditionFeatures" IsHideTabs="false" file="mssql\Instance\Databases\Licensing\MSSQLServerAuditor.EEFeatures.Description.xsl" icon="folder" showIfEmpty="false" showNumberOfRecords="true" hideEmptyResultDatabases="false">
+			<i18n name="en">
+				Enterprise Edition Features In Use
+			</i18n>
+			<i18n name="ru">
+				Использование Enterprise Edition Features
+			</i18n>
+
+			<group-select id="1" name="GetListOfDatabases" file="SQLQuery\mssql\MSSQLQuery.Database.xml" defaultDataBaseField="DatabaseName">
+				<parameter name="@IsIncludeTempdb" value="True"/>
+				<parameter name="@IsIncludeSystemDatabases" value="True"/>
+				<parameter name="@IsIncludeUserDatabases" value="True"/>
+				<parameter name="@IsIncludeSnapshotDatabases" value="True"/>
+			</group-select>
+
+			<template id="00001" group-select-id="1" name="DatabaseEnterpriseEditionFeatures" file="mssql\Instance\Databases\Licensing\MSSQLServerAuditor.EEFeatures.xsl" icon="doc" showIfEmpty="true" showNumberOfRecords="true">
+				<sql-select id="0" name="GetDatabaseEnterpriseEditionFeatures" file="SQLQuery\mssql\MSSQLQuery.EEFeatures.xml" hierarchy="">
+				</sql-select>
+			</template>
+		</template>
+	</template>
+</MSSQLServerAuditorTemplate>

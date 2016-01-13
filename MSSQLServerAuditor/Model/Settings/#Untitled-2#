@@ -1,0 +1,94 @@
+SET NOCOUNT ON;
+SET DEADLOCK_PRIORITY LOW;
+
+DECLARE
+	@intMySpId [INTEGER]
+;
+
+DECLARE
+	@tblProcesses TABLE
+	(
+		 [EventTime]  [DATETIME]      NOT NULL
+		,[SpId]       [INTEGER]       NOT NULL
+		,[Loginame]   [NVARCHAR](128) NOT NULL
+		,[Cpu]        [BIGINT]        NOT NULL
+		,[PhysicalIO] [BIGINT]        NOT NULL
+		,[Blocked]    [INTEGER]       NOT NULL
+		,[Status]     [NVARCHAR](128) NOT NULL
+	);
+
+SET @intMySpId = @@spid;
+
+INSERT INTO @tblProcesses
+(
+	 [EventTime]
+	,[SpId]
+	,[Loginame]
+	,[Cpu]
+	,[PhysicalIO]
+	,[Blocked]
+	,[Status]
+)
+SELECT
+	 getdate()                                            AS [EventTime]
+	,ISNULL(tSP.[spid], 0)                                AS [SpId]
+	,LTRIM(RTRIM(ISNULL(tSP.[loginame], N'?')))           AS [Loginame]
+	,SUM(ISNULL(CONVERT([BIGINT], tSP.[cpu]), 0))         AS [Cpu]
+	,SUM(ISNULL(CONVERT([BIGINT], tSP.[physical_io]), 0)) AS [PhysicalIO]
+	,ISNULL(tSP.[blocked], 0)                             AS [Blocked]
+	,LTRIM(RTRIM(ISNULL(tSP.[Status], N'?')))             AS [Status]
+FROM
+	[master].[dbo].[sysprocesses] tSP
+WHERE
+	tSP.[spid] NOT IN (@intMySpId)
+GROUP BY
+	 ISNULL(tSP.[spid], 0)
+	,LTRIM(RTRIM(ISNULL(tSP.[loginame], N'?')))
+	,ISNULL(tSP.[blocked], 0)
+	,LTRIM(RTRIM(ISNULL(tSP.[Status], N'?')))
+;
+
+SELECT
+	 MAX(t.[EventTime])        AS [EventTime]
+	,SUM(CASE
+		WHEN (t.[spid] <= 51 AND t.[blocked] = 0) THEN
+			1
+		ELSE
+			0
+	END)                       AS [NumberOfSystemProcesses]
+	,SUM(CASE
+		WHEN (t.[spid] > 51 AND t.[blocked] = 0 AND t.[Status] IN (N'sleeping', N'background', N'dormant')) THEN
+			1
+		ELSE
+			0
+	END)                       AS [NumberOfUserProcesses]
+	,SUM(CASE
+		WHEN (t.[spid] > 51 AND t.[blocked] = 0 AND t.[Status] NOT IN (N'sleeping', N'background', N'dormant')) THEN
+			1
+		ELSE
+			0
+	END)                       AS [NumberOfActiveUserProcesses]
+	,SUM(CASE
+		WHEN (t.[blocked] > 0) THEN
+			1
+		ELSE
+			0
+	END)                       AS [NumberOfBlockedProcesses]
+FROM
+	@tblProcesses t
+;
+
+SELECT
+	 MAX(t.[EventTime])  AS [EventTime]
+	,t.[Loginame]        AS [Loginame]
+	,SUM(t.[Cpu])        AS [Cpu]
+	,SUM(t.[PhysicalIO]) AS [PhysicalIO]
+FROM
+	@tblProcesses t
+WHERE
+	t.[Loginame] NOT IN (
+		N'sa'
+	)
+GROUP BY
+	t.[Loginame]
+;

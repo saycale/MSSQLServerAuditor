@@ -1,0 +1,261 @@
+﻿<?xml version="1.0" encoding="UTF-8"?>
+<MSSQLServerAuditorTemplate id="Groups" type="MSSQL" xmlns:xi="http://www.w3.org/2003/XInclude" version="1.0">
+	<i18n name="en">
+		Groups
+	</i18n>
+	<i18n name="ru">
+		Группы
+	</i18n>
+
+	<template id="01000" name="Issues" file="" icon="folder" showIfEmpty="true" showNumberOfRecords="true">
+		<i18n name="en">
+			Issues and Problems
+		</i18n>
+		<i18n name="ru">
+			Ошибки и проблемы
+		</i18n>
+
+		<template id="00100" name="Jobs" file="" icon="folder" showIfEmpty="true" showNumberOfRecords="true">
+			<i18n name="en">
+				Jobs execution
+			</i18n>
+			<i18n name="ru">
+				Регулярные задания
+			</i18n>
+
+			<template id="00010" name="GroupJobsTablesToday" file="mssql\Group\Jobs\MSSQLServerAuditor.JobsHistoryTables.xsl" icon="doc" showIfEmpty="true" showNumberOfRecords="true">
+				<i18n name="en">
+					Today
+				</i18n>
+				<i18n name="ru">
+					Сегодня
+				</i18n>
+				<sql-select id="0" file="SQLQuery\mssql\MSSQLServerAuditor.MSSQLQuery.Job.xml" name="GetJobsExecutionHistory" hierarchy="">
+					<parameter name="@intDaysInHistory" value="1"/>
+					<parameter name="@isShowJobsIssuesOnly" value="True"/>
+				</sql-select>
+			</template>
+			<template id="00020" name="GroupJobsTablesLastTwoDays" file="mssql\Group\Jobs\MSSQLServerAuditor.JobsHistoryTables.xsl" icon="doc" showIfEmpty="true" showNumberOfRecords="true">
+				<i18n name="en">
+					Last Two Days
+				</i18n>
+				<i18n name="ru">
+					Последние два дня
+				</i18n>
+				<sql-select id="0" file="SQLQuery\mssql\MSSQLServerAuditor.MSSQLQuery.Job.xml" name="GetJobsExecutionHistory" hierarchy="">
+					<parameter name="@intDaysInHistory" value="2"/>
+					<parameter name="@isShowJobsIssuesOnly" value="True"/>
+				</sql-select>
+			</template>
+			<template id="00030" name="GroupJobsTablesLastWeek" file="mssql\Group\Jobs\MSSQLServerAuditor.JobsHistoryTables.xsl" icon="doc" showIfEmpty="true" showNumberOfRecords="true">
+				<i18n name="en">
+					Last Week
+				</i18n>
+				<i18n name="ru">
+					Неделя
+				</i18n>
+				<sql-select id="0" file="SQLQuery\mssql\MSSQLServerAuditor.MSSQLQuery.Job.xml" name="GetJobsExecutionHistory" hierarchy="">
+					<parameter name="@intWeeksInHistory" value="1"/>
+					<parameter name="@isShowJobsIssuesOnly" value="True"/>
+				</sql-select>
+			</template>
+			<template id="00040" name="GroupJobsTablesLastTwoWeeks" file="mssql\Group\Jobs\MSSQLServerAuditor.JobsHistoryTables.xsl" icon="doc" showIfEmpty="true" showNumberOfRecords="true">
+				<i18n name="en">
+					Last Two Weeks
+				</i18n>
+				<i18n name="ru">
+					Две недели
+				</i18n>
+				<sql-select id="0" file="SQLQuery\mssql\MSSQLServerAuditor.MSSQLQuery.Job.xml" name="GetJobsExecutionHistory" hierarchy="">
+					<parameter name="@intWeeksInHistory" value="2"/>
+					<parameter name="@isShowJobsIssuesOnly" value="True"/>
+				</sql-select>
+			</template>
+			<template id="00050" name="GroupJobsTablesLastMonth" file="mssql\Group\Jobs\MSSQLServerAuditor.JobsHistoryTables.xsl" icon="doc" showIfEmpty="true" showNumberOfRecords="true">
+				<i18n name="en">
+					Last Month
+				</i18n>
+				<i18n name="ru">
+					Месяц
+				</i18n>
+				<sql-select id="0" file="SQLQuery\mssql\MSSQLServerAuditor.MSSQLQuery.Job.xml" name="GetJobsExecutionHistory" hierarchy="">
+					<parameter name="@intMonthesInHistory" value="1"/>
+					<parameter name="@isShowJobsIssuesOnly" value="True"/>
+				</sql-select>
+			</template>
+		</template>
+
+		<template id="00200" name="JobSteps" file="mssql\Group\Jobs\MSSQLServerAuditor.JobStepsHistoryTables.xsl" icon="doc" showIfEmpty="true" showNumberOfRecords="true">
+			<i18n name="en">
+				Jobs execution by steps
+			</i18n>
+			<i18n name="ru">
+				Регулярные задания (шаги)
+			</i18n>
+			<sql-select id="0" file="SQLQuery\mssql\MSSQLServerAuditor.MSSQLQuery.Job.xml" name="GetJobStepsExecutionHistory" hierarchy="LastDay">
+				<parameter name="@intDaysInHistory" value="1"/>
+				<parameter name="@isShowJobsIssuesOnly" value="True"/>
+			</sql-select>
+			<sql-select id="0" file="SQLQuery\mssql\MSSQLServerAuditor.MSSQLQuery.Job.xml" name="GetJobStepsExecutionHistory" hierarchy="LastTwoDays">
+				<parameter name="@intDaysInHistory" value="2"/>
+				<parameter name="@isShowJobsIssuesOnly" value="True"/>
+			</sql-select>
+			<sql-select id="0" file="SQLQuery\mssql\MSSQLServerAuditor.MSSQLQuery.Job.xml" name="GetJobStepsExecutionHistory" hierarchy="LastWeek">
+				<parameter name="@intWeeksInHistory" value="1"/>
+				<parameter name="@isShowJobsIssuesOnly" value="True"/>
+			</sql-select>
+			<sql-select id="0" file="SQLQuery\mssql\MSSQLServerAuditor.MSSQLQuery.Job.xml" name="GetJobStepsExecutionHistory" hierarchy="LastTwoWeeks">
+				<parameter name="@intWeeksInHistory" value="2"/>
+				<parameter name="@isShowJobsIssuesOnly" value="True"/>
+			</sql-select>
+			<sql-select id="0" file="SQLQuery\mssql\MSSQLServerAuditor.MSSQLQuery.Job.xml" name="GetJobStepsExecutionHistory" hierarchy="LastMonth">
+				<parameter name="@intMonthesInHistory" value="1"/>
+				<parameter name="@isShowJobsIssuesOnly" value="True"/>
+			</sql-select>
+		</template>
+
+		<template id="00300" name="BackupIssue" file="mssql\Group\Databases\Backup\MSSQLServerAuditor.xsl" icon="doc" showIfEmpty="true" showNumberOfRecords="true">
+			<i18n name="en">
+				Backup
+			</i18n>
+			<i18n name="ru">
+				Архивное копирование
+			</i18n>
+			<sql-select id="0" file="SQLQuery\mssql\MSSQLServerAuditor.MSSQLQuery.DatabaseBackup.xml" name="GetLastDatabaseBackup" hierarchy="">
+				<parameter name="@isShowBackupIssuesOnly" value="True"/>
+				<parameter name="@intDaysFullDatabaseBackupThreshold" value="14"/>
+				<parameter name="@intHoursIncrementalDatabaseBackupThreshold" value="24"/>
+				<parameter name="@intHoursLogBackupThreshold" value="24"/>
+			</sql-select>
+		</template>
+
+		<template id="00400" name="RestoreLogs" file="mssql\Group\Databases\Restore\MSSQLServerAuditor.xsl" icon="doc" showIfEmpty="true" showNumberOfRecords="true">
+			<i18n name="en">
+				Transaction Logs Restoration
+			</i18n>
+			<i18n name="ru">
+				Восстановление журнала транзакций
+			</i18n>
+			<sql-select id="0" file="SQLQuery\mssql\MSSQLServerAuditor.MSSQLQuery.DatabaseRestore.xml" name="GetLastDatabaseRestore" hierarchy="">
+				<parameter name="@chRestoreType" value="L"/>
+				<parameter name="@isShowRestoreIssuesOnly" value="True"/>
+			</sql-select>
+		</template>
+
+		<template id="00500" name="OrphanUsers" file="mssql\Group\Databases\Security\MSSQLServerAuditor.OrphanUsers.xsl" icon="doc" showIfEmpty="true" showNumberOfRecords="true">
+			<i18n name="en">
+				OrphanUsers
+			</i18n>
+			<i18n name="ru">
+				Осиротевшие пользователи
+			</i18n>
+			<sql-select id="0" file="SQLQuery\mssql\MSSQLServerAuditor.MSSQLQuery.OrphanUsers.xml" name="GetOrphanUsers" hierarchy="">
+			</sql-select>
+		</template>
+
+		<template id="00600" name="Guests" file="ru\Group\Databases\Security\MSSQLServerAuditor.Guests.xsl" icon="doc" showIfEmpty="true" showNumberOfRecords="true">
+			<i18n name="en">
+				Active Guests acccounts
+			</i18n>
+			<i18n name="ru">
+				Неблокированные гостевые записи
+			</i18n>
+			<sql-select id="0" file="SQLQuery\mssql\MSSQLServerAuditor.MSSQLQuery.Guests.xml" name="GetActiveGuests" hierarchy="">
+			</sql-select>
+		</template>
+	</template>
+
+	<template id="02000" name="Reports" file="" icon="folder" showIfEmpty="true" showNumberOfRecords="true">
+		<i18n name="en">
+			Reports
+		</i18n>
+		<i18n name="ru">
+			Отчёты
+		</i18n>
+
+		<template id="00100" name="GroupProperties" file="mssql\Group\Audit\MSSQLServerAuditor.xsl" icon="doc" showIfEmpty="true" showNumberOfRecords="true">
+			<i18n name="en">
+				SQL server version
+			</i18n>
+			<i18n name="ru">
+				Версии сервера
+			</i18n>
+			<sql-select id="0" file="SQLQuery\mssql\MSSQLServerAuditor.MSSQLQuery.InstanceInfo.xml" name="GetServerInfo" hierarchy="">
+			</sql-select>
+		</template>
+
+		<template id="00200" name="Size" file="mssql\Group\Databases\Size\MSSQLServerAuditor.xsl" icon="doc" showIfEmpty="true" showNumberOfRecords="true">
+			<i18n name="en">
+				DatabaseSize
+			</i18n>
+			<i18n name="ru">
+				Размер баз
+			</i18n>
+			<sql-select id="0" file="SQLQuery\mssql\MSSQLServerAuditor.MSSQLQuery.DatabaseSize.xml" name="GetDatabaseSize" hierarchy="">
+			</sql-select>
+		</template>
+
+		<template id="00300" name="Backup" file="mssql\Group\Databases\Backup\MSSQLServerAuditor.xsl" icon="doc" showIfEmpty="true" showNumberOfRecords="true">
+			<i18n name="en">
+				Backup
+			</i18n>
+			<i18n name="ru">
+				Архивное копирование
+			</i18n>
+			<sql-select id="0" file="SQLQuery\mssql\MSSQLServerAuditor.MSSQLQuery.DatabaseBackup.xml" name="GetLastDatabaseBackup" hierarchy="">
+				<parameter name="@isShowBackupIssuesOnly" value="False"/>
+				<parameter name="@intDaysFullDatabaseBackupThreshold" value="14"/>
+				<parameter name="@intHoursIncrementalDatabaseBackupThreshold" value="24"/>
+				<parameter name="@intHoursLogBackupThreshold" value="24"/>
+			</sql-select>
+		</template>
+
+		<template id="00400" name="Restore" file="" icon="folder" showIfEmpty="true" showNumberOfRecords="true">
+			<i18n name="en">
+				Restore
+			</i18n>
+			<i18n name="ru">
+				Восстановление
+			</i18n>
+
+			<template id="00010" name="RestoreDatabasesFull" file="mssql\Group\Databases\Restore\MSSQLServerAuditor.xsl" icon="doc" showIfEmpty="true" showNumberOfRecords="true">
+				<i18n name="en">
+					Full
+				</i18n>
+				<i18n name="ru">
+					Полное
+				</i18n>
+				<sql-select id="0" file="SQLQuery\mssql\MSSQLServerAuditor.MSSQLQuery.DatabaseRestore.xml" name="GetLastDatabaseRestore" hierarchy="">
+					<parameter name="@chRestoreType" value="D"/>
+					<parameter name="@isShowRestoreIssuesOnly" value="False"/>
+				</sql-select>
+			</template>
+
+			<template id="00020" name="RestoreDatabasesDifferencial" file="mssql\Group\Databases\Restore\MSSQLServerAuditor.xsl" icon="doc" showIfEmpty="true" showNumberOfRecords="true">
+				<i18n name="en">
+					Incremental
+				</i18n>
+				<i18n name="ru">
+					Инкрементальное
+				</i18n>
+				<sql-select id="0" file="SQLQuery\mssql\MSSQLServerAuditor.MSSQLQuery.DatabaseRestore.xml" name="GetLastDatabaseRestore" hierarchy="">
+					<parameter name="@chRestoreType" value="I"/>
+					<parameter name="@isShowRestoreIssuesOnly" value="False"/>
+				</sql-select>
+			</template>
+
+			<template id="00030" name="RestoreLogs" file="mssql\Group\Databases\Restore\MSSQLServerAuditor.xsl" icon="doc" showIfEmpty="true" showNumberOfRecords="true">
+				<i18n name="en">
+					Transaction Logs
+				</i18n>
+				<i18n name="ru">
+					Журнал транзакций
+				</i18n>
+				<sql-select id="0" file="SQLQuery\mssql\MSSQLServerAuditor.MSSQLQuery.DatabaseRestore.xml" name="GetLastDatabaseRestore" hierarchy="">
+					<parameter name="@chRestoreType" value="L"/>
+					<parameter name="@isShowRestoreIssuesOnly" value="False"/>
+				</sql-select>
+			</template>
+		</template>
+	</template>
+</MSSQLServerAuditorTemplate>

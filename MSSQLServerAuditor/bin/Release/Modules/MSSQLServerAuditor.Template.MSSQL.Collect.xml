@@ -1,0 +1,466 @@
+﻿<?xml version="1.0" encoding="UTF-8"?>
+<MSSQLServerAuditorTemplate id="mssql_collect" type="MSSQL" xmlns:xi="http://www.w3.org/2003/XInclude" version="1.0">
+	<i18n name="en">
+		MSSQL: Historical Data: Collect
+	</i18n>
+	<i18n name="ru">
+		MSSQL: Сбор исторических данных
+	</i18n>
+
+	<MainWindowTitle>
+		<i18n name="en">
+			$ConnectionName$ $ModuleName$ $ApplicationProductName$ $ApplicationProductVersion$
+		</i18n>
+		<i18n name="ru">
+			$ConnectionName$ $ModuleName$ $ApplicationProductName$ $ApplicationProductVersion$
+		</i18n>
+	</MainWindowTitle>
+
+	<TreeTitle>
+		<i18n name="en">
+			$ConnectionName$ : $ModuleName$
+		</i18n>
+		<i18n name="ru">
+			$ConnectionName$ : $ModuleName$
+		</i18n>
+	</TreeTitle>
+
+	<template id="1100000" name="Activity" IsHideTabs="true" file="" icon="folder" showIfEmpty="true" showNumberOfRecords="false">
+		<i18n name="en">
+			Activity
+		</i18n>
+		<i18n name="ru">
+			Активность
+		</i18n>
+
+		<template id="1110000" name="InstanceCPUUtilization" IsHideTabs="true" file="mssql\Instance\Audit\Processes\CPU\MSSQLServerAuditor.InstanceCPUUtilization.xsl" icon="doc" showIfEmpty="true" showNumberOfRecords="false">
+			<i18n name="en">
+				CPU
+			</i18n>
+			<i18n name="ru">
+				Процессор
+			</i18n>
+
+			<sql-select id="0" name="GetInstanceCPUUtilization" file="SQLQuery\mssql\Monitoring\MSSQLQuery.Instance.CPUInfo.xml" hierarchy="">
+			</sql-select>
+
+			<RefreshSchedules>
+				<RefreshSchedule>
+					<Enabled>false</Enabled>
+					<Id>001</Id>
+					<Name>GetInstanceCPUUtilization</Name>
+					<OccursOnceDateTime>1900-01-01T00:00:00</OccursOnceDateTime>
+					<OccursOnceDateTimeEnabled>false</OccursOnceDateTimeEnabled>
+					<ReccurPeriod>
+						<TimeUnit>Daily</TimeUnit>
+						<TimeUnitCount>1</TimeUnitCount>
+					</ReccurPeriod>
+					<DailyFrequency>
+						<OccursOnce>false</OccursOnce>
+						<OccursOnceTime>PT0S</OccursOnceTime>
+						<PeriodTimeUnit>Minute</PeriodTimeUnit>
+						<PeriodTimeUnitCount>1</PeriodTimeUnitCount>
+						<StartingAt>PT00H00M05S</StartingAt>
+						<EndingAt>PT23H59M59S</EndingAt>
+					</DailyFrequency>
+					<ActiveWeekDays />
+					<DayOfMonth>
+						<DayNumber>1</DayNumber>
+					</DayOfMonth>
+					<StartDate>1900-01-01T00:00:00</StartDate>
+					<EndDate>1900-01-01T00:00:00</EndDate>
+					<HasEndDate>false</HasEndDate>
+				</RefreshSchedule>
+			</RefreshSchedules>
+		</template>
+
+		<template id="1120000" name="InstanceMemoryUtilization" IsHideTabs="true" file="sqlite\Audit\Processes\Memory\MSSQLServerAuditor.InstanceMemoryUtilization.xsl" icon="doc" showIfEmpty="true" showNumberOfRecords="false">
+			<i18n name="en">
+				Memory
+			</i18n>
+			<i18n name="ru">
+				Память
+			</i18n>
+
+			<sql-select id="0" name="GetInstanceMemoryUtilization" file="SQLQuery\mssql\Monitoring\MSSQLQuery.Instance.MemoryInfo.xml" hierarchy="">
+			</sql-select>
+
+			<RefreshSchedules>
+				<RefreshSchedule>
+					<Enabled>false</Enabled>
+					<Id>001</Id>
+					<Name>GetInstanceMemoryUtilization</Name>
+					<OccursOnceDateTime>1900-01-01T00:00:00</OccursOnceDateTime>
+					<OccursOnceDateTimeEnabled>false</OccursOnceDateTimeEnabled>
+					<ReccurPeriod>
+						<TimeUnit>Daily</TimeUnit>
+						<TimeUnitCount>1</TimeUnitCount>
+					</ReccurPeriod>
+					<DailyFrequency>
+						<OccursOnce>false</OccursOnce>
+						<OccursOnceTime>PT0S</OccursOnceTime>
+						<PeriodTimeUnit>Minute</PeriodTimeUnit>
+						<PeriodTimeUnitCount>1</PeriodTimeUnitCount>
+						<StartingAt>PT00H00M10S</StartingAt>
+						<EndingAt>PT23H59M59S</EndingAt>
+					</DailyFrequency>
+					<ActiveWeekDays />
+					<DayOfMonth>
+						<DayNumber>1</DayNumber>
+					</DayOfMonth>
+					<StartDate>1900-01-01T00:00:00</StartDate>
+					<EndDate>1900-01-01T00:00:00</EndDate>
+					<HasEndDate>false</HasEndDate>
+				</RefreshSchedule>
+			</RefreshSchedules>
+		</template>
+
+		<template id="1130000" name="InstanceNetworkStatus" IsHideTabs="true" file="sqlite\Audit\Network\MSSQLServerAuditor.InstanceNetworkStatus.xsl" icon="doc" showIfEmpty="true" showNumberOfRecords="false">
+			<i18n name="en">
+				Network
+			</i18n>
+			<i18n name="ru">
+				Сеть
+			</i18n>
+
+			<sql-select id="0" name="GetInstanceNetworkStatus" file="SQLQuery\mssql\Monitoring\MSSQLQuery.Instance.NetworkStatus.xml" hierarchy="">
+			</sql-select>
+
+			<RefreshSchedules>
+				<RefreshSchedule>
+					<Enabled>false</Enabled>
+					<Id>001</Id>
+					<Name>GetInstanceNetworkStatus</Name>
+					<OccursOnceDateTime>1900-01-01T00:00:00</OccursOnceDateTime>
+					<OccursOnceDateTimeEnabled>false</OccursOnceDateTimeEnabled>
+					<ReccurPeriod>
+						<TimeUnit>Daily</TimeUnit>
+						<TimeUnitCount>1</TimeUnitCount>
+					</ReccurPeriod>
+					<DailyFrequency>
+						<OccursOnce>false</OccursOnce>
+						<OccursOnceTime>PT0S</OccursOnceTime>
+						<PeriodTimeUnit>Minute</PeriodTimeUnit>
+						<PeriodTimeUnitCount>1</PeriodTimeUnitCount>
+						<StartingAt>PT00H00M35S</StartingAt>
+						<EndingAt>PT23H59M59S</EndingAt>
+					</DailyFrequency>
+					<ActiveWeekDays />
+					<DayOfMonth>
+						<DayNumber>1</DayNumber>
+					</DayOfMonth>
+					<StartDate>1900-01-01T00:00:00</StartDate>
+					<EndDate>1900-01-01T00:00:00</EndDate>
+					<HasEndDate>false</HasEndDate>
+				</RefreshSchedule>
+			</RefreshSchedules>
+		</template>
+
+		<template id="1140000" name="InstanceWaitStatistics" IsHideTabs="true" file="sqlite\Audit\Processes\MSSQLServerAuditor.InstanceWaitStatistics.xsl" icon="doc" showIfEmpty="true" showNumberOfRecords="false">
+			<i18n name="en">
+				Wait Statistics
+			</i18n>
+			<i18n name="ru">
+				Задержки
+			</i18n>
+
+			<sql-select id="0" name="GetSysDmOsWaitStats" file="SQLQuery\mssql\Monitoring\MSSQLQuery.Instance.SysDmOsWaitStats.xml" hierarchy="">
+			</sql-select>
+
+			<RefreshSchedules>
+				<RefreshSchedule>
+					<Enabled>false</Enabled>
+					<Id>001</Id>
+					<Name>GetSysDmOsWaitStats</Name>
+					<OccursOnceDateTime>1900-01-01T00:00:00</OccursOnceDateTime>
+					<OccursOnceDateTimeEnabled>false</OccursOnceDateTimeEnabled>
+					<ReccurPeriod>
+						<TimeUnit>Daily</TimeUnit>
+						<TimeUnitCount>1</TimeUnitCount>
+					</ReccurPeriod>
+					<DailyFrequency>
+						<OccursOnce>false</OccursOnce>
+						<OccursOnceTime>PT0S</OccursOnceTime>
+						<PeriodTimeUnit>Minute</PeriodTimeUnit>
+						<PeriodTimeUnitCount>1</PeriodTimeUnitCount>
+						<StartingAt>PT00H00M30S</StartingAt>
+						<EndingAt>PT23H59M59S</EndingAt>
+					</DailyFrequency>
+					<ActiveWeekDays />
+					<DayOfMonth>
+						<DayNumber>1</DayNumber>
+					</DayOfMonth>
+					<StartDate>1900-01-01T00:00:00</StartDate>
+					<EndDate>1900-01-01T00:00:00</EndDate>
+					<HasEndDate>false</HasEndDate>
+				</RefreshSchedule>
+			</RefreshSchedules>
+		</template>
+
+		<template id="1150000" name="InstanceOSPerformanceCounters" IsHideTabs="true" file="mssql\Monitoring\Instance.OSPerformanceCounters.xsl" icon="doc" showIfEmpty="true" showNumberOfRecords="false">
+			<i18n name="en">
+				Counters
+			</i18n>
+			<i18n name="ru">
+				Счётчики
+			</i18n>
+
+			<sql-select id="0" name="GetInstanceOSPerformanceCounters" file="SQLQuery\mssql\Monitoring\MSSQLQuery.Instance.OSPerformanceCounters.xml" hierarchy="">
+			</sql-select>
+
+			<RefreshSchedules>
+				<RefreshSchedule>
+					<Enabled>false</Enabled>
+					<Id>001</Id>
+					<Name>GetInstanceOSPerformanceCounters</Name>
+					<OccursOnceDateTime>1900-01-01T00:00:00</OccursOnceDateTime>
+					<OccursOnceDateTimeEnabled>false</OccursOnceDateTimeEnabled>
+					<ReccurPeriod>
+						<TimeUnit>Daily</TimeUnit>
+						<TimeUnitCount>1</TimeUnitCount>
+					</ReccurPeriod>
+					<DailyFrequency>
+						<OccursOnce>false</OccursOnce>
+						<OccursOnceTime>PT0S</OccursOnceTime>
+						<PeriodTimeUnit>Minute</PeriodTimeUnit>
+						<PeriodTimeUnitCount>1</PeriodTimeUnitCount>
+						<StartingAt>PT00H00M15S</StartingAt>
+						<EndingAt>PT23H59M59S</EndingAt>
+					</DailyFrequency>
+					<ActiveWeekDays />
+					<DayOfMonth>
+						<DayNumber>1</DayNumber>
+					</DayOfMonth>
+					<StartDate>1900-01-01T00:00:00</StartDate>
+					<EndDate>1900-01-01T00:00:00</EndDate>
+					<HasEndDate>false</HasEndDate>
+				</RefreshSchedule>
+			</RefreshSchedules>
+		</template>
+
+		<template id="1160000" name="InstanceProcesses" IsHideTabs="true" file="sqlite\Audit\Processes\MSSQLServerAuditor.InstanceSummaryProcesses.xsl" icon="doc" showIfEmpty="true" showNumberOfRecords="false">
+			<i18n name="en">
+				Processes
+			</i18n>
+			<i18n name="ru">
+				Процессы
+			</i18n>
+
+			<sql-select id="0" name="GetInstanceSummaryProcesses" file="SQLQuery\mssql\Monitoring\MSSQLQuery.Instance.SummaryProcesses.xml" hierarchy="">
+			</sql-select>
+
+			<RefreshSchedules>
+				<RefreshSchedule>
+					<Enabled>false</Enabled>
+					<Id>001</Id>
+					<Name>GetInstanceSummaryProcesses</Name>
+					<OccursOnceDateTime>1900-01-01T00:00:00</OccursOnceDateTime>
+					<OccursOnceDateTimeEnabled>false</OccursOnceDateTimeEnabled>
+					<ReccurPeriod>
+						<TimeUnit>Daily</TimeUnit>
+						<TimeUnitCount>1</TimeUnitCount>
+					</ReccurPeriod>
+					<DailyFrequency>
+						<OccursOnce>false</OccursOnce>
+						<OccursOnceTime>PT0S</OccursOnceTime>
+						<PeriodTimeUnit>Minute</PeriodTimeUnit>
+						<PeriodTimeUnitCount>1</PeriodTimeUnitCount>
+						<StartingAt>PT00H00M25S</StartingAt>
+						<EndingAt>PT23H59M59S</EndingAt>
+					</DailyFrequency>
+					<ActiveWeekDays />
+					<DayOfMonth>
+						<DayNumber>1</DayNumber>
+					</DayOfMonth>
+					<StartDate>1900-01-01T00:00:00</StartDate>
+					<EndDate>1900-01-01T00:00:00</EndDate>
+					<HasEndDate>false</HasEndDate>
+				</RefreshSchedule>
+			</RefreshSchedules>
+		</template>
+
+		<template id="1170000" name="InstanceIOStatus" IsHideTabs="true" file="sqlite\IO\InstanceIOStatus.xsl" icon="doc" showIfEmpty="true" showNumberOfRecords="false">
+			<i18n name="en">
+				IO
+			</i18n>
+			<i18n name="ru">
+				Ввод/вывод
+			</i18n>
+
+			<sql-select id="0" name="GetInstanceIOStatus" file="SQLQuery\mssql\Monitoring\MSSQLQuery.Instance.IOStatus.xml" hierarchy="">
+			</sql-select>
+
+			<RefreshSchedules>
+				<RefreshSchedule>
+					<Enabled>false</Enabled>
+					<Id>001</Id>
+					<Name>GetInstanceIOStatus</Name>
+					<OccursOnceDateTime>1900-01-01T00:00:00</OccursOnceDateTime>
+					<OccursOnceDateTimeEnabled>false</OccursOnceDateTimeEnabled>
+					<ReccurPeriod>
+						<TimeUnit>Daily</TimeUnit>
+						<TimeUnitCount>1</TimeUnitCount>
+					</ReccurPeriod>
+					<DailyFrequency>
+						<OccursOnce>false</OccursOnce>
+						<OccursOnceTime>PT0S</OccursOnceTime>
+						<PeriodTimeUnit>Minute</PeriodTimeUnit>
+						<PeriodTimeUnitCount>1</PeriodTimeUnitCount>
+						<StartingAt>PT00H00M45S</StartingAt>
+						<EndingAt>PT23H59M59S</EndingAt>
+					</DailyFrequency>
+					<ActiveWeekDays />
+					<DayOfMonth>
+						<DayNumber>1</DayNumber>
+					</DayOfMonth>
+					<StartDate>1900-01-01T00:00:00</StartDate>
+					<EndDate>1900-01-01T00:00:00</EndDate>
+					<HasEndDate>false</HasEndDate>
+				</RefreshSchedule>
+			</RefreshSchedules>
+		</template>
+	</template>
+
+	<template id="2100000" name="Queries" IsHideTabs="true" file="" icon="folder" showIfEmpty="true" showNumberOfRecords="false">
+		<i18n name="en">
+			Queries
+		</i18n>
+		<i18n name="ru">
+			Запросы
+		</i18n>
+
+		<template id="2110000" name="InstanceExecQueries" IsHideTabs="true" file="mssql\Monitoring\Instance.ExecQueries.xsl" icon="doc" showIfEmpty="true" showNumberOfRecords="false">
+			<i18n name="en">
+				Queries
+			</i18n>
+			<i18n name="ru">
+				Запросы
+			</i18n>
+
+			<sql-select id="0" name="GetInstanceExecQueries" file="SQLQuery\mssql\Monitoring\MSSQLQuery.Instance.ExecQueries.xml" hierarchy="">
+				<parameter name="@intNumberOfRowsToShow" value="10000" />
+			</sql-select>
+
+			<RefreshSchedules>
+				<RefreshSchedule>
+					<Enabled>false</Enabled>
+					<Id>001</Id>
+					<Name>GetInstanceExecQueries</Name>
+					<OccursOnceDateTime>1900-01-01T00:00:00</OccursOnceDateTime>
+					<OccursOnceDateTimeEnabled>false</OccursOnceDateTimeEnabled>
+					<ReccurPeriod>
+						<TimeUnit>Daily</TimeUnit>
+						<TimeUnitCount>1</TimeUnitCount>
+					</ReccurPeriod>
+					<DailyFrequency>
+						<OccursOnce>true</OccursOnce>
+						<OccursOnceTime>PT03H30M00S</OccursOnceTime>
+						<PeriodTimeUnit>Hour</PeriodTimeUnit>
+						<PeriodTimeUnitCount>1</PeriodTimeUnitCount>
+						<StartingAt>PT03H30M00S</StartingAt>
+						<EndingAt>PT23H59M59S</EndingAt>
+					</DailyFrequency>
+					<ActiveWeekDays />
+					<DayOfMonth>
+						<DayNumber>1</DayNumber>
+					</DayOfMonth>
+					<StartDate>1900-01-01T00:00:00</StartDate>
+					<EndDate>1900-01-01T00:00:00</EndDate>
+					<HasEndDate>false</HasEndDate>
+				</RefreshSchedule>
+			</RefreshSchedules>
+		</template>
+
+		<template id="2120000" name="InstanceExecProcedures" IsHideTabs="true" file="mssql\Monitoring\Instance.ExecProcedures.xsl" icon="doc" showIfEmpty="true" showNumberOfRecords="false">
+			<i18n name="en">
+				Procedures
+			</i18n>
+			<i18n name="ru">
+				Процедуры
+			</i18n>
+
+			<sql-select id="0" name="GetInstanceExecProcedures" file="SQLQuery\mssql\Monitoring\MSSQLQuery.Instance.ExecProcedures.xml" hierarchy="">
+				<parameter name="@intNumberOfRowsToShow" value="10000" />
+			</sql-select>
+
+			<RefreshSchedules>
+				<RefreshSchedule>
+					<Enabled>false</Enabled>
+					<Id>001</Id>
+					<Name>GetInstanceExecProcedures</Name>
+					<OccursOnceDateTime>1900-01-01T00:00:00</OccursOnceDateTime>
+					<OccursOnceDateTimeEnabled>false</OccursOnceDateTimeEnabled>
+					<ReccurPeriod>
+						<TimeUnit>Daily</TimeUnit>
+						<TimeUnitCount>1</TimeUnitCount>
+					</ReccurPeriod>
+					<DailyFrequency>
+						<OccursOnce>true</OccursOnce>
+						<OccursOnceTime>PT04H30M00S</OccursOnceTime>
+						<PeriodTimeUnit>Hour</PeriodTimeUnit>
+						<PeriodTimeUnitCount>1</PeriodTimeUnitCount>
+						<StartingAt>PT04H30M00S</StartingAt>
+						<EndingAt>PT23H59M59S</EndingAt>
+					</DailyFrequency>
+					<ActiveWeekDays />
+					<DayOfMonth>
+						<DayNumber>1</DayNumber>
+					</DayOfMonth>
+					<StartDate>1900-01-01T00:00:00</StartDate>
+					<EndDate>1900-01-01T00:00:00</EndDate>
+					<HasEndDate>false</HasEndDate>
+				</RefreshSchedule>
+			</RefreshSchedules>
+		</template>
+	</template>
+
+	<template id="3100000" name="Statistics" IsHideTabs="true" file="" icon="folder" showIfEmpty="true" showNumberOfRecords="false">
+		<i18n name="en">
+			Statistics
+		</i18n>
+		<i18n name="ru">
+			Статистика
+		</i18n>
+
+		<template id="3110000" name="InstanceDatabasesSize" IsHideTabs="true" file="mssql\Monitoring\Instance.DatabasesSize.xsl" icon="doc" showIfEmpty="true" showNumberOfRecords="false">
+			<i18n name="en">
+				DB Size
+			</i18n>
+			<i18n name="ru">
+				Размер баз данных
+			</i18n>
+
+			<sql-select id="0" name="GetInstanceDatabasesSize" file="SQLQuery\mssql\Monitoring\MSSQLQuery.Instance.DatabasesSize.xml" hierarchy="">
+			</sql-select>
+
+			<RefreshSchedules>
+				<RefreshSchedule>
+					<Enabled>false</Enabled>
+					<Id>001</Id>
+					<Name>GetInstanceDatabasesSize</Name>
+					<OccursOnceDateTime>1900-01-01T00:00:00</OccursOnceDateTime>
+					<OccursOnceDateTimeEnabled>false</OccursOnceDateTimeEnabled>
+					<ReccurPeriod>
+						<TimeUnit>Daily</TimeUnit>
+						<TimeUnitCount>1</TimeUnitCount>
+					</ReccurPeriod>
+					<DailyFrequency>
+						<OccursOnce>true</OccursOnce>
+						<OccursOnceTime>PT00H30M00S</OccursOnceTime>
+						<PeriodTimeUnit>Minute</PeriodTimeUnit>
+						<PeriodTimeUnitCount>1</PeriodTimeUnitCount>
+						<StartingAt>PT00H00M05S</StartingAt>
+						<EndingAt>PT23H59M59S</EndingAt>
+					</DailyFrequency>
+					<ActiveWeekDays />
+					<DayOfMonth>
+						<DayNumber>1</DayNumber>
+					</DayOfMonth>
+					<StartDate>1900-01-01T00:00:00</StartDate>
+					<EndDate>1900-01-01T00:00:00</EndDate>
+					<HasEndDate>false</HasEndDate>
+				</RefreshSchedule>
+			</RefreshSchedules>
+		</template>
+	</template>
+</MSSQLServerAuditorTemplate>

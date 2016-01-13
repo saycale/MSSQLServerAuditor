@@ -1,0 +1,88 @@
+﻿using System;
+using System.Windows.Forms;
+
+namespace MSSQLServerAuditor.Utils
+{
+	public static class ControlExtensions
+	{
+		/// <summary>
+		/// Safely invoke an <paramref name="action"/> on a <paramref name="control"/> without having to care about execution context.
+		/// </summary>
+		/// <typeparam name="T"></typeparam>
+		/// <param name="control"></param>
+		/// <param name="action"></param>
+		public static void SafeInvoke<T>(this T control, Action<T> action)
+		  where T : Control
+		{
+			if (control.InvokeRequired)
+			{
+				control.Invoke(action, new object[] { control });
+			}
+			else
+			{
+				if (!control.IsHandleCreated)
+				{
+					return;
+				}
+
+				if (control.IsDisposed)
+				{
+					throw new ObjectDisposedException("control is disposed.");
+				}
+
+				action(control);
+			}
+		}
+
+		/// <summary>
+		/// Safely invoke an <paramref name="action"/> on a <paramref name="control"/> without having to care about execution context.
+		/// </summary>
+		/// <param name="control"></param>
+		/// <param name="action"></param>
+		public static void SafeInvoke(this Control control, Action action)
+		{
+			if (control.InvokeRequired)
+			{
+				control.Invoke(action);
+			}
+			else
+			{
+				if (!control.IsHandleCreated)
+				{
+					return;
+				}
+
+				if (control.IsDisposed)
+				{
+					throw new ObjectDisposedException("control is disposed.");
+				}
+
+				action();
+			}
+		}
+
+		/// <summary>
+		/// Safely executes the specified <paramref name="action"/> without having to care about execution context.
+		/// </summary>
+		/// <typeparam name="T"></typeparam>
+		/// <param name="control"></param>
+		/// <param name="action"></param>
+		public static IAsyncResult SafeBeginInvoke<T>(this T control, Action<T> action)
+		  where T : Control
+		{
+			return control.BeginInvoke((Action)(() => control.SafeInvoke(action)));
+		}
+
+		/// <summary>
+		/// Retrieves the return value of the asynchronous operation represented by the System.IAsyncResult passed without having to care about execution context.
+		/// </summary>
+		/// <typeparam name="T"></typeparam>
+		/// <param name="control"></param>
+		/// <param name="action"></param>
+		public static object SafeEndInvoke<T>(this T control, IAsyncResult result)
+		  where T : Control
+		{
+			return control.EndInvoke(result);
+		}
+	}
+}

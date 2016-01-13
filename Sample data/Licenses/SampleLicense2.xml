@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<MSSQLServerAuditorConnections xmlns:xi="http://www.w3.org/2003/XInclude" version="1.0">
+
+	<connections name="localExpress" template="MSSQLServerAuditor.Template.xml">
+		<connection name="localExpress" instance="YURA-PC\MSSQLSERVER2012" type="MSSQL" odbc="true">
+			<authentication isWindows="true" username="" password=""/>
+			<license hostname="YURA-PC" osusername="YURA-PC\YURA" expirydate="99991231" buildexpirydate="20150801"  signature=""/>
+		</connection>
+	</connections>
+
+</MSSQLServerAuditorConnections>

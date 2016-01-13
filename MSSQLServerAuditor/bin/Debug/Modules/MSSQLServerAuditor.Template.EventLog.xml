@@ -1,0 +1,86 @@
+﻿<?xml version="1.0" encoding="UTF-8"?>
+<MSSQLServerAuditorTemplate id="EventLog" type="EventLog" xmlns:xi="http://www.w3.org/2003/XInclude" version="1.0">
+	<i18n name="en">
+		EventLog
+	</i18n>
+	<i18n name="ru">
+		EventLog
+	</i18n>
+
+	<template id="100000" name="EventLogMessages" file="EventLog\EventLogMessages.xsl" icon="doc" showIfEmpty="true" showNumberOfRecords="true" IsHideTabs="true">
+		<i18n name="en">
+			Event Log Messages
+		</i18n>
+		<i18n name="ru">
+			Event Log Messages
+		</i18n>
+
+		<sql-select id="0" file="EventLogQuery\GetEventLogMessages.xml" name="GetEventLogMessages" hierarchy="">
+			<parameter name="@intEntryType" value="528"/>
+		</sql-select>
+	</template>
+
+	<template id="100001" name="LogonHistory" file="EventLog\LogonHistory.xsl" icon="doc" showIfEmpty="true" showNumberOfRecords="true" IsHideTabs="true">
+		<i18n name="en">
+			Logon History
+		</i18n>
+		<i18n name="ru">
+			Logon History
+		</i18n>
+
+		<sql-select id="0" file="EventLogQuery\GetLogonHistory.xml" name="GetLogonHistory" hierarchy="">
+			<parameter name="@colEventId"         value="//EventID/text()"/>
+			<parameter name="@colUsername"        value="//EventData/Data[@Name=&#39;TargetUserName&#39;]/text()"/>
+			<parameter name="@colClientIPAddress" value="//EventData/Data[@Name=&#39;IpAddress&#39;]/text()"/>
+			<parameter name="@colTimeGenerated"   value="//TimeCreated/@SystemTime"/>
+		</sql-select>
+	</template>
+
+	<template id="100002" name="WindowsUpdatesHistory" file="EventLog\WindowsUpdatesHistory.xsl" icon="doc" showIfEmpty="true" showNumberOfRecords="true" IsHideTabs="true">
+		<i18n name="en">
+			Windows updates history
+		</i18n>
+		<i18n name="ru">
+			Windows updates history
+		</i18n>
+
+		<sql-select id="0" file="EventLogQuery\GetWindowsUpdatesHistory.xml" name="GetWindowsUpdatesHistory" hierarchy="">
+			<parameter name="@colEventId"       value="//EventID/text()"/>
+			<parameter name="@colTimeInstalled" value="//TimeCreated/@SystemTime"/>
+			<parameter name="@colName"          value="//EventData/Data[1]/text()"/>
+			<parameter name="@colVersion"       value="//EventData/Data[2]/text()"/>
+			<parameter name="@colFullname"      value="//EventData/Data[4]/text()"/>
+		</sql-select>
+
+		<RefreshSchedules>
+			<RefreshSchedule>
+				<Enabled>false</Enabled>
+				<Id>001</Id>
+				<Name>Update Every Minute</Name>
+				<Action>Update</Action>
+				<Address />
+				<OccursOnceDateTime>1900-01-01T00:00:00</OccursOnceDateTime>
+				<OccursOnceDateTimeEnabled>false</OccursOnceDateTimeEnabled>
+				<ReccurPeriod>
+					<TimeUnit>Daily</TimeUnit>
+					<TimeUnitCount>1</TimeUnitCount>
+				</ReccurPeriod>
+				<DailyFrequency>
+					<OccursOnce>false</OccursOnce>
+					<OccursOnceTime>PT0S</OccursOnceTime>
+					<PeriodTimeUnit>Minute</PeriodTimeUnit>
+					<PeriodTimeUnitCount>1</PeriodTimeUnitCount>
+					<StartingAt>PT00H00M05S</StartingAt>
+					<EndingAt>PT23H59M59S</EndingAt>
+				</DailyFrequency>
+				<ActiveWeekDays />
+				<DayOfMonth>
+					<DayNumber>1</DayNumber>
+				</DayOfMonth>
+				<StartDate>1900-01-01T00:00:00</StartDate>
+				<EndDate>1900-01-01T00:00:00</EndDate>
+				<HasEndDate>false</HasEndDate>
+			</RefreshSchedule>
+		</RefreshSchedules>
+	</template>
+</MSSQLServerAuditorTemplate>

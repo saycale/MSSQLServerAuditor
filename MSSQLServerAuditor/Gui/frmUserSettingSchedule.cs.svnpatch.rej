@@ -1,0 +1,48 @@
+--- Gui/frmUserSettingSchedule.cs
++++ Gui/frmUserSettingSchedule.cs
+@@ -72,30 +69,27 @@
+ 
+ 		public void AddNewSchedule()
+ 		{
+-			frmNewScheduleId dlg = new frmNewScheduleId();
+-
+-			if (dlg.ShowDialog() == DialogResult.Ok)
++			frmNewScheduleId dlg = new frmNewScheduleId(this.GetUpdateJobs());
++			if (dlg.ShowDialog() == DialogResult.Cancel) return;
++			TemplateNodeUpdateJob newJob = new TemplateNodeUpdateJob();
++			newJob.Settings = new ScheduleSettings();
++			newJob.Settings.Id = dlg.Value;
++			newJob.Settings.StartDate = DateTime.Now;
++			newJob.Settings.Enabled = false;
++			UserSettingScheduleControl usc = new UserSettingScheduleControl(newJob)
+ 			{
+-				TemplateNodeUpdateJob newJob = new TemplateNodeUpdateJob();
++				Name = "UserSettingScheduleControl1"
++			};
++			TabPage tabPage = new TabPage("New schedule");
++			tabPage.Controls.Add(usc);
+ 
+-				newJob.Settings = new ScheduleSettings();
++			this.tabControl1.TabPages.Add(tabPage);
++			this.tabControl1.SelectedTab = tabPage;
++		}
+ 
+-				newJob.Settings.Id        = dlg.Value;
+-				newJob.Settings.StartDate = DateTime.Now;
+ 
+-				UserSettingScheduleControl usc = new UserSettingScheduleControl(newJob)
+-				{
+-					Name = "UserSettingScheduleControl1"
+-				};
+ 
+-				TabPage tabPage = new TabPage("New schedule");
+-				tabPage.Controls.Add(usc);
+ 
+-				this.tabControl1.TabPages.Add(tabPage);
+-				this.tabControl1.SelectedTab = tabPage;
+-			}
+-		}
+-
+ 		public List<TemplateNodeUpdateJob> GetUpdateJobs()
+ 		{
+ 			List<TemplateNodeUpdateJob> updateJobs = new List<TemplateNodeUpdateJob>();

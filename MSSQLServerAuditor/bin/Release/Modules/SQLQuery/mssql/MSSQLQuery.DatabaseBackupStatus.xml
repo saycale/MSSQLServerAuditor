@@ -1,0 +1,437 @@
+﻿<?xml version="1.0" encoding="UTF-8"?>
+<root xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+<sqlquery type="MSSQL">
+	<sql-select name="GetDatabaseBackupStatus">
+		<reference>
+			http://msdn.microsoft.com/en-us/library/ms190284.aspx
+		</reference>
+		<sql-select-text MinSupportedVersion="8.*" MaxSupportedVersion="8.*" signature="">
+			SET NOCOUNT ON;
+			SET DEADLOCK_PRIORITY LOW;
+
+			DECLARE
+				@ServerName [NVARCHAR](128)
+			;
+
+			SET @ServerName = CONVERT([NVARCHAR](128), SERVERPROPERTY(N'Servername'));
+
+			DECLARE
+				@tblBackupResults TABLE
+				(
+					 [DatabaseName]                 [NVARCHAR](128)
+					,[DatabaseStatus]               [NVARCHAR](128)
+					,[DatabaseUpdateability]        [NVARCHAR](128)
+					,[DatabaseBackupIsSnapshot]     [INT]
+					,[DatabaseBackupType]           [NCHAR](1)
+					,[DatabaseBackupName]           [NVARCHAR](128)
+					,[DatabaseBackupDateTime]       [DATETIME]
+					,[DatabaseBackupSize]           [NUMERIC](20, 2)
+					,[DatabaseCompressedBackupSize] [NUMERIC](20, 2)
+					,[DatabaseBackupDevice]         [NVARCHAR](128)
+				);
+
+			INSERT INTO @tblBackupResults
+			(
+				 [DatabaseName]
+				,[DatabaseStatus]
+				,[DatabaseUpdateability]
+				,[DatabaseBackupIsSnapshot]
+				,[DatabaseBackupType]
+				,[DatabaseBackupName]
+				,[DatabaseBackupDateTime]
+				,[DatabaseBackupSize]
+				,[DatabaseCompressedBackupSize]
+				,[DatabaseBackupDevice]
+			)
+			SELECT
+				 tSD.[name]                                                                         AS [DatabaseName]
+				,CONVERT([NVARCHAR](128), DatabasePropertyEx(tSD.[name], N'Status'))                AS [DatabaseStatus]
+				,CONVERT([NVARCHAR](128), DatabasePropertyEx(tSD.[name], N'Updateability'))         AS [DatabaseUpdateability]
+				,NULL                                                                               AS [DatabaseBackupIsSnapshot]
+				,tBS.[type]                                                                         AS [DatabaseBackupType]
+				,tBS.[name]                                                                         AS [DatabaseBackupName]
+				,tBS.[backup_finish_date]                                                           AS [DatabaseBackupDateTime]
+				,CASE
+					WHEN (tBS.[backup_size] IS NULL) THEN
+						NULL
+					ELSE
+						CONVERT([NUMERIC](20, 2), tBS.[backup_size] / (CONVERT([NUMERIC](20, 2), 1024.0 * 1024.0)))
+				END                                                                                 AS [DatabaseBackupSize]
+				,NULL                                                                               AS [DatabaseCompressedBackupSize]
+				,CASE
+					WHEN ISNULL(tBMF.[device_type], 0) = 2 THEN
+						N'Disk'
+					WHEN ISNULL(tBMF.[device_type], 0) = 5 THEN
+						N'Tape'
+					WHEN ISNULL(tBMF.[device_type], 0) = 7 THEN
+						N'Virtual device'
+					WHEN ISNULL(tBMF.[device_type], 0) = 105 THEN
+						N'A permanent backup device'
+					ELSE
+						N'Unknown:' + CONVERT([NVARCHAR](128), ISNULL(tBMF.[device_type], 0))
+				END                                                                                 AS [DatabaseBackupDevice]
+			FROM
+				[master].[dbo].[sysdatabases] tSD
+				INNER JOIN (
+					SELECT
+						 tBS.[database_name]
+						,tBS.[type]
+						,tBS.[name]
+						,tBS.[backup_finish_date]
+						,tBS.[backup_size]
+						,tBS.[media_set_id]
+					FROM
+						[msdb].[dbo].[backupset] tBS
+						INNER JOIN (
+							SELECT
+								 t.[server_name]             AS [server_name]
+								,t.[database_name]           AS [database_name]
+								,t.[type]                    AS [type]
+								,MAX(t.[backup_finish_date]) AS [backup_finish_date]
+							FROM
+								[msdb].[dbo].[backupset] t
+							WHERE
+								t.[type] = ISNULL(@chBackupType, t.[type])
+								AND t.[backup_finish_date] IS NOT NULL
+							GROUP BY
+								 t.[server_name]
+								,t.[database_name]
+								,t.[type]
+						) tBSLast ON
+							tBSLast.[server_name] = tBS.[server_name]
+							AND tBSLast.[database_name] = tBS.[database_name]
+							AND tBSLast.[type] = tBS.[type]
+							AND tBSLast.[backup_finish_date] = tBS.[backup_finish_date]
+					WHERE
+						tBS.[server_name] = @ServerName
+				) tBS ON
+					tBS.[database_name] = tSD.[name]
+				LEFT OUTER JOIN (
+					SELECT
+						 t.[media_set_id]
+						,t.[device_type]
+					FROM
+						[msdb].[dbo].[backupmediafamily] t
+					GROUP BY
+						 t.[media_set_id]
+						,t.[device_type]
+				) tBMF ON
+					tBMF.[media_set_id] = tBS.[media_set_id]
+			WHERE
+				tSD.[name] NOT IN (
+					N'tempdb'
+				)
+				AND ISNULL(@IsSnapshot, 0) = 0
+				AND tSD.[name] = ISNULL(@DatabaseName, tSD.[name]);
+
+			SELECT
+				 t.[DatabaseName]
+				,t.[DatabaseStatus]
+				,t.[DatabaseUpdateability]
+				,t.[DatabaseBackupIsSnapshot]
+				,t.[DatabaseBackupType]
+				,t.[DatabaseBackupName]
+				,t.[DatabaseBackupDateTime]
+				,t.[DatabaseBackupSize]
+				,t.[DatabaseCompressedBackupSize]
+				,t.[DatabaseBackupDevice]
+			FROM
+				@tblBackupResults t
+			ORDER BY
+				t.[DatabaseName];
+		</sql-select-text>
+		<sql-select-text MinSupportedVersion="9.*" MaxSupportedVersion="9.*" signature="">
+			SET NOCOUNT ON;
+			SET DEADLOCK_PRIORITY LOW;
+
+			DECLARE
+				@ServerName [NVARCHAR](128)
+			;
+
+			SET @ServerName = CONVERT([NVARCHAR](128), SERVERPROPERTY(N'Servername'));
+
+			DECLARE
+				@tblBackupResults TABLE
+				(
+					 [DatabaseName]                 [NVARCHAR](128)
+					,[DatabaseStatus]               [NVARCHAR](128)
+					,[DatabaseUpdateability]        [NVARCHAR](128)
+					,[DatabaseBackupIsSnapshot]     [INT]
+					,[DatabaseBackupType]           [NCHAR](1)
+					,[DatabaseBackupName]           [NVARCHAR](128)
+					,[DatabaseBackupDateTime]       [DATETIME]
+					,[DatabaseBackupSize]           [NUMERIC](20, 2)
+					,[DatabaseCompressedBackupSize] [NUMERIC](20, 2)
+					,[DatabaseBackupDevice]         [NVARCHAR](128)
+				);
+
+			INSERT INTO @tblBackupResults
+			(
+				 [DatabaseName]
+				,[DatabaseStatus]
+				,[DatabaseUpdateability]
+				,[DatabaseBackupIsSnapshot]
+				,[DatabaseBackupType]
+				,[DatabaseBackupName]
+				,[DatabaseBackupDateTime]
+				,[DatabaseBackupSize]
+				,[DatabaseCompressedBackupSize]
+				,[DatabaseBackupDevice]
+			)
+			SELECT
+				 tSD.[name]                                                                         AS [DatabaseName]
+				,CONVERT([NVARCHAR](128), DatabasePropertyEx(tSD.[name], N'Status'))                AS [DatabaseStatus]
+				,CONVERT([NVARCHAR](128), DatabasePropertyEx(tSD.[name], N'Updateability'))         AS [DatabaseUpdateability]
+
+				,tBS.[is_snapshot]                                                                  AS [DatabaseBackupIsSnapshot]
+				,tBS.[type]                                                                         AS [DatabaseBackupType]
+				,tBS.[name]                                                                         AS [DatabaseBackupName]
+				,tBS.[backup_finish_date]                                                           AS [DatabaseBackupDateTime]
+				,CASE
+					WHEN (tBS.[backup_size] IS NULL) THEN
+						NULL
+					ELSE
+						CONVERT([NUMERIC](20, 2), tBS.[backup_size] / (CONVERT([NUMERIC](20, 2), 1024.0 * 1024.0)))
+				END                                                                                 AS [DatabaseBackupSize]
+				,NULL                                                                               AS [DatabaseCompressedBackupSize]
+				,CASE
+					WHEN ISNULL(tBMF.[device_type], 0) = 2 THEN
+						N'Disk'
+					WHEN ISNULL(tBMF.[device_type], 0) = 5 THEN
+						N'Tape'
+					WHEN ISNULL(tBMF.[device_type], 0) = 7 THEN
+						N'Virtual device'
+					WHEN ISNULL(tBMF.[device_type], 0) = 105 THEN
+						N'A permanent backup device'
+					ELSE
+						N'Unknown:' + CONVERT([NVARCHAR](128), ISNULL(tBMF.[device_type], 0))
+				END                                                                                 AS [DatabaseBackupDevice]
+			FROM
+				[master].[sys].[sysdatabases] tSD
+				INNER JOIN (
+					SELECT
+						 tBS.[database_name]
+						,tBS.[is_snapshot]
+						,tBS.[type]
+						,tBS.[name]
+						,tBS.[backup_finish_date]
+						,tBS.[backup_size]
+						,tBS.[media_set_id]
+					FROM
+						[msdb].[dbo].[backupset] tBS
+						INNER JOIN (
+							SELECT
+								 t.[server_name]             AS [server_name]
+								,t.[database_name]           AS [database_name]
+								,t.[is_snapshot]             AS [is_snapshot]
+								,t.[type]                    AS [type]
+								,MAX(t.[backup_finish_date]) AS [backup_finish_date]
+							FROM
+								[msdb].[dbo].[backupset] t
+							WHERE
+								t.[type] = ISNULL(@chBackupType, t.[type])
+								AND t.[is_snapshot] = ISNULL(@IsSnapshot, t.[is_snapshot])
+								AND t.[backup_finish_date] IS NOT NULL
+							GROUP BY
+								 t.[server_name]
+								,t.[database_name]
+								,t.[is_snapshot]
+								,t.[type]
+						) tBSLast ON
+							tBSLast.[server_name] = tBS.[server_name]
+							AND tBSLast.[database_name] = tBS.[database_name]
+							AND tBSLast.[is_snapshot] = tBS.[is_snapshot]
+							AND tBSLast.[type] = tBS.[type]
+							AND tBSLast.[backup_finish_date] = tBS.[backup_finish_date]
+					WHERE
+						tBS.[server_name] = @ServerName
+				) tBS ON
+					tBS.[database_name] = tSD.[name]
+				LEFT OUTER JOIN (
+					SELECT
+						 t.[media_set_id]
+						,t.[device_type]
+					FROM
+						[msdb].[dbo].[backupmediafamily] t
+					GROUP BY
+						 t.[media_set_id]
+						,t.[device_type]
+				) tBMF ON
+					tBMF.[media_set_id] = tBS.[media_set_id]
+			WHERE
+				tSD.[name] NOT IN (
+					N'tempdb'
+				)
+				AND tSD.[name] = ISNULL(@DatabaseName, tSD.[name]);
+
+			SELECT
+				 t.[DatabaseName]
+				,t.[DatabaseStatus]
+				,t.[DatabaseUpdateability]
+				,t.[DatabaseBackupIsSnapshot]
+				,t.[DatabaseBackupType]
+				,t.[DatabaseBackupName]
+				,t.[DatabaseBackupDateTime]
+				,t.[DatabaseBackupSize]
+				,t.[DatabaseCompressedBackupSize]
+				,t.[DatabaseBackupDevice]
+			FROM
+				@tblBackupResults t
+			ORDER BY
+				t.[DatabaseName];
+		</sql-select-text>
+		<sql-select-text MinSupportedVersion="10.*" MaxSupportedVersion="*" signature="">
+			SET NOCOUNT ON;
+			SET DEADLOCK_PRIORITY LOW;
+
+			DECLARE
+				@ServerName [NVARCHAR](128)
+			;
+
+			SET @ServerName = CONVERT([NVARCHAR](128), SERVERPROPERTY(N'Servername'));
+
+			DECLARE
+				@tblBackupResults TABLE
+				(
+					 [DatabaseName]                 [NVARCHAR](128)
+					,[DatabaseStatus]               [NVARCHAR](128)
+					,[DatabaseUpdateability]        [NVARCHAR](128)
+					,[DatabaseBackupIsSnapshot]     [INT]
+					,[DatabaseBackupType]           [NCHAR](1)
+					,[DatabaseBackupName]           [NVARCHAR](128)
+					,[DatabaseBackupDateTime]       [DATETIME]
+					,[DatabaseBackupSize]           [NUMERIC](20, 2)
+					,[DatabaseCompressedBackupSize] [NUMERIC](20, 2)
+					,[DatabaseBackupDevice]         [NVARCHAR](128)
+				);
+
+			INSERT INTO @tblBackupResults
+			(
+				 [DatabaseName]
+				,[DatabaseStatus]
+				,[DatabaseUpdateability]
+				,[DatabaseBackupIsSnapshot]
+				,[DatabaseBackupType]
+				,[DatabaseBackupName]
+				,[DatabaseBackupDateTime]
+				,[DatabaseBackupSize]
+				,[DatabaseCompressedBackupSize]
+				,[DatabaseBackupDevice]
+			)
+			SELECT
+				 tSD.[name]                                                                         AS [DatabaseName]
+				,CONVERT([NVARCHAR](128), DatabasePropertyEx(tSD.[name], N'Status'))                AS [DatabaseStatus]
+				,CONVERT([NVARCHAR](128), DatabasePropertyEx(tSD.[name], N'Updateability'))         AS [DatabaseUpdateability]
+
+				,tBS.[is_snapshot]                                                                  AS [DatabaseBackupIsSnapshot]
+				,tBS.[type]                                                                         AS [DatabaseBackupType]
+				,tBS.[name]                                                                         AS [DatabaseBackupName]
+				,tBS.[backup_finish_date]                                                           AS [D_DatabaseBackupDateTime]
+				,CASE
+					WHEN (tBS.[backup_size] IS NULL) THEN
+						NULL
+					ELSE
+						CONVERT([NUMERIC](20, 2), tBS.[backup_size] / (CONVERT([NUMERIC](20, 2), 1024.0 * 1024.0)))
+				END                                                                                 AS [DatabaseBackupSize]
+				,CASE
+					WHEN (tBS.[compressed_backup_size] IS NULL) THEN
+						NULL
+					ELSE
+						CONVERT([NUMERIC](20, 2), tBS.[compressed_backup_size] / (CONVERT([NUMERIC](20, 2), 1024.0 * 1024.0)))
+				END                                                                                 AS [DatabaseCompressedBackupSize]
+				,CASE
+					WHEN ISNULL(tBMF.[device_type], 0) = 2 THEN
+						N'Disk'
+					WHEN ISNULL(tBMF.[device_type], 0) = 5 THEN
+						N'Tape'
+					WHEN ISNULL(tBMF.[device_type], 0) = 7 THEN
+						N'Virtual device'
+					WHEN ISNULL(tBMF.[device_type], 0) = 105 THEN
+						N'A permanent backup device'
+					ELSE
+						N'Unknown:' + CONVERT([NVARCHAR](128), ISNULL(tBMF.[device_type], 0))
+				END                                                                                 AS [DatabaseBackupDevice]
+			FROM
+				[master].[sys].[sysdatabases] tSD
+				INNER JOIN (
+					SELECT
+						 tBS.[database_name]
+						,tBS.[is_snapshot]
+						,tBS.[type]
+						,tBS.[name]
+						,tBS.[backup_finish_date]
+						,tBS.[backup_size]
+						,tBS.[compressed_backup_size]
+						,tBS.[media_set_id]
+					FROM
+						[msdb].[dbo].[backupset] tBS
+						INNER JOIN (
+							SELECT
+								 t.[server_name]             AS [server_name]
+								,t.[database_name]           AS [database_name]
+								,t.[is_snapshot]             AS [is_snapshot]
+								,t.[type]                    AS [type]
+								,MAX(t.[backup_finish_date]) AS [backup_finish_date]
+							FROM
+								[msdb].[dbo].[backupset] t
+							WHERE
+								t.[type] = ISNULL(@chBackupType, t.[type])
+								AND t.[is_snapshot] = ISNULL(@IsSnapshot, t.[is_snapshot])
+								AND t.[backup_finish_date] IS NOT NULL
+							GROUP BY
+								 t.[server_name]
+								,t.[database_name]
+								,t.[is_snapshot]
+								,t.[type]
+						) tBSLast ON
+							tBSLast.[server_name] = tBS.[server_name]
+							AND tBSLast.[database_name] = tBS.[database_name]
+							AND tBSLast.[is_snapshot] = tBS.[is_snapshot]
+							AND tBSLast.[type] = tBS.[type]
+							AND tBSLast.[backup_finish_date] = tBS.[backup_finish_date]
+					WHERE
+						tBS.[server_name] = @ServerName
+				) tBS ON
+					tBS.[database_name] = tSD.[name]
+				LEFT OUTER JOIN (
+					SELECT
+						 t.[media_set_id]
+						,t.[device_type]
+					FROM
+						[msdb].[dbo].[backupmediafamily] t
+					GROUP BY
+						 t.[media_set_id]
+						,t.[device_type]
+				) tBMF ON
+					tBMF.[media_set_id] = tBS.[media_set_id]
+			WHERE
+				tSD.[name] NOT IN (
+					N'tempdb'
+				)
+				AND tSD.[name] = ISNULL(@DatabaseName, tSD.[name]);
+
+			SELECT
+				 t.[DatabaseName]
+				,t.[DatabaseStatus]
+				,t.[DatabaseUpdateability]
+				,t.[DatabaseBackupIsSnapshot]
+				,t.[DatabaseBackupType]
+				,t.[DatabaseBackupName]
+				,t.[DatabaseBackupDateTime]
+				,t.[DatabaseBackupSize]
+				,t.[DatabaseCompressedBackupSize]
+				,t.[DatabaseBackupDevice]
+			FROM
+				@tblBackupResults t
+			ORDER BY
+				t.[DatabaseName];
+		</sql-select-text>
+		<sql-select-parameters>
+			<sql-select-parameter name="@chBackupType" type="NChar" />
+			<sql-select-parameter name="@IsSnapshot" type="Int" />
+			<sql-select-parameter name="@DatabaseName" type="NChar" />
+		</sql-select-parameters>
+	</sql-select>
+</sqlquery>
+</root>
+

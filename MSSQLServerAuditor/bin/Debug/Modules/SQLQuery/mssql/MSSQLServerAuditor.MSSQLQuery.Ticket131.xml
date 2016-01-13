@@ -1,0 +1,36 @@
+﻿<?xml version="1.0" encoding="UTF-8"?>
+<root xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+<sqlquery type="MSSQL">
+	<sql-select name="GetDatabaseBackupHistory">
+		<sql-select-text MinSupportedVersion="*" MaxSupportedVersion="*" signature="">
+			SET NOCOUNT ON;
+			SET DEADLOCK_PRIORITY LOW;
+
+			SELECT
+				 N'db1'                           AS [DatabaseName]
+				,N'D'                             AS [BackupType]
+				,CONVERT([DATETIME], N'20131018') AS [BackupFinishDate]
+				,100.10                           AS [DatabaseBackupSizeMB]
+
+			UNION ALL
+
+			SELECT
+				 N'db1'                           AS [DatabaseName]
+				,N'D'                             AS [BackupType]
+				,CONVERT([DATETIME], N'20131017') AS [BackupFinishDate]
+				,95.50                            AS [DatabaseBackupSizeMB]
+
+			UNION ALL
+
+			SELECT
+				 N'db2'                           AS [DatabaseName]
+				,N'D'                             AS [BackupType]
+				,CONVERT([DATETIME], N'20131018') AS [BackupFinishDate]
+				,50.50                            AS [DatabaseBackupSizeMB]
+
+			;
+		</sql-select-text>
+	</sql-select>
+</sqlquery>
+</root>
+

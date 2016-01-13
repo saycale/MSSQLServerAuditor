@@ -1,0 +1,80 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<root xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+<sqlquery type="MSSQL">
+	<sql-select name="GetOverlappingObjectPermissions">
+		<sql-select-text MinSupportedVersion="9.*" MaxSupportedVersion="*" signature="">
+			SET NOCOUNT ON;
+			SET DEADLOCK_PRIORITY LOW;
+
+			SELECT
+				 tSO.[type_desc]                AS [ObjectType]
+				,tSS.[name]                     AS [SchemaName]
+				,tSO.[name]                     AS [ObjectName]
+				,tSO.[create_date]              AS [ObjectCreateDate]
+				,t1.[ObjectPermission]          AS [ObjectPermission]
+				,t1.[ObjectPermissionStateDesc] AS [ObjectPermissionStateDesc]
+				,t1.[PrincipalName]             AS [PrincipalName]
+				,t1.[PrincipalTypeDesc]         AS [PrincipalTypeDesc]
+				,t2.[PrincipalName]             AS [PrincipalName2]
+				,t2.[PrincipalTypeDesc]         AS [PrincipalTypeDesc2]
+			FROM
+				[sys].[objects] tSO
+				INNER JOIN [sys].[schemas] tSS ON
+					tSS.[schema_id] = tSO.[schema_id]
+				INNER JOIN (
+					SELECT
+						 tSDP.[major_id]        AS [object_id]
+						,tSDP.[permission_name] AS [ObjectPermission]
+						,tSDP.[state_desc]      AS [ObjectPermissionStateDesc]
+						,tSDPR.[name]           AS [PrincipalName]
+						,tSDPR.[type_desc]      AS [PrincipalTypeDesc]
+						,tSDPG.[name]           AS [PrincipalMember]
+					FROM
+						[sys].[database_permissions] tSDP
+						LEFT OUTER JOIN [sys].[database_principals] tSDPR ON
+							tSDPR.[principal_id] = tSDP.[grantee_principal_id]
+						LEFT OUTER JOIN [sys].[database_role_members] tSDRM ON
+							tSDRM.[role_principal_id] = tSDPR.[principal_id]
+						LEFT OUTER JOIN [sys].[database_principals] tSDPG ON
+							tSDPG.[principal_id] = tSDRM.[member_principal_id]
+				) t1 ON
+					t1.[object_id] = tSO.[object_id]
+				INNER JOIN (
+					SELECT
+						 tSDP.[major_id]        AS [object_id]
+						,tSDP.[permission_name] AS [ObjectPermission]
+						,tSDP.[state_desc]      AS [ObjectPermissionStateDesc]
+						,tSDPR.[name]           AS [PrincipalName]
+						,tSDPR.[type_desc]      AS [PrincipalTypeDesc]
+						,tSDPG.[name]           AS [PrincipalMember]
+					FROM
+						[sys].[database_permissions] tSDP
+						LEFT OUTER JOIN [sys].[database_principals] tSDPR ON
+							tSDPR.[principal_id] = tSDP.[grantee_principal_id]
+						LEFT OUTER JOIN [sys].[database_role_members] tSDRM ON
+							tSDRM.[role_principal_id] = tSDPR.[principal_id]
+						LEFT OUTER JOIN [sys].[database_principals] tSDPG ON
+							tSDPG.[principal_id] = tSDRM.[member_principal_id]
+				) t2 ON
+					t2.[object_id] = t1.[object_id]
+					AND t2.[ObjectPermission] = t1.[ObjectPermission]
+					AND t2.[ObjectPermissionStateDesc] = t1.[ObjectPermissionStateDesc]
+					AND t2.[PrincipalMember] = t1.[PrincipalName]
+			ORDER BY
+				 tSO.[type_desc]
+				,tSS.[name]
+				,tSO.[name]
+				,tSO.[create_date]
+				,t1.[ObjectPermission]
+				,t1.[ObjectPermissionStateDesc]
+				,t1.[PrincipalName]
+				,t1.[PrincipalTypeDesc]
+				,t2.[PrincipalName]
+				,t2.[PrincipalTypeDesc]
+			;
+		</sql-select-text>
+		<sql-select-parameters>
+		</sql-select-parameters>
+	</sql-select>
+</sqlquery>
+</root>

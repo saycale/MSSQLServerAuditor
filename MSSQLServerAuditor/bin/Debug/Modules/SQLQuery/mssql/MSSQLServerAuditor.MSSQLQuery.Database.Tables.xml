@@ -1,0 +1,99 @@
+﻿<?xml version="1.0" encoding="UTF-8"?>
+<root xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+<sqlquery type="MSSQL">
+	<sql-select name="GetListOfDatabaseTables" group="" scope="database">
+		<sql-select-text MinSupportedVersion="8.*" MaxSupportedVersion="8.*" signature="">
+			SET NOCOUNT ON;
+			SET DEADLOCK_PRIORITY LOW;
+
+			SELECT
+				 tSO.[name]   AS [NodeUName]
+				,tSO.[id]     AS [NodeUId]
+				,1            AS [NodeEnabled]
+				,CASE
+					WHEN OBJECTPROPERTY(tSO.[id], N'IsMSShipped') = 1 THEN
+						N'MSShippedTableIcon'
+					WHEN tSO.[xtype] IN (N'U') THEN
+						N'UserTableIcon'
+					WHEN tSO.[xtype] IN (N'S') THEN
+						N'SystemTableIcon'
+					ELSE
+						N'UnknownTableIcon'
+				END           AS [NodeUIcon]
+				,N'#808080'   AS [NodeFontColor]
+				,N'normal'    AS [NodeFontStyle]
+				,tSU.[name]   AS [SchemaName]
+				,tSO.[name]   AS [ObjectName]
+				,tSO.[xtype]  AS [ObjectType]
+				,tSO.[crdate] AS [ObjectCreateDate]
+				,tSO.[id]     AS [ObjectId]
+			FROM
+				[dbo].[sysobjects] tSO
+				INNER JOIN [dbo].[sysusers] tSU ON
+					tSU.[uid] = tSO.[uid]
+			WHERE
+				tSO.[xtype] = @XTypeId
+				AND tSO.[uid] = @SchemaId
+			GROUP BY
+				 tSO.[id]
+				,tSU.[name]
+				,tSO.[name]
+				,tSO.[xtype]
+				,tSO.[crdate]
+			ORDER BY
+				 tSU.[name]
+				,tSO.[name]
+			;
+		</sql-select-text>
+		<sql-select-text MinSupportedVersion="9.*" MaxSupportedVersion="*" signature="">
+			SET NOCOUNT ON;
+			SET DEADLOCK_PRIORITY LOW;
+
+			SELECT
+				 tSO.[name]        AS [NodeUName]
+				,tSO.[object_id]   AS [NodeUId]
+				,1                 AS [NodeEnabled]
+				,CASE
+					WHEN OBJECTPROPERTY(tSO.[object_id], N'IsMSShipped') = 1 THEN
+						N'MSShippedTableIcon'
+					WHEN tSO.[type_desc] IN (N'USER_TABLE') THEN
+						N'UserTableIcon'
+					WHEN tSO.[type_desc] IN (N'SYSTEM_TABLE') THEN
+						N'SystemTableIcon'
+					WHEN tSO.[type_desc] IN (N'INTERNAL_TABLE') THEN
+						N'InternalTableIcon'
+					ELSE
+						N'UnknownTableIcon'
+				END                AS [NodeUIcon]
+				,N'#808080'        AS [NodeFontColor]
+				,N'normal'         AS [NodeFontStyle]
+				,tSS.[name]        AS [SchemaName]
+				,tSO.[name]        AS [ObjectName]
+				,tSO.[type_desc]   AS [ObjectType]
+				,tSO.[create_date] AS [ObjectCreateDate]
+				,tSO.[object_id]   AS [ObjectId]
+			FROM
+				[sys].[objects] tSO
+				INNER JOIN [sys].[schemas] tSS ON
+					tSS.[schema_id] = tSO.[schema_id]
+			WHERE
+				tSO.[type] = @XTypeId
+				AND tSO.[schema_id] = @SchemaId
+			GROUP BY
+				 tSO.[object_id]
+				,tSS.[name]
+				,tSO.[name]
+				,tSO.[type_desc]
+				,tSO.[create_date]
+			ORDER BY
+				 tSS.[name]
+				,tSO.[name]
+			;
+		</sql-select-text>
+		<sql-select-parameters>
+			<sql-select-parameter name="@XTypeId" type="NChar" />
+			<sql-select-parameter name="@SchemaId" type="Int" />
+		</sql-select-parameters>
+	</sql-select>
+</sqlquery>
+</root>

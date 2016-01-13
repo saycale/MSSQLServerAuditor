@@ -1,0 +1,34 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<LicenseSettings xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+	<PublicKeySign>&lt;RSAKeyValue&gt;&lt;Modulus&gt;l88KaAR3FRSFIIQlTl5nbyFQ/U5mBCNueIHQtWbKlDwhGRjr8B6yv2iP+Ky9SPkM9aMsyYzw47qCiH+/pBAiJrDcBEAQr3iPzYYIBCPO8KEH88MyzQSJgBnuhozDjTcIYDOeCNpfdrO7iYfWjv3mmUtIujuY6gKwIyGCW3vm4Us=&lt;/Modulus&gt;&lt;Exponent&gt;AQAB&lt;/Exponent&gt;&lt;/RSAKeyValue&gt;</PublicKeySign>
+	<PrivateKeySign>&lt;RSAKeyValue&gt;&lt;Modulus&gt;l88KaAR3FRSFIIQlTl5nbyFQ/U5mBCNueIHQtWbKlDwhGRjr8B6yv2iP+Ky9SPkM9aMsyYzw47qCiH+/pBAiJrDcBEAQr3iPzYYIBCPO8KEH88MyzQSJgBnuhozDjTcIYDOeCNpfdrO7iYfWjv3mmUtIujuY6gKwIyGCW3vm4Us=&lt;/Modulus&gt;&lt;Exponent&gt;AQAB&lt;/Exponent&gt;&lt;P&gt;0vuPjf+fN/Bgq4s9vPjv/18LAEe73GJa51VsvkjeC5y48C9Xnnt9MPS0QlSMHNFi8sZp8WQim/h9FQLkM8X1xQ==&lt;/P&gt;&lt;Q&gt;uDM+BCoqPiEYn1pod7LbfX1FhZl5x+hFTWmPIwXG+G9D8FGHvZtU9zQmGBpCL3svfEOr9DTjCrdU0q0+djn7zw==&lt;/Q&gt;&lt;DP&gt;OFTGPWmUv0DE7shckYn9ujdMHqUIeY0hLEbYo+2cq4kKr8ZUJJJgGKQdROCCEGevfZaQTs0nmHE+JFADUfd26Q==&lt;/DP&gt;&lt;DQ&gt;Tjj8khox3DaD1VA4YvSifzUOrACUFc/OdmRoc7AFYgUmLc0BvwRS3bPYpY2pI67FaJj4UfmPnUJjlCAcEWroQw==&lt;/DQ&gt;&lt;InverseQ&gt;AO8JISZkH+qW495Yz/VCUe3NOSeSeBu6oBLPiNT6dzFssYu1h4XsbymIGFgI4tEaldNjPMFflO+FOgYBcdPdqA==&lt;/InverseQ&gt;&lt;D&gt;KxsF+G00Jw8xkf8T3MHfmuWZ6qNFQm2RI7Swv6GVaiv8tfSmogMFfGZDYzghc0QMkv8na3+Sswc1o26qyvotx+B/46PTiYIxvtcftg5+K0CvB2YU8efJUqfwLO7sfjZkBgwGns6V7+sV1poM+OE1PDdzrhQhWgVpraa+c5Xefjk=&lt;/D&gt;&lt;/RSAKeyValue&gt;</PrivateKeySign>
+	<PublicKeyDecrypt>&lt;RSAKeyValue&gt;&lt;Modulus&gt;0cNF7gU7ej5QyElt8v8ILPy/KoMDn+xNXGec5xV8t0zlDjwLdvXrBsQMGd/f9cg+SZWe4TvKfH/LKnURmFUhsi1AAAgjdiaHXTqmK//OiQStFYqnouIqFS7L3/GMA0Nlffvhr9CUFvsS567xMvSL6YIfVe9PB0IgSZPxGPRciLU=&lt;/Modulus&gt;&lt;Exponent&gt;AQAB&lt;/Exponent&gt;&lt;/RSAKeyValue&gt;</PublicKeyDecrypt>
+	<PrivateKeyDecrypt>&lt;RSAKeyValue&gt;&lt;Modulus&gt;0cNF7gU7ej5QyElt8v8ILPy/KoMDn+xNXGec5xV8t0zlDjwLdvXrBsQMGd/f9cg+SZWe4TvKfH/LKnURmFUhsi1AAAgjdiaHXTqmK//OiQStFYqnouIqFS7L3/GMA0Nlffvhr9CUFvsS567xMvSL6YIfVe9PB0IgSZPxGPRciLU=&lt;/Modulus&gt;&lt;Exponent&gt;AQAB&lt;/Exponent&gt;&lt;P&gt;/LuQsjX2110izEWcItpzXTpLexE66/Ej7HhWK8+LHuO/+Pdjc/PUGed2wl3E9noLi9Wpuxwiu1nhcirekTXDnw==&lt;/P&gt;&lt;Q&gt;1Hl/EjsYDSh/k45kFNDGTrA+AWQ6ST3WiWYx4CCHScMAkQFCeB+XFX+kCbDzriMGL6tDEbQlTtPa+TaHqCQzKw==&lt;/Q&gt;&lt;DP&gt;4gz5/QwbfsHFMCRK5Tmy2f4cKTVeGE8VLJrtqD34V2ap/It5nurGGW1YYbzxQOwki6xOJheiUSSxayZA8GzATQ==&lt;/DP&gt;&lt;DQ&gt;YdeM93U07yI+FVHVrmwxVZz9AKEJ4h5Sw7TGtOHlysa8ZQnCdRR++0xq2neczwyb1am02dst7u3KAUbmEzyQPw==&lt;/DQ&gt;&lt;InverseQ&gt;fY26scqPlzgG1MDY5K0U5FX3Xuv/ql4X18SodTFJKEAim0f5t2iwGUGsa9vrVA3NPlHGSda1Sm2rBr691+weAw==&lt;/InverseQ&gt;&lt;D&gt;GGLOR2yeTIjgFVjMCnrxtWEwzD1s93OeTsbQ6+CInjq3Sl9aqdrPFvtFuOBZBhbgfueBEAhGcxDcSrRPdlk3UGxy7RnBrNV0pAd6dZKP4FKeU2/3D25TxviGxzgvV+HmWNncUMUa3F4SPACIedW/G6DAm9Jhz9MuRJDZm9q34sU=&lt;/D&gt;&lt;/RSAKeyValue&gt;</PrivateKeyDecrypt>
+	<TemplateFiles>
+		<string>..\..\..\Sample data\BuildingSetup.MSSQLServerAuditor-Locks!\MSSQLServerAuditor-Locks!.Templates\MSSQLServerAuditor-Locks!.Template.xml</string>
+	</TemplateFiles>
+	<DstFolder>..\..\..\Sample data\BuildingSetup.MSSQLServerAuditor-Locks!\temp</DstFolder>
+	<SrcFolder>..\..\..\Sample data\BuildingSetup.MSSQLServerAuditor-Locks!\MSSQLServerAuditor-Locks!.Templates</SrcFolder>
+	<NetFolder>C:\Program Files (x86)\Reference Assemblies\Microsoft\Framework\.NETFramework\v4.0\</NetFolder>
+	<NetPlatform>v4</NetPlatform>
+	<LanguageFile>..\..\..\Sample data\BuildingSetup.MSSQLServerAuditor-Locks!\MSSQLServerAuditor-Locks!.Templates\MSSQLServerAuditor-Locks!.i18n.xml</LanguageFile>
+	<SystemSettingsFile>..\..\..\Sample data\BuildingSetup.MSSQLServerAuditor-Locks!\MSSQLServerAuditor-Locks!.Templates\MSSQLServerAuditor-Locks!.SystemSettings.xml</SystemSettingsFile>
+	<UserSettingsFile>..\..\..\Sample data\BuildingSetup.MSSQLServerAuditor-Locks!\MSSQLServerAuditor-Locks!.Templates\MSSQLServerAuditor-Locks!.UserSettings.xml</UserSettingsFile>
+	<WixFileName>..\..\..\Sample data\BuildingSetup.MSSQLServerAuditor-Locks!\MSSQLServerAuditor-Locks!.wxs</WixFileName>
+	<WixBannerFileName>..\..\..\Sample data\BuildingSetup.MSSQLServerAuditor-Locks!\MSSQLServerAuditor-Locks!.BannerBitmap.bmp</WixBannerFileName>
+	<WixFolder>c:\Program Files (x86)\WiX Toolset v3.8\bin\</WixFolder>
+	<OutputMsi>..\..\..\SetupOut\MSSQLServerAuditor-Locks!.0.6.5.21.x64.msi</OutputMsi>
+	<DnGuardFolder>C:\Program Files (x86)\DNGuard Trial</DnGuardFolder>
+	<DnGuardExeName>DNGuardCMD.exe</DnGuardExeName>
+	<UseDnGuard>true</UseDnGuard>
+	<DnGuardX64Opt>true</DnGuardX64Opt>
+	<DnGuardOptions> /encrypt_code /encrypt_cctor /encrypt_ctor /encrypt_blob /encrypt_res /encrypt_string /obmode=0</DnGuardOptions>
+	<AdditionalSql />
+	<AppPath>..\..\..\MSSQLServerAuditor\bin\Release\MSSQLServerAuditor.exe</AppPath>
+	<DirectoryName>MSSQLServerAuditor-Locks!</DirectoryName>
+	<ExeFileName>MSSQLServerAuditor-Locks!.exe</ExeFileName>
+	<ShorcName>MSSQLServerAuditor-Locks!</ShorcName>
+	<LicenseFolder>..\..\..\Sample data\BuildingSetup.MSSQLServerAuditor-Locks!\EndUserAgreement\</LicenseFolder>
+	<LicenseFileName>MSSQLServerAuditor-Locks!.EndUserAgreement.rtf</LicenseFileName>
+	<ProgramName>MSSQLServerAuditor-Locks!</ProgramName>
+</LicenseSettings>

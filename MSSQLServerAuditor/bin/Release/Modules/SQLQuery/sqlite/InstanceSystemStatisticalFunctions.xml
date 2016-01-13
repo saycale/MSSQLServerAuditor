@@ -1,0 +1,52 @@
+﻿<?xml version="1.0" encoding="UTF-8"?>
+<root xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+<sqlquery type="SQLite">
+	<sql-select name="GetInstanceSystemStatisticalFunctions">
+		<sql-select-text MinSupportedVersion="*" MaxSupportedVersion="*" signature="">
+			SELECT
+				 t.[EventTime]    AS [EventTime]
+				,t.[Connections]  AS [Connections]
+				,t.[CPUBusy]      AS [CPUBusy]
+				,t.[CPUIdle]      AS [CPUIdle]
+				,t.[IOBusy]       AS [IOBusy]
+				,t.[PackReceived] AS [PackReceived]
+				,t.[PackSent]     AS [PackSent]
+				,t.[PacketErrors] AS [PacketErrors]
+				,t.[TimeTicks]    AS [TimeTicks]
+				,t.[TotalErrors]  AS [TotalErrors]
+				,t.[TotalRead]    AS [TotalRead]
+				,t.[TotalWrite]   AS [TotalWrite]
+			FROM
+				[hist].[h_InstanceSystemStatisticalFunctions] t
+				INNER JOIN [hist].[h_ServerInstance] hSI ON
+					hSI.[rowid] = t.[h_ServerInstance_id]
+					AND hSI.[d_ServerInstance_id] = @d_ServerInstance_id
+			WHERE
+				CASE
+					WHEN ((@EventDayMin IS NOT NULL) AND (@EventDayMax IS NOT NULL)) THEN
+						t.[EventDay] BETWEEN date(@EventDayMin) AND date(@EventDayMax)
+					WHEN (@strDateTimeModifier IS NOT NULL) THEN
+						t.[EventTime] &gt; (
+							SELECT
+								DATETIME(MAX(t.[EventTime]), @strDateTimeModifier)
+							FROM
+								[hist].[h_InstanceSystemStatisticalFunctions] t
+								INNER JOIN [hist].[h_ServerInstance] hSI ON
+									hSI.[rowid] = t.[h_ServerInstance_id]
+									AND hSI.[d_ServerInstance_id] = @d_ServerInstance_id
+						)
+					ELSE
+						t.[EventDay] = date('1900-01-01')
+				END
+			ORDER BY
+				t.[EventTime] ASC
+			;
+		</sql-select-text>
+		<sql-select-parameters>
+			<sql-select-parameter name="@EventDayMin"         type="Date"     />
+			<sql-select-parameter name="@EventDayMax"         type="Date"     />
+			<sql-select-parameter name="@strDateTimeModifier" type="NVarChar" />
+		</sql-select-parameters>
+	</sql-select>
+</sqlquery>
+</root>

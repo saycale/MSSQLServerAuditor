@@ -1,0 +1,307 @@
+﻿<?xml version="1.0" encoding="UTF-8"?>
+<root xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+<sqlquery type="MSSQL">
+	<sql-select name="GetInstanceDatabasesSize">
+		<sql-select-text MinSupportedVersion="8.*" MaxSupportedVersion="8.*" signature="">
+			SET NOCOUNT ON;
+			SET DEADLOCK_PRIORITY LOW;
+
+			DECLARE
+				 @DatabaseName           [NVARCHAR](128)
+				,@bigintDatabaseSize     [DECIMAL](24, 2)
+				,@bigintDatabaseDataSize [DECIMAL](24, 2)
+				,@bigintDatabaseLogSize  [DECIMAL](24, 2)
+				,@strSQLTemp             [NVARCHAR](4000)
+				,@intPageSize            [INTEGER]
+			;
+
+			DECLARE
+				@tableDatabases TABLE
+				(
+					 [DatabaseID]                 [INTEGER]
+					,[DatabaseName]               [NVARCHAR](128)
+					,[bigintDatabaseSize]         [DECIMAL](24, 2)
+					,[bigintDatabaseDataSize]     [DECIMAL](24, 2)
+					,[bigintDatabaseDataSizeUsed] [DECIMAL](24, 2)
+					,[bigintDatabaseLogSize]      [DECIMAL](24, 2)
+					,[bigintDatabaseLogSizeUsed]  [DECIMAL](24, 2)
+				);
+
+			CREATE TABLE #tblDatabaseSize
+			(
+				 [bigintDatabaseSize]         [DECIMAL](24, 2)
+				,[bigintDatabaseDataSize]     [DECIMAL](24, 2)
+				,[bigintDatabaseDataSizeUsed] [DECIMAL](24, 2)
+				,[bigintDatabaseLogSize]      [DECIMAL](24, 2)
+				,[bigintDatabaseLogSizeUsed]  [DECIMAL](24, 2)
+			);
+
+			SELECT
+				@intPageSize = tSV.[low]
+			FROM
+				[master].[dbo].[spt_values] tSV
+			WHERE
+				tSV.[number] = 1
+				AND tSV.[type] = N'E';
+
+			INSERT INTO @tableDatabases
+			(
+				 [DatabaseID]
+				,[DatabaseName]
+			)
+			SELECT
+				 sdb.[dbid]
+				,sdb.[name]
+			FROM
+				[master].[dbo].[sysdatabases] sdb
+			WHERE
+				DatabasePropertyEx(sdb.[name], N'Status') IN (
+					N'ONLINE'
+				)
+			GROUP BY
+				 sdb.[dbid]
+				,sdb.[name];
+
+			SELECT
+				@DatabaseName = MIN(t.[DatabaseName])
+			FROM
+				@tableDatabases t;
+
+			WHILE (@DatabaseName IS NOT NULL)
+			BEGIN
+				SET @strSQLTemp = N'USE ' + QuoteName(@DatabaseName, ']') + N';
+					SELECT
+						 SUM(CONVERT([DECIMAL](24, 2), tSF.[size]))
+						,SUM(
+							CASE
+								WHEN (tSF.[status] &amp; 0x40 = 0) THEN
+									CONVERT([DECIMAL](24, 2), tSF.[size])
+								ELSE
+									CONVERT([DECIMAL](24, 2), 0.0)
+							END
+						)
+						,SUM(
+							CASE
+								WHEN (tSF.[status] &amp; 0x40 = 0) THEN
+									CONVERT([DECIMAL](24, 2), FILEPROPERTY(tSF.[name], N''SpaceUsed''))
+								ELSE
+									CONVERT([DECIMAL](24, 2), 0.0)
+							END
+						)
+						,SUM(
+							CASE
+								WHEN (tSF.[status] &amp; 0x40 NOT IN (0)) THEN
+									CONVERT([DECIMAL](24, 2), tSF.[size])
+								ELSE
+									CONVERT([DECIMAL](24, 2), 0.0)
+							END
+						)
+						,SUM(
+							CASE
+								WHEN (tSF.[status] &amp; 0x40 NOT IN (0)) THEN
+									CONVERT([DECIMAL](24, 2), FILEPROPERTY(tSF.[name], N''SpaceUsed''))
+								ELSE
+									CONVERT([DECIMAL](24, 2), 0.0)
+							END
+						)
+					FROM
+						[dbo].[sysfiles] tSF;
+				'
+
+				TRUNCATE TABLE #tblDatabaseSize;
+
+				INSERT INTO #tblDatabaseSize
+				(
+					 [bigintDatabaseSize]
+					,[bigintDatabaseDataSize]
+					,[bigintDatabaseDataSizeUsed]
+					,[bigintDatabaseLogSize]
+					,[bigintDatabaseLogSizeUsed]
+				)
+					EXEC (@strSQLTemp);
+
+				UPDATE @tableDatabases SET
+					 [bigintDatabaseSize]         = tDBS.[bigintDatabaseSize]
+					,[bigintDatabaseDataSize]     = tDBS.[bigintDatabaseDataSize]
+					,[bigintDatabaseDataSizeUsed] = tDBS.[bigintDatabaseDataSizeUsed]
+					,[bigintDatabaseLogSize]      = tDBS.[bigintDatabaseLogSize]
+					,[bigintDatabaseLogSizeUsed]  = tDBS.[bigintDatabaseLogSizeUsed]
+				FROM
+					@tableDatabases tDB
+					INNER JOIN #tblDatabaseSize tDBS ON
+						tDB.[DatabaseName] = @DatabaseName;
+
+				SELECT
+					@DatabaseName = MIN(t.[DatabaseName])
+				FROM
+					@tableDatabases t
+				WHERE
+					t.[DatabaseName] &gt; @DatabaseName;
+			END
+
+			SELECT
+				 tDB.[DatabaseID]                                                                                                            AS [DatabaseID]
+				,tDB.[DatabaseName]                                                                                                          AS [DatabaseName]
+				,(tDB.[bigintDatabaseSize]         * CONVERT([DECIMAL](24, 2), @intPageSize)) / (CONVERT([DECIMAL](24, 2), 1024.0 * 1024.0)) AS [DatabaseSizeMB]
+				,(tDB.[bigintDatabaseDataSize]     * CONVERT([DECIMAL](24, 2), @intPageSize)) / (CONVERT([DECIMAL](24, 2), 1024.0 * 1024.0)) AS [DatabaseDataSizeMB]
+				,(tDB.[bigintDatabaseDataSizeUsed] * CONVERT([DECIMAL](24, 2), @intPageSize)) / (CONVERT([DECIMAL](24, 2), 1024.0 * 1024.0)) AS [DatabaseDataSizeUsedMB]
+				,(tDB.[bigintDatabaseLogSize]      * CONVERT([DECIMAL](24, 2), @intPageSize)) / (CONVERT([DECIMAL](24, 2), 1024.0 * 1024.0)) AS [DatabaseLogSizeMB]
+				,(tDB.[bigintDatabaseLogSizeUsed]  * CONVERT([DECIMAL](24, 2), @intPageSize)) / (CONVERT([DECIMAL](24, 2), 1024.0 * 1024.0)) AS [DatabaseLogSizeUsedMB]
+			FROM
+				@tableDatabases tDB
+			ORDER BY
+				tDB.[bigintDatabaseSize] DESC;
+		</sql-select-text>
+		<sql-select-text MinSupportedVersion="9.*" MaxSupportedVersion="*" signature="">
+			SET NOCOUNT ON;
+			SET DEADLOCK_PRIORITY LOW;
+
+			DECLARE
+				 @intPageSize  [INTEGER]
+				,@DatabaseName [NVARCHAR](128)
+				,@strSQLTemp   [NVARCHAR](4000)
+			;
+
+			DECLARE
+				@tableDatabases TABLE
+				(
+					 [DatabaseID]                 [INTEGER]
+					,[DatabaseName]               [NVARCHAR](128)
+					,[bigintDatabaseSize]         [DECIMAL](24, 2)
+					,[bigintDatabaseDataSize]     [DECIMAL](24, 2)
+					,[bigintDatabaseDataSizeUsed] [DECIMAL](24, 2)
+					,[bigintDatabaseLogSize]      [DECIMAL](24, 2)
+					,[bigintDatabaseLogSizeUsed]  [DECIMAL](24, 2)
+				);
+
+			CREATE TABLE #tblDatabaseSize
+			(
+				 [bigintDatabaseDataSizeUsed] [DECIMAL](24, 2)
+				,[bigintDatabaseLogSizeUsed]  [DECIMAL](24, 2)
+			);
+
+			SELECT
+				@intPageSize = tSV.[low]
+			FROM
+				[master].[dbo].[spt_values] tSV
+			WHERE
+				tSV.[number] = 1
+				AND tSV.[type] = N'E';
+
+			INSERT INTO @tableDatabases
+			(
+				 [DatabaseID]
+				,[DatabaseName]
+				,[bigintDatabaseSize]
+				,[bigintDatabaseDataSize]
+				,[bigintDatabaseLogSize]
+			)
+			SELECT
+				 tSD.[database_id]
+				,tSD.[name]
+				,SUM(CONVERT([DECIMAL](24, 2), tMF.[size]))
+				,SUM(CASE
+					WHEN (tMF.[type_desc] = N'ROWS') THEN
+						CONVERT([DECIMAL](24, 2), tMF.[size])
+					ELSE
+						CONVERT([DECIMAL](24, 2), 0.0)
+					END
+				)
+				,SUM(CASE
+					WHEN (tMF.[type_desc] = N'LOG') THEN
+						CONVERT([DECIMAL](24, 2), tMF.[size])
+					ELSE
+						CONVERT([DECIMAL](24, 2), 0.0)
+					END
+				)
+			FROM
+				[master].[sys].[master_files] tMF
+				INNER JOIN [master].[sys].[databases] tSD ON
+					tSD.[database_id] = tMF.[database_id]
+			GROUP BY
+				 tSD.[database_id]
+				,tSD.[name];
+
+			SELECT
+				@DatabaseName = MIN(tDB.[DatabaseName])
+			FROM
+				@tableDatabases tDB;
+
+			WHILE (@DatabaseName IS NOT NULL)
+			BEGIN
+				IF (DatabasePropertyEx(@DatabaseName, N'Status') IN (N'ONLINE'))
+				BEGIN
+					SET @strSQLTemp = N'USE ' + QuoteName(@DatabaseName, ']') + N';
+						SELECT
+							SUM(CASE
+								WHEN (tDF.[type_desc] = N''ROWS'') THEN
+									CONVERT([DECIMAL](24, 2), FILEPROPERTY(tDF.[name], N''SpaceUsed''))
+								ELSE
+									CONVERT([DECIMAL](24, 2), 0.0)
+							END)
+							,SUM(CASE
+								WHEN (tDF.[type_desc] = N''LOG'') THEN
+									CONVERT([DECIMAL](24, 2), FILEPROPERTY(tDF.[name], N''SpaceUsed''))
+								ELSE
+									CONVERT([DECIMAL](24, 2), 0.0)
+							END)
+						FROM
+							[sys].[database_files] tDF;
+					';
+
+					TRUNCATE TABLE #tblDatabaseSize;
+
+					BEGIN TRY
+						INSERT INTO #tblDatabaseSize
+						(
+							 [bigintDatabaseDataSizeUsed]
+							,[bigintDatabaseLogSizeUsed]
+						)
+							EXEC (@strSQLTemp);
+					END TRY
+					BEGIN CATCH
+						INSERT INTO #tblDatabaseSize
+						(
+							 [bigintDatabaseDataSizeUsed]
+							,[bigintDatabaseLogSizeUsed]
+						)
+						VALUES
+						(
+							 -128
+							,-128
+						);
+					END CATCH
+
+					UPDATE @tableDatabases SET
+						 [bigintDatabaseDataSizeUsed] = tDBS.[bigintDatabaseDataSizeUsed]
+						,[bigintDatabaseLogSizeUsed]  = tDBS.[bigintDatabaseLogSizeUsed]
+					FROM
+						@tableDatabases tDB
+						INNER JOIN #tblDatabaseSize tDBS ON
+							tDB.[DatabaseName] = @DatabaseName;
+				END
+
+				SELECT
+					@DatabaseName = MIN(t.[DatabaseName])
+				FROM
+					@tableDatabases t
+				WHERE
+					t.[DatabaseName] &gt; @DatabaseName;
+			END
+
+			SELECT
+				 tDB.[DatabaseID]                                                                                                            AS [DatabaseID]
+				,tDB.[DatabaseName]                                                                                                          AS [DatabaseName]
+				,(tDB.[bigintDatabaseSize]         * CONVERT([DECIMAL](24, 2), @intPageSize)) / (CONVERT([DECIMAL](24, 2), 1024.0 * 1024.0)) AS [DatabaseSizeMB]
+				,(tDB.[bigintDatabaseDataSize]     * CONVERT([DECIMAL](24, 2), @intPageSize)) / (CONVERT([DECIMAL](24, 2), 1024.0 * 1024.0)) AS [DatabaseDataSizeMB]
+				,(tDB.[bigintDatabaseDataSizeUsed] * CONVERT([DECIMAL](24, 2), @intPageSize)) / (CONVERT([DECIMAL](24, 2), 1024.0 * 1024.0)) AS [DatabaseDataSizeUsedMB]
+				,(tDB.[bigintDatabaseLogSize]      * CONVERT([DECIMAL](24, 2), @intPageSize)) / (CONVERT([DECIMAL](24, 2), 1024.0 * 1024.0)) AS [DatabaseLogSizeMB]
+				,(tDB.[bigintDatabaseLogSizeUsed]  * CONVERT([DECIMAL](24, 2), @intPageSize)) / (CONVERT([DECIMAL](24, 2), 1024.0 * 1024.0)) AS [DatabaseLogSizeUsedMB]
+			FROM
+				@tableDatabases tDB
+			ORDER BY
+				tDB.[bigintDatabaseSize] DESC;
+		</sql-select-text>
+	</sql-select>
+</sqlquery>
+</root>

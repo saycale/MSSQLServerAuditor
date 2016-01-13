@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<root xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+<sqlquery type="MSSQL">
+	<sql-select name="GetInstanceMemoryUtilization">
+		<reference>
+			http://www.sqlskills.com/blogs/jonathan/wow-an-online-calculator-to-misconfigure-your-sql-server-memory/
+		</reference>
+		<sql-select-text MinSupportedVersion="9.*" MaxSupportedVersion="*" signature="">
+			SELECT
+				 x.[RecordEventTime]                                                                  AS [EventTime]
+				,x.[RecordTimeStamp]                                                                  AS [RecordTimeStamp]
+				,x.[RingBufferType]                                                                   AS [RecordRingBufferType]
+				,XMLRecord.value('(//Record/@id)[1]', 'int')                                          AS [RecordId]
+				,XMLRecord.value('(//Record/@type)[1]', 'varchar(128)')                               AS [RecordType]
+				,XMLRecord.value('(//Record/@time)[1]', 'bigint')                                     AS [RecordTime]
+				,XMLRecord.value('(./Record/ResourceMonitor/Notification)[1]', 'varchar(max)')        AS [NotificationType]
+				,XMLRecord.value('(./Record/ResourceMonitor/IndicatorsProcess)[1]', 'int')            AS [IndicatorsProcess]
+				,XMLRecord.value('(./Record/ResourceMonitor/IndicatorsSystem)[1]', 'int')             AS [IndicatorsSystem]
+				,XMLRecord.value('(./Record/MemoryRecord/AvailablePhysicalMemory)[1]', 'bigint')      AS [AvailiblePhysicalMemoryKb]
+				,XMLRecord.value('(./Record/MemoryRecord/AvailableVirtualAddressSpace)[1]', 'bigint') AS [AvailibleVirtualMemoryKb]
+				,XMLRecord.value('(./Record/MemoryRecord/AvailablePageFile)[1]', 'bigint')            AS [AvailablePageFileKb]
+				,XMLRecord.value('(./Record/MemoryNode/ReservedMemory)[1]', 'bigint')                 AS [ReservedMemoryKb]
+				,XMLRecord.value('(./Record/MemoryNode/CommittedMemory)[1]', 'bigint')                AS [CommittedMemoryKb]
+			FROM (
+				SELECT
+					 DATEADD(ms, t.[timestamp] - tSDOSI.[ms_ticks], GETDATE()) AS [RecordEventTime]
+					,t.[timestamp]                                             AS [RecordTimeStamp]
+					,t.[ring_buffer_type]                                      AS [RingBufferType]
+					,CONVERT([XML], t.[record])                                AS [XMLRecord]
+				FROM
+					[sys].[dm_os_ring_buffers] t
+					CROSS JOIN [sys].[dm_os_sys_info] AS tSDOSI
+				WHERE
+					t.[ring_buffer_type] = N'RING_BUFFER_RESOURCE_MONITOR'
+					AND t.[record] LIKE '% %'
+					AND (tSDOSI.[ms_ticks] - t.[timestamp]) &lt; 2147483647
+				) AS x
+			ORDER BY
+				x.[RecordEventTime] ASC
+			;
+		</sql-select-text>
+	</sql-select>
+</sqlquery>
+</root>
+

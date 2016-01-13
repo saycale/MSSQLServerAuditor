@@ -1,0 +1,311 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<root xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+<sqlquery type="MSSQL">
+	<sql-select name="GetServerInfo">
+		<sql-select-text MinSupportedVersion="7.*" MaxSupportedVersion="7.*" signature="">
+			SELECT
+				 @@VERSION          AS [Version]
+				,@@MICROSOFTVERSION AS [MicrosoftVersion]
+				,NULL               AS [BuildClrVersion]
+				,NULL               AS [Collation]
+				,NULL               AS [CollationID]
+				,NULL               AS [ComparisonStyle]
+				,NULL               AS [ComputerNamePhysicalNetBIOS]
+				,NULL               AS [Edition]
+				,NULL               AS [EditionID]
+				,NULL               AS [EngineEdition]
+				,NULL               AS [HadrManagerStatus]
+				,NULL               AS [InstanceName]
+				,NULL               AS [IsClustered]
+				,NULL               AS [IsFullTextInstalled]
+				,NULL               AS [IsHadrEnabled]
+				,NULL               AS [IsIntegratedSecurityOnly]
+				,NULL               AS [IsLocalDB]
+				,NULL               AS [IsSingleUser]
+				,NULL               AS [LCID]
+				,NULL               AS [LicenseType]
+				,NULL               AS [MachineName]
+				,NULL               AS [NumLicenses]
+				,NULL               AS [ProcessID]
+				,NULL               AS [ProductVersion]
+				,NULL               AS [ProductLevel]
+				,NULL               AS [ResourceLastUpdateDateTime]
+				,NULL               AS [ResourceVersion]
+				,NULL               AS [ServerName]
+				,NULL               AS [SqlCharSet]
+				,NULL               AS [SqlCharSetName]
+				,NULL               AS [SqlSortOrder]
+				,NULL               AS [SqlSortOrderName]
+				,NULL               AS [FilestreamShareName]
+				,NULL               AS [FilestreamConfiguredLevel]
+				,NULL               AS [FilestreamEffectiveLevel]
+				,NULL               AS [ServiceAccount];
+				,NULL               AS [TcpPort]
+				,NULL               AS [MajorVersion]
+				,NULL               AS [MinorVersion]
+				,NULL               AS [LatestVersion]
+		</sql-select-text>
+		<sql-select-text MinSupportedVersion="8.*" MaxSupportedVersion="8.*" signature="">
+			SET NOCOUNT ON;
+			SET DEADLOCK_PRIORITY LOW;
+
+			DECLARE
+				 @dateLatestVersion  [DATETIME]
+				,@intMajorVersion    [INTEGER]
+				,@intMinorVersion    [INTEGER]
+				,@intPosMajorVersion [INTEGER]
+				,@intPosMinorVersion [INTEGER]
+				,@intTcpPort         [INTEGER]
+				,@strCurrentVersion  [NVARCHAR](128)
+				,@strInstanceName    [NVARCHAR](128)
+				,@strLatestVersion   [NVARCHAR](128)
+				,@strRegistryPath    [NVARCHAR](4000)
+				,@strServiceAccount  [NVARCHAR](128)
+				,@strTcpPort         [NVARCHAR](4000)
+			;
+
+			DECLARE
+				@tableMSSQLServerVersion TABLE
+				(
+					 [intMajorVersion]   [INTEGER]       NOT NULL
+					,[intMinorVersion]   [INTEGER]       NOT NULL
+					,[strLatestVersion]  [NVARCHAR](128) NOT NULL
+					,[dateLatestVersion] [DATETIME]      NOT NULL
+				);
+
+			INSERT INTO @tableMSSQLServerVersion VALUES ( 8,  0, N'8.00.2305', N'20120814');
+
+			SET @strInstanceName    = CONVERT([NVARCHAR](128), SERVERPROPERTY(N'INSTANCENAME'));
+			SET @strCurrentVersion  = CONVERT([NVARCHAR](128), SERVERPROPERTY(N'PRODUCTVERSION'));
+			SET @intPosMajorVersion = CHARINDEX(N'.', @strCurrentVersion, 0);
+			SET @intPosMinorVersion = CHARINDEX(N'.', @strCurrentVersion, @intPosMajorVersion + 1);
+
+			SET @intMajorVersion = CONVERT([INTEGER], SUBSTRING(@strCurrentVersion, 0, @intPosMajorVersion));
+			SET @intMinorVersion = CONVERT([INTEGER], SUBSTRING(@strCurrentVersion, @intPosMajorVersion + 1, @intPosMinorVersion - @intPosMajorVersion - 1));
+
+			SELECT
+				 @strLatestVersion  = t.[strLatestVersion]
+				,@dateLatestVersion = t.[dateLatestVersion]
+			FROM
+				@tableMSSQLServerVersion t
+			WHERE
+				t.[intMajorVersion] = @intMajorVersion
+				AND t.[intMinorVersion] = @intMinorVersion;
+
+			EXECUTE [master].[dbo].[xp_instance_regread]
+				 N'HKEY_LOCAL_MACHINE'
+				,N'SYSTEM\CurrentControlSet\Services\MSSQLSERVER'
+				,N'ObjectName'
+				,@strServiceAccount OUTPUT
+				,N'no_output';
+
+			IF (@strInstanceName IS NULL)
+			BEGIN
+				SET @strRegistryPath = N'Software\Microsoft\MSSQLServer\MSSQLServer\SuperSocketNetLib\Tcp\';
+			END
+			ELSE
+			BEGIN
+				SET @strRegistryPath = N'Software\Microsoft\Microsoft SQL Server\'
+					+ @strInstanceName
+					+ N'\MSSQLServer\SuperSocketNetLib\Tcp\';
+			END
+
+			EXECUTE [master].[dbo].[xp_regread]
+				 N'HKEY_LOCAL_MACHINE'
+				,@strRegistryPath
+				,N'tcpPort'
+				,@strTcpPort OUTPUT
+				,N'no_output';
+
+			SET @intTcpPort = CONVERT([INTEGER], @strTcpPort);
+
+			SELECT
+				 @@VERSION                                      AS [Version]
+				,@@MICROSOFTVERSION                             AS [MicrosoftVersion]
+				,SERVERPROPERTY(N'BuildClrVersion')             AS [BuildClrVersion]
+				,SERVERPROPERTY(N'Collation')                   AS [Collation]
+				,SERVERPROPERTY(N'CollationID')                 AS [CollationID]
+				,SERVERPROPERTY(N'ComparisonStyle')             AS [ComparisonStyle]
+				,SERVERPROPERTY(N'ComputerNamePhysicalNetBIOS') AS [ComputerNamePhysicalNetBIOS]
+				,SERVERPROPERTY(N'Edition')                     AS [Edition]
+				,SERVERPROPERTY(N'EditionID')                   AS [EditionID]
+				,SERVERPROPERTY(N'EngineEdition')               AS [EngineEdition]
+				,SERVERPROPERTY(N'HadrManagerStatus')           AS [HadrManagerStatus]
+				,SERVERPROPERTY(N'InstanceName')                AS [InstanceName]
+				,SERVERPROPERTY(N'IsClustered')                 AS [IsClustered]
+				,SERVERPROPERTY(N'IsFullTextInstalled')         AS [IsFullTextInstalled]
+				,SERVERPROPERTY(N'IsHadrEnabled')               AS [IsHadrEnabled]
+				,SERVERPROPERTY(N'IsIntegratedSecurityOnly')    AS [IsIntegratedSecurityOnly]
+				,SERVERPROPERTY(N'IsLocalDB')                   AS [IsLocalDB]
+				,SERVERPROPERTY(N'IsSingleUser')                AS [IsSingleUser]
+				,SERVERPROPERTY(N'LCID')                        AS [LCID]
+				,SERVERPROPERTY(N'LicenseType')                 AS [LicenseType]
+				,SERVERPROPERTY(N'MachineName')                 AS [MachineName]
+				,SERVERPROPERTY(N'NumLicenses')                 AS [NumLicenses]
+				,SERVERPROPERTY(N'ProcessID')                   AS [ProcessID]
+				,SERVERPROPERTY(N'ProductVersion')              AS [ProductVersion]
+				,SERVERPROPERTY(N'ProductLevel')                AS [ProductLevel]
+				,SERVERPROPERTY(N'ResourceLastUpdateDateTime')  AS [ResourceLastUpdateDateTime]
+				,SERVERPROPERTY(N'ResourceVersion')             AS [ResourceVersion]
+				,SERVERPROPERTY(N'ServerName')                  AS [ServerName]
+				,SERVERPROPERTY(N'SqlCharSet')                  AS [SqlCharSet]
+				,SERVERPROPERTY(N'SqlCharSetName')              AS [SqlCharSetName]
+				,SERVERPROPERTY(N'SqlSortOrder')                AS [SqlSortOrder]
+				,SERVERPROPERTY(N'SqlSortOrderName')            AS [SqlSortOrderName]
+				,SERVERPROPERTY(N'FilestreamShareName')         AS [FilestreamShareName]
+				,SERVERPROPERTY(N'FilestreamConfiguredLevel')   AS [FilestreamConfiguredLevel]
+				,SERVERPROPERTY(N'FilestreamEffectiveLevel')    AS [FilestreamEffectiveLevel]
+				,@strServiceAccount                             AS [ServiceAccount]
+				,@intTcpPort                                    AS [TcpPort]
+				,@intMajorVersion                               AS [MajorVersion]
+				,@intMinorVersion                               AS [MinorVersion]
+				,@strLatestVersion                              AS [LatestVersion]
+				,@dateLatestVersion                             AS [LatestVersionDate]
+			;
+		</sql-select-text>
+		<sql-select-text MinSupportedVersion="9.*" MaxSupportedVersion="*" signature="">
+			SET NOCOUNT ON;
+			SET DEADLOCK_PRIORITY LOW;
+
+			DECLARE
+				 @dateLatestVersion  [DATE]
+				,@intMajorVersion    [INTEGER]
+				,@intMinorVersion    [INTEGER]
+				,@intPosMajorVersion [INTEGER]
+				,@intPosMinorVersion [INTEGER]
+				,@intTcpPort         [INTEGER]
+				,@strCurrentVersion  [NVARCHAR](128)
+				,@strInstanceName    [NVARCHAR](128)
+				,@strLatestVersion   [NVARCHAR](128)
+				,@strRegistryPath    [NVARCHAR](4000)
+				,@strServiceAccount  [NVARCHAR](128)
+				,@strTcpPort         [NVARCHAR](4000)
+			;
+
+			DECLARE
+				@tableMSSQLServerVersion TABLE
+				(
+					 [intMajorVersion]   [INTEGER]       NOT NULL
+					,[intMinorVersion]   [INTEGER]       NOT NULL
+					,[strLatestVersion]  [NVARCHAR](128) NOT NULL
+					,[dateLatestVersion] [DATE]          NOT NULL
+				);
+
+			INSERT INTO @tableMSSQLServerVersion VALUES (11,  0 ,N'11.00.9000'    ,N'20121127');
+			INSERT INTO @tableMSSQLServerVersion VALUES (10, 50 ,N'10.50.6000'    ,N'20130617');
+			INSERT INTO @tableMSSQLServerVersion VALUES (10,  0 ,N'10.00.6000.29' ,N'20130716');
+			INSERT INTO @tableMSSQLServerVersion VALUES ( 9,  0 ,N'9.00.5324'     ,N'20121009');
+
+			SET @strInstanceName    = CONVERT([NVARCHAR](128), SERVERPROPERTY(N'INSTANCENAME'));
+			SET @strCurrentVersion  = CONVERT([NVARCHAR](128), SERVERPROPERTY(N'PRODUCTVERSION'));
+			SET @intPosMajorVersion = CHARINDEX(N'.', @strCurrentVersion, 0);
+			SET @intPosMinorVersion = CHARINDEX(N'.', @strCurrentVersion, @intPosMajorVersion + 1);
+
+			SET @intMajorVersion = CONVERT([INTEGER], SUBSTRING(@strCurrentVersion, 0, @intPosMajorVersion));
+			SET @intMinorVersion = CONVERT([INTEGER], SUBSTRING(@strCurrentVersion, @intPosMajorVersion + 1, @intPosMinorVersion - @intPosMajorVersion - 1));
+
+			SELECT
+				 @strLatestVersion  = t.[strLatestVersion]
+				,@dateLatestVersion = t.[dateLatestVersion]
+			FROM
+				@tableMSSQLServerVersion t
+			WHERE
+				t.[intMajorVersion] = @intMajorVersion
+				AND t.[intMinorVersion] = @intMinorVersion;
+
+			BEGIN TRY
+				EXECUTE [master].[dbo].[xp_instance_regread]
+					 N'HKEY_LOCAL_MACHINE'
+					,N'SYSTEM\CurrentControlSet\Services\MSSQLSERVER'
+					,N'ObjectName'
+					,@strServiceAccount OUTPUT
+					,N'no_output';
+			END TRY
+			BEGIN CATCH
+				SET @strServiceAccount = NULL;
+			END CATCH
+
+			IF (@strInstanceName IS NULL)
+			BEGIN
+				SET @strRegistryPath = N'Software\Microsoft\MSSQLServer\MSSQLServer\SuperSocketNetLib\Tcp\';
+			END
+			ELSE
+			BEGIN
+				SET @strRegistryPath = N'Software\Microsoft\Microsoft SQL Server\'
+					+ @strInstanceName
+					+ N'\MSSQLServer\SuperSocketNetLib\Tcp\';
+			END
+
+			BEGIN TRY
+				EXECUTE [master].[dbo].[xp_regread]
+					 N'HKEY_LOCAL_MACHINE'
+					,@strRegistryPath
+					,N'tcpPort'
+					,@strTcpPort OUTPUT
+					,N'no_output';
+			END TRY
+			BEGIN CATCH
+				SET @strTcpPort = NULL;
+			END CATCH
+
+			BEGIN TRY
+				IF (@strTcpPort IS NOT NULL)
+				BEGIN
+					SET @intTcpPort = CONVERT([INTEGER], @strTcpPort);
+				END
+				ELSE
+				BEGIN
+					SET @intTcpPort = NULL;
+				END
+			END TRY
+			BEGIN CATCH
+				SET @intTcpPort = NULL;
+			END CATCH
+
+			SELECT
+				 @@VERSION                                      AS [Version]
+				,@@MICROSOFTVERSION                             AS [MicrosoftVersion]
+				,SERVERPROPERTY(N'BuildClrVersion')             AS [BuildClrVersion]
+				,SERVERPROPERTY(N'Collation')                   AS [Collation]
+				,SERVERPROPERTY(N'CollationID')                 AS [CollationID]
+				,SERVERPROPERTY(N'ComparisonStyle')             AS [ComparisonStyle]
+				,SERVERPROPERTY(N'ComputerNamePhysicalNetBIOS') AS [ComputerNamePhysicalNetBIOS]
+				,SERVERPROPERTY(N'Edition')                     AS [Edition]
+				,SERVERPROPERTY(N'EditionID')                   AS [EditionID]
+				,SERVERPROPERTY(N'EngineEdition')               AS [EngineEdition]
+				,SERVERPROPERTY(N'HadrManagerStatus')           AS [HadrManagerStatus]
+				,SERVERPROPERTY(N'InstanceName')                AS [InstanceName]
+				,SERVERPROPERTY(N'IsClustered')                 AS [IsClustered]
+				,SERVERPROPERTY(N'IsFullTextInstalled')         AS [IsFullTextInstalled]
+				,SERVERPROPERTY(N'IsHadrEnabled')               AS [IsHadrEnabled]
+				,SERVERPROPERTY(N'IsIntegratedSecurityOnly')    AS [IsIntegratedSecurityOnly]
+				,SERVERPROPERTY(N'IsLocalDB')                   AS [IsLocalDB]
+				,SERVERPROPERTY(N'IsSingleUser')                AS [IsSingleUser]
+				,SERVERPROPERTY(N'LCID')                        AS [LCID]
+				,SERVERPROPERTY(N'LicenseType')                 AS [LicenseType]
+				,SERVERPROPERTY(N'MachineName')                 AS [MachineName]
+				,SERVERPROPERTY(N'NumLicenses')                 AS [NumLicenses]
+				,SERVERPROPERTY(N'ProcessID')                   AS [ProcessID]
+				,SERVERPROPERTY(N'ProductVersion')              AS [ProductVersion]
+				,SERVERPROPERTY(N'ProductLevel')                AS [ProductLevel]
+				,SERVERPROPERTY(N'ResourceLastUpdateDateTime')  AS [ResourceLastUpdateDateTime]
+				,SERVERPROPERTY(N'ResourceVersion')             AS [ResourceVersion]
+				,SERVERPROPERTY(N'ServerName')                  AS [ServerName]
+				,SERVERPROPERTY(N'SqlCharSet')                  AS [SqlCharSet]
+				,SERVERPROPERTY(N'SqlCharSetName')              AS [SqlCharSetName]
+				,SERVERPROPERTY(N'SqlSortOrder')                AS [SqlSortOrder]
+				,SERVERPROPERTY(N'SqlSortOrderName')            AS [SqlSortOrderName]
+				,SERVERPROPERTY(N'FilestreamShareName')         AS [FilestreamShareName]
+				,SERVERPROPERTY(N'FilestreamConfiguredLevel')   AS [FilestreamConfiguredLevel]
+				,SERVERPROPERTY(N'FilestreamEffectiveLevel')    AS [FilestreamEffectiveLevel]
+				,@strServiceAccount                             AS [ServiceAccount]
+				,@intTcpPort                                    AS [TcpPort]
+				,@intMajorVersion                               AS [MajorVersion]
+				,@intMinorVersion                               AS [MinorVersion]
+				,@strLatestVersion                              AS [LatestVersion]
+				,@dateLatestVersion                             AS [LatestVersionDate]
+			;
+		</sql-select-text>
+	</sql-select>
+</sqlquery>
+</root>

@@ -1,0 +1,362 @@
+\section{Изменения}
+
+\subsection{Первого приоритета}
+
+\subsubsection{Отображение дерева запросов}
+
+При выполнении запросов в настоящее время периодически перерисовывается дерево, возникает эффект
+``моргания'', очень неприятно. Попытаться минимизировать перерисовку графических компонентов во
+время выполнения запросов, по возможности не перерисовывать ничего во время выполнения запросов, а
+только после окончания выполения.
+
+\subsubsection{Интерфейс главного дерева}
+
+В дополение к интерфейсу с табами добавить интерфейс где все компоненты происходят от одного корня с
+названием типа подключения. Сделать дополнительный интерфейс в стиле SQL Server Management Studio,
+как там сделано для подключений (есть единое дерево со всеми подключениями). Добавить новую опцию
+настроек в меню конфигурации, настройка идёт на уровне пользователя. Сохранить существующий
+интерфейс, дополнительный предоставлять в качестве опции.
+
+\subsubsection{Отображение дерева запросов}
+
+Показывать общее число записей для дерева запросов слева. Для этого суммировать все возвращённые
+результаты и выводить общее число записей. Отображать число в круглых скобках после названия меню.
+Обратить внимание на отображение числа для запросов вида scope="database" где для каждой базы данных
+отображать число относящееся к ней только, на верхнем уровне суммировать для всех баз данных.
+
+\subsubsection{Отображение дерева запросов (не отображать пустые записи)}
+
+Добавить новую опцию настройки которая позволяет для запросов вида scope="database" не отображать те
+базы данных для которых число записей равно нулю. Добавить опцию настройки для отображения или не
+отображения числа возвращённых записей в главном дереве запросов.
+
+\subsubsection{Вывод для запросов к нескольким базам}
+
+Для запросов вида scope="database" есть XML файл для вывода данных каждой из баз, но нет возможности
+задать файл вывода для корневой папки. Например мы формируем список объектов для каждой из баз
+данных, а в папке верхнего уровня хотим вывести справочную информацию что в нижеследующих папках
+находятся списки объектов.
+
+\subsubsection{Формирование XML результата для запросов к нескольким базам}
+
+При формировании результирующего XML файла для запросов вида scope="database" некорретно формируется
+MSSQLResult. В файл для одной базы данных попадают результаты для всех остальных баз данных.
+
+\begin{lstlisting}[language=XML,label=current_result_set,caption=Выводится сейчас]
+
+	<?xml version="1.0" encoding="UTF-8"?>
+	<MSSQLResults timestamp="2013-07-12T11:21:01" database="FCM15">
+	  <MSSQLResult name="Get" hierarchy="" RowCount="0" SqlErrorCode="" SqlErrorNumber="" />
+	  <MSSQLResult name="Get" hierarchy="" RowCount="0" SqlErrorCode="" SqlErrorNumber="" />
+	  <MSSQLResult name="Get" hierarchy="" RowCount="150" SqlErrorCode="" SqlErrorNumber="" />
+	  <MSSQLResult name="Get" hierarchy="" RowCount="8" SqlErrorCode="" SqlErrorNumber="" />
+	  <MSSQLResult name="Get" hierarchy="" RowCount="3" SqlErrorCode="" SqlErrorNumber="" />
+	  <MSSQLResult name="Get" hierarchy="" RowCount="11" SqlErrorCode="" SqlErrorNumber="" />
+	  <MSSQLResult name="Get" hierarchy="" RowCount="4" SqlErrorCode="" SqlErrorNumber="" />
+	  <MSSQLResult name="Get" hierarchy="" RowCount="0" SqlErrorCode="" SqlErrorNumber="" />
+	  <MSSQLResult name="Get" hierarchy="" RowCount="0" SqlErrorCode="" SqlErrorNumber="" />
+	  <MSSQLResult name="Get" hierarchy="" RowCount="0" SqlErrorCode="" SqlErrorNumber="" />
+	  <MSSQLResult name="Get" hierarchy="" RowCount="20" SqlErrorCode="" SqlErrorNumber="" />
+	  <MSSQLResult name="Get" hierarchy="" RowCount="0" SqlErrorCode="" SqlErrorNumber="" />
+	  <MSSQLResult name="Get" hierarchy="" RowCount="10" SqlErrorCode="" SqlErrorNumber="" />
+	  <MSSQLResult name="Get" hierarchy="" RowCount="91" SqlErrorCode="" SqlErrorNumber="" />
+	  <MSSQLResult name="Get" hierarchy="" RowCount="69" SqlErrorCode="" SqlErrorNumber="" />
+	  <MSSQLResult name="Get" hierarchy="" RowCount="0" SqlErrorCode="" SqlErrorNumber="" />
+	  <MSSQLResult name="Get" hierarchy="" RowCount="0" SqlErrorCode="" SqlErrorNumber="" />
+	  <MSSQLResult name="Get" hierarchy="" RowCount="2" SqlErrorCode="" SqlErrorNumber="" />
+	  <MSSQLResult name="Get" hierarchy="" RowCount="0" SqlErrorCode="" SqlErrorNumber="" />
+	  <MSSQLResult name="Get" hierarchy="" RowCount="0" SqlErrorCode="" SqlErrorNumber="" />
+	  <Get>
+	     ...
+	  </Get>
+	</MSSQLResults>
+
+\end{lstlisting}
+
+\begin{lstlisting}[language=XML,label=new_result_set,caption=Нужно выводить]
+
+	<?xml version="1.0" encoding="UTF-8"?>
+	<MSSQLResults timestamp="2013-07-12T11:21:01" database="FCM15">
+	  <MSSQLResult name="Get" hierarchy="" RowCount="150" SqlErrorCode="" SqlErrorNumber="" />
+	  <Get>
+	     ...
+	  </Get>
+	</MSSQLResults>
+
+\end{lstlisting}
+
+\subsubsection{Обновление}
+
+Не всегда корректно работает обновление вложенных узлов на главном дереве. (правая клавиша мыши -
+выбрать ``Обновить вложенные узлы'').
+
+\subsubsection{Старт приложение}
+
+При старте приложения не проверять доступность серверов, делать это при каждом запуске запроса так
+как в момент старта приложения сервер баз данных может при некоторых обстоятельствах быть
+недоступен. Если сервер не запущен или недоступен, то выводить сообщение об ошибке в тексте запроса,
+но при следущем запуске снова обращаться к серверу, он может стать доступен.
+
+\subsubsection{Выполнение SQL запросов}
+
+При сохранении результатов в XML файле в теге \textbf{MSSQLResult} вставлять имя экземпляра сервера
+баз данных как \textbf{Instance=""}, так как сейчас, в случае формирования результата для нескольких
+экземпляров, неясно к какому именно экземпляру относится результат. Переменную
+\textbf{SqlErrorNumber} возвращать в виде числа. При отсутствии ошибки возвращать ноль, вместо
+пустой строки.
+
+\begin{lstlisting}[language=XML,label=current_result_set,caption=Выводится сейчас]
+
+	<MSSQLResult
+		name="Get"
+		hierarchy=""
+		RowCount="1"
+		SqlErrorCode=""
+		SqlErrorNumber=""
+	/>
+
+\end{lstlisting}
+
+\begin{lstlisting}[language=XML,label=new_result_set,caption=Нужно выводить]
+
+	<MSSQLResult
+		Instance="I"
+		name="Get"
+		hierarchy=""
+		RowCount="1"
+		SqlErrorCode=""
+		SqlErrorNumber="0"
+	/>
+
+\end{lstlisting}
+
+\subsubsection{Offline режим}
+
+В \textbf{Offline} режиме (отчёты формируются из сохранённого файла, а не из реального сервера баз
+данных) все промежуточные html файлы следует хранить не в корневой директории, а создавать отдельную
+папку с названием файла в качестве имени папки и уже в ней хранить все промежуточные и временные
+файлы, которые генерируются утилитой. Иначе происходит замусоривание корневой директории.
+
+\subsubsection{Многократные запросы обновления}
+
+В том случае когда пользователь обновляет элемент в момент уже идущего обновления ставить этот
+запрос в очередь и после окончания обновления выполнять его. В случае если в очереди есть несколько
+одинаковых запросов, выполнять из единственный раз.
+
+\subsection{Второго приоритета}
+
+\subsubsection{VARBINARY переменные}
+
+Корректно отображать переменные типа \textbf{VARBINARY}. Сейчас переменные этого типа возвращаются
+как \textbf{System.Byte}. Необходимо отображать их в виде строки вида \textbf{0x12345789}.
+
+\subsubsection{Меню Help}
+
+Сейчас в меню ``О программе'' отображаются версии установленных компонентов. Реорганизовать меню в
+виде таблицы и показывать три колонки, в первой - название компонента, во второй установленную
+версию, в третьей - битность данного компонента. Обратить особое внимание на установленную версию
+\textbf{.Net runtime}. При наличии нескольких версий выводить все версии и номер версии. Добавить
+вывод версии ADO Database Runtime Version (а если не установлена явно указывать что версия не
+установлена). Добавить вывод версии Windows, тип версии (64 или 32 битная), номер сервис пака.
+Добавить вывод установленной версии IE. Для проверки корректности работы использовать утилиту
+\textbf{Free DotNet VersionCheck Utility}, расположенную по адресу
+http://www.tmgdevelopment.co.uk/versioncheck.htm. Проверить правильность определения версии .Net для
+версии 4.5. Ссылка
+http://stackoverflow.com/\-questions/\-199080/\-how-to-detect-\-what-net-framework\--versions-and\--service-packs-are-installed
+
+\subsubsection{Протоколирование работы}
+
+Добавить системную переменную в конфигурацию, включение которой позволит протоколировать работу
+приложения. Протоколирование нужно для решения проблем работы приложения. В настоящее время при
+проблемах с запуском крайне сложно идентифицировать проблему. Все логи складывать в домашнюю
+директорию пользователя ``Документы''. Логирование производить в файл с номером дня и создавать
+новый файл, если такого файла ещё нет, например файл логирования
+MSSQL\-Server\-Auditor.\-YYYYMMDD.\-log
+
+\subsubsection{Строка статуса}
+
+При длинном названии сервера (имя подключения) строка статуса с полем имя подключения становится
+двойной, не помещается имя сервера, хотя есть достаточно места слева. Впечатление что ограничена
+максимальная длина имени подключения.
+
+\subsubsection{Проблемы запуска под .Net 4.0.30319.1}
+
+Установлено, что приложение запускается, но не работает под \textbf{.Net 4.0.30319.1}. Установка
+\textbf{.Net 4.5} решает проблему. Разобраться почему и в принципе если это можно то решить проблему
+запуска, если требуются компоненты \textbf{.Net}, доступные только в версии \textbf{4.5}, то
+объяснить какие.
+
+\subsubsection{Конфигурация приложения}
+
+Переименовать директорию SQLAuditor в проекте как MSSQLServerAuditor.
+
+\subsubsection{Расположение конфигурационных файлов}
+
+Перенести файлы \textbf{MSSQL\-Server\-Auditor\-.User\-Settings\-.xml} и
+\textbf{MSSQL\-Server\-Auditor\-.UserLayout\-Settings\-.xml} в директорию ``Документы''.
+
+\subsubsection{Конфигурация приложения (системный файл)}
+
+Добавить переменную в системный конфигурационный файл с именем директории, где хранятся лицензии.
+Директория должна находится в локальной папке пользователя, где хранятся документы.
+
+\subsection{Третьего приоритета}
+
+\subsubsection{Графика с данными плавающей запятой}
+
+Не работает форматирование в графиках с данными, представленными в виде данных с плавающей запятой.
+График формируется неправильно и не работает форматирование.
+
+Вот исходные данные:
+
+\begin{lstlisting}[language=XML,label=GanttChartData,caption=Данные для диаграммы]
+
+	<?xml version="1.0" encoding="UTF-8"?>
+	<MSSQLResults timestamp="2013-08-15T12:45:22">
+	  <MSSQLResult name="GetDatabaseRestoreHistory" hierarchy="" RowCount="1" SqlErrorCode="" SqlErrorNumber="" />
+	  <GetDatabaseRestoreHistory>
+		   <Instance>PRODSYD041P</Instance>
+		   <DatabaseName>TallymanOffline</DatabaseName>
+		   <RestoreType>D</RestoreType>
+		   <RestoreDate>2013-08-14T13:18:45</RestoreDate>
+		   <DatabaseRestoreSizeMB>32.81</DatabaseRestoreSizeMB>
+	  </GetDatabaseRestoreHistory>
+	</MSSQLResults>
+
+\end{lstlisting}
+
+Вот декларация для диаграммы:
+
+\begin{lstlisting}[language=XML,label=GanttChartDefinition,caption=Определение для диаграммы]
+
+	<Format>
+		#,###.##
+	</Format>
+
+	<GraphSource xsi:type="XmlFileGraphSource">
+		<FileName>$INPUT$</FileName>
+		<PathToItems>MSSQLResults</PathToItems>
+		<ItemTag>GetDatabaseRestoreHistory</ItemTag>
+		<DateTag>RestoreDate</DateTag>
+		<NameTag>DatabaseName</NameTag>
+		<ValueTag>DatabaseRestoreSizeMB</ValueTag>
+	</GraphSource>
+
+\end{lstlisting}
+
+\subsubsection{Новый тип графика}
+
+Добавить новый тип графика - \textbf{диаграмма Ганта}. Про диаграмму почитать здесь
+http://ru.wikipedia.org\-/wiki/\-Диаграмма\_Ганта.
+
+Вот исходные данные:
+
+\begin{lstlisting}[language=XML,label=GanttChartData,caption=Данные для диаграммы Ганта]
+
+	<GetJobsExecutionHistory>
+		<JobRunStartDateTime>2013-08-14T15:20:00</JobRunStartDateTime>
+		<JobRunEndDateTime>2013-08-14T15:25:00</JobRunEndDateTime>
+		<JobName>JobTest1</JobName>
+	</GetJobsExecutionHistory>
+
+	<GetJobsExecutionHistory>
+		<JobRunStartDateTime>2013-08-14T15:30:00</JobRunStartDateTime>
+		<JobRunEndDateTime>2013-08-14T15:35:00</JobRunEndDateTime>
+		<JobName>JobTest2</JobName>
+	</GetJobsExecutionHistory>
+
+	<GetJobsExecutionHistory>
+		<JobRunStartDateTime>2013-08-14T15:40:00</JobRunStartDateTime>
+		<JobRunEndDateTime>2013-08-14T15:45:00</JobRunEndDateTime>
+		<JobName>JobTest1</JobName>
+	</GetJobsExecutionHistory>
+
+\end{lstlisting}
+
+Вот предполагаемая декларация получения такой диаграммы:
+
+\begin{lstlisting}[language=XML,label=GanttChartDefinition,caption=Определение для диаграммы Ганта]
+
+	<GraphSource xsi:type="XmlFileGraphSource">
+		<FileName>$INPUT$</FileName>
+		<PathToItems>MSSQLResults</PathToItems>
+		<ItemTag>GetJobsExecutionHistory</ItemTag>
+		<DateTagBegin>JobRunStartDateTime</DateTagBegin>
+		<DateTagEnd>JobRunEndDateTime</DateTagEnd>
+		<NameTag>JobName</NameTag>
+	</GraphSource>
+
+\end{lstlisting}
+
+\subsection{Программа для сбора утилиты и лицензий}
+
+\subsubsection{Правильный выбор шаблонов}
+
+При выборе шаблона (template), файлов запросов и файлов для построения отчётов не основываться на
+лицензиях, а добавлять файлы шаблона непросредственно в утилиту. Дать возможность задать несколько
+шаблонов.
+
+\subsubsection{I18N для конфигурационной утилиты}
+
+Для текстовых полей с названием опций сделать конфигурационный i18n файл и брать название оттуда
+(сейчас имена полей зашиты в коде), так же как это сделано для основной программы. Так же задавать
+файл с выбором языка. Сделать утилиту на двух языках, английский и русский с возможностью добавления
+нового языка, также как и в основной программе.
+
+\subsubsection{Новая вкладка ``Лицензии''}
+
+Удалить подписание файла лицинзий из вкладки ``Исходные данные''. После вкладки ``Ключи'' сделать
+вкладку ``Лицензии'', где можно задать файл лицензий и подписать его. Указать там файл с лицензиями
+и название выходного подписанного файла лицензий. Почему? Иногда требуется подписать только новую
+лизенцию и иметь отдельную вкладку удобнее. Также это позволит вынести файлы лицензий из директории
+инсталлятора.
+
+\subsubsection{Вкладка ``Сбор приложения''}
+
+При выключенном флаге использования DNGuard делать поля с названием папки и опций недоступной для
+редактирования (затенение серым цветом). Добавить опцию с названием исполняемого файла утилиты
+DNGuard. Поле с опциями DNGuard сделать расширяемым при изменении диалогового окна, также как и для
+поля с названием папки DNGuard, сейчас поле опций имеет фиксированную длину.
+
+\subsubsection{32-х разрядное приложение}
+
+При сборке дистрибутива и установке приложение устанавливается в директорию \textbf{Program
+Files~(x86)} как будто приложение 32-x разрядное, хотя приложение скомпилировано как 64-х битное
+приложение. Дать возможность сформировать инсталлятор для установки как 32-х, так и для 64-х
+разрядных приложений.
+
+\subsubsection{Исходные данные}
+
+При нажатии клавиши ``...'' для поиска пути отображать не последнюю директорию, а директорию
+заданную в опциях, при отсутствии такой директории или файла выводить предупреждение об ошибке с
+возможностью выбора корректной директории.
+
+\subsubsection{Директория для установки}
+
+На машинах с установленной версией Windows 64 бит директория по умолчанию для утилиты такая,
+``C:/Program Files (x86)/MSSQLServerAuditor'', хотя это не 32-x разрядное приложение и директория
+должна быть ``C:/Program Files/MSSQLServerAuditor''.
+
+\subsubsection{Список языков}
+
+Формировать список доступных языков приложения из файла MSSQL\-ServerAuditor\-.SystemSettings\-.xml.
+Языки интерфейса брать из списка available\-\_ui\_lang, языки отчётов брать из списка
+available\-\_report\-\_lang. Выбранные при установке языки становятся языками по умолчанию для
+interface\-\_lang и report\-\_lang в формируемом файле MSSQL\-ServerAuditor\-.SystemSettings\-.xml.
+
+\subsubsection{Обработка лицензий}
+
+В формирующийся дистрибутив не включать никакие лицензии, они идут отдельно.
+
+\subsubsection{Название программы инстяллятора}
+
+Переименовать MSSQLServerAuditorSetup в MSSQLServerAuditor. Прописывать имя компании и номер версии
+программы. Для контроля просмотреть установленную программу в Control Panel.
+
+\subsubsection{Директории дистрибутива}
+
+Не включать директории .svn и файлы вида ``about folder'' в состав дистрибутива.
+
+\section{Пояснения и комментарии}
+
+

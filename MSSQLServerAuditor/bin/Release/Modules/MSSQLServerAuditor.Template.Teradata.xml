@@ -1,0 +1,75 @@
+﻿<?xml version="1.0" encoding="UTF-8"?>
+<MSSQLServerAuditorTemplate id="tdsql" type="TDSQL" xmlns:xi="http://www.w3.org/2003/XInclude" version="1.0">
+	<i18n name="en">
+		Teradata
+	</i18n>
+	<i18n name="ru">
+		Teradata
+	</i18n>
+
+	<MainWindowTitle>
+		<i18n name="en">
+			$ConnectionName$ $ModuleName$ $ApplicationProductName$ $ApplicationProductVersion$
+		</i18n>
+		<i18n name="ru">
+			$ConnectionName$ $ModuleName$ $ApplicationProductName$ $ApplicationProductVersion$
+		</i18n>
+	</MainWindowTitle>
+
+	<TreeTitle>
+		<i18n name="en">
+			$ConnectionName$ : $ModuleName$
+		</i18n>
+		<i18n name="ru">
+			$ConnectionName$ : $ModuleName$
+		</i18n>
+	</TreeTitle>
+
+	<template id="1" name="CurrentDate" IsHideTabs="false" file="tdsql\Instance\MSSQLServerAuditor.CurrentDate.xsl" icon="doc" showIfEmpty="true" showNumberOfRecords="true">
+		<i18n name="en">
+			Current Date
+		</i18n>
+		<i18n name="ru">
+			Сегодняшняя дата
+		</i18n>
+
+		<sql-select id="CurrentDate" name="GetCurrentDate" file="SQLQuery\tdsql\TDSQLQuery.CurrentDate.xml" hierarchy="">
+		</sql-select>
+	</template>
+
+	<template id="2" name="ListOfDatabases" IsHideTabs="false" file="tdsql\Instance\MSSQLServerAuditor.ListOfDatabases.xsl" icon="doc" showIfEmpty="true" showNumberOfRecords="true">
+		<i18n name="en">
+			Databases
+		</i18n>
+		<i18n name="ru">
+			Базы данных
+		</i18n>
+
+		<sql-select id="ListOfDatabases" name="GetListOfDatabases" file="SQLQuery\tdsql\TDSQLQuery.ListOfDatabases.xml" hierarchy="">
+		</sql-select>
+	</template>
+
+	<template id="3" name="CurrentUser" IsHideTabs="false" file="tdsql\Instance\MSSQLServerAuditor.CurrentUser.xsl" icon="doc" showIfEmpty="true" showNumberOfRecords="true">
+		<i18n name="en">
+			Current User
+		</i18n>
+		<i18n name="ru">
+			Текущий пользователь
+		</i18n>
+
+		<sql-select id="CurrentUser" name="GetCurrentUser" file="SQLQuery\tdsql\TDSQLQuery.CurrentUser.xml" hierarchy="">
+		</sql-select>
+	</template>
+
+	<template id="4" name="DbInfo" IsHideTabs="false" file="tdsql\Instance\MSSQLServerAuditor.DbInfo.xsl" icon="doc" showIfEmpty="true" showNumberOfRecords="true">
+		<i18n name="en">
+			DbInfo
+		</i18n>
+		<i18n name="ru">
+			Данные о сервере
+		</i18n>
+
+		<sql-select id="DbInfo" name="GetDbInfo" file="SQLQuery\tdsql\TDSQLQuery.DbInfo.xml" hierarchy="">
+		</sql-select>
+	</template>
+</MSSQLServerAuditorTemplate>

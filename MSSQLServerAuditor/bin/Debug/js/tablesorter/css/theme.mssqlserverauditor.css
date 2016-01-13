@@ -1,0 +1,332 @@
+/******************************************************************************/
+/* ***************** MSSQLServerAuditor ***************************************/
+/******************************************************************************/
+
+/* overall */
+.tablesorter-MSSQLServerAuditor {
+	border-spacing: 0px;
+	border-width: 1px 0 0 1px;
+	font-family:Courier New;
+	font-size: 12px;
+	margin: 0px 0 0px;
+	text-align: left;
+	vertical-align: middle;
+	width: 100%;
+}
+
+/* header */
+.tablesorter-MSSQLServerAuditor th,
+.tablesorter-MSSQLServerAuditor thead td {
+	background-color: #9acd32;
+	border-collapse: collapse;
+	border-bottom: #ccc 2px solid;
+	padding: 2px;
+	text-align: center;
+	vertical-align: middle;
+}
+.tablesorter-MSSQLServerAuditor tfoot th,
+.tablesorter-MSSQLServerAuditor tfoot td {
+	border: 1;
+}
+.tablesorter-MSSQLServerAuditor .header,
+.tablesorter-MSSQLServerAuditor .tablesorter-header {
+	background-image: url(data:image/gif;base64,R0lGODlhFQAJAIAAACMtMP///yH5BAEAAAEALAAAAAAVAAkAAAIXjI+AywnaYnhUMoqt3gZXPmVg94yJVQAAOw==);
+	background-position: center right;
+	background-repeat: no-repeat;
+	cursor: pointer;
+	white-space: normal;
+	padding: 4px 20px 4px 4px;
+}
+.tablesorter-MSSQLServerAuditor thead .headerSortUp,
+.tablesorter-MSSQLServerAuditor thead .tablesorter-headerSortUp,
+.tablesorter-MSSQLServerAuditor thead .tablesorter-headerAsc {
+	background-image: url(data:image/gif;base64,R0lGODlhFQAEAIAAACMtMP///yH5BAEAAAEALAAAAAAVAAQAAAINjI8Bya2wnINUMopZAQA7);
+	border-bottom: #000 2px solid;
+}
+.tablesorter-MSSQLServerAuditor thead .headerSortDown,
+.tablesorter-MSSQLServerAuditor thead .tablesorter-headerSortDown,
+.tablesorter-MSSQLServerAuditor thead .tablesorter-headerDesc {
+	background-image: url(data:image/gif;base64,R0lGODlhFQAEAIAAACMtMP///yH5BAEAAAEALAAAAAAVAAQAAAINjB+gC+jP2ptn0WskLQA7);
+	border-bottom: #000 2px solid;
+}
+.tablesorter-MSSQLServerAuditor thead .sorter-false {
+	background-image: none;
+	padding: 4px;
+}
+
+/* tfoot */
+.tablesorter-MSSQLServerAuditor tfoot .tablesorter-headerSortUp,
+.tablesorter-MSSQLServerAuditor tfoot .tablesorter-headerSortDown,
+.tablesorter-MSSQLServerAuditor tfoot .tablesorter-headerAsc,
+.tablesorter-MSSQLServerAuditor tfoot .tablesorter-headerDesc {
+	border-top: #000 2px solid;
+}
+
+/* tbody */
+.tablesorter-MSSQLServerAuditor td {
+	margin: 0px 0 0px;
+	border: 4px;
+	padding: 4px;
+	border-spacing: 4px;
+	/*border-bottom: #333 1px solid;*/
+	/*border-top: #333 1px solid;*/
+	/*border-left: #333 1px solid;*/
+	/*border-right: #333 1px solid;*/
+}
+
+/* Zebra Widget - row alternating colors */
+.tablesorter-MSSQLServerAuditor tr.odd td {
+	background-color: #CCCCCC;
+}
+
+.tablesorter-MSSQLServerAuditor tr.even td {
+	background-color: #FFFFFF;
+}
+
+/******************************************************************************/
+/* ***************** MSSQLServerAuditorResult *********************************/
+/******************************************************************************/
+
+/* overall */
+.tablesorter-MSSQLServerAuditorResult {
+	border-spacing: 0px;
+	border-width: 1px 0 0 1px;
+	font-family:Courier New;
+	font-size: 12px;
+	margin: 0px 0 0px;
+	text-align: left;
+	vertical-align: middle;
+	width: 100%;
+}
+
+/* header */
+.tablesorter-MSSQLServerAuditorResult th,
+.tablesorter-MSSQLServerAuditorResult thead td {
+	background-color: #FFFFCC;
+	border-collapse: collapse;
+	border-bottom: #ccc 2px solid;
+	padding: 2px;
+	text-align: center;
+	vertical-align: middle;
+}
+.tablesorter-MSSQLServerAuditorResult tfoot th,
+.tablesorter-MSSQLServerAuditorResult tfoot td {
+	border: 1;
+}
+.tablesorter-MSSQLServerAuditorResult .header,
+.tablesorter-MSSQLServerAuditorResult .tablesorter-header {
+	background-image: url(data:image/gif;base64,R0lGODlhFQAJAIAAACMtMP///yH5BAEAAAEALAAAAAAVAAkAAAIXjI+AywnaYnhUMoqt3gZXPmVg94yJVQAAOw==);
+	background-position: center right;
+	background-repeat: no-repeat;
+	cursor: pointer;
+	white-space: normal;
+	padding: 4px 20px 4px 4px;
+}
+.tablesorter-MSSQLServerAuditorResult thead .headerSortUp,
+.tablesorter-MSSQLServerAuditorResult thead .tablesorter-headerSortUp,
+.tablesorter-MSSQLServerAuditorResult thead .tablesorter-headerAsc {
+	background-image: url(data:image/gif;base64,R0lGODlhFQAEAIAAACMtMP///yH5BAEAAAEALAAAAAAVAAQAAAINjI8Bya2wnINUMopZAQA7);
+	border-bottom: #000 2px solid;
+}
+.tablesorter-MSSQLServerAuditorResult thead .headerSortDown,
+.tablesorter-MSSQLServerAuditorResult thead .tablesorter-headerSortDown,
+.tablesorter-MSSQLServerAuditorResult thead .tablesorter-headerDesc {
+	background-image: url(data:image/gif;base64,R0lGODlhFQAEAIAAACMtMP///yH5BAEAAAEALAAAAAAVAAQAAAINjB+gC+jP2ptn0WskLQA7);
+	border-bottom: #000 2px solid;
+}
+.tablesorter-MSSQLServerAuditorResult thead .sorter-false {
+	background-image: none;
+	padding: 4px;
+}
+
+/* tfoot */
+.tablesorter-MSSQLServerAuditorResult tfoot .tablesorter-headerSortUp,
+.tablesorter-MSSQLServerAuditorResult tfoot .tablesorter-headerSortDown,
+.tablesorter-MSSQLServerAuditorResult tfoot .tablesorter-headerAsc,
+.tablesorter-MSSQLServerAuditorResult tfoot .tablesorter-headerDesc {
+	border-top: #000 2px solid;
+}
+
+/* tbody */
+.tablesorter-MSSQLServerAuditorResult td {
+	margin: 0px 0 0px;
+	border: 4px;
+	padding: 4px;
+	border-spacing: 4px;
+	/*border-bottom: #333 1px solid;*/
+	/*border-top: #333 1px solid;*/
+	/*border-left: #333 1px solid;*/
+	/*border-right: #333 1px solid;*/
+}
+
+/* Zebra Widget - row alternating colors */
+.tablesorter-MSSQLServerAuditorResult tr.odd td {
+	background-color: #CCCCCC;
+}
+
+.tablesorter-MSSQLServerAuditorResult tr.even td {
+	background-color: #FFFFFF;
+}
+
+/******************************************************************************/
+/* *************** MSSQLServerAuditorError ************************************/
+/******************************************************************************/
+
+/* overall: MSSQLServerAuditorError */
+.tablesorter-MSSQLServerAuditorError {
+	border-spacing: 0px;
+	border-width: 1px 0 0 1px;
+	font-family:Courier New;
+	font-size: 12px;
+	margin: 0px 0 0px;
+	text-align: left;
+	vertical-align: middle;
+	width: 100%;
+}
+
+/* header */
+.tablesorter-MSSQLServerAuditorError th,
+.tablesorter-MSSQLServerAuditorError thead td {
+	background-color: #FF0000;
+	border-collapse: collapse;
+	border-bottom: #ccc 2px solid;
+	padding: 2px;
+	text-align: center;
+	vertical-align: middle;
+}
+.tablesorter-MSSQLServerAuditorError tfoot th,
+.tablesorter-MSSQLServerAuditorError tfoot td {
+	border: 1;
+}
+.tablesorter-MSSQLServerAuditorError .header,
+.tablesorter-MSSQLServerAuditorError .tablesorter-header {
+	background-image: url(data:image/gif;base64,R0lGODlhFQAJAIAAACMtMP///yH5BAEAAAEALAAAAAAVAAkAAAIXjI+AywnaYnhUMoqt3gZXPmVg94yJVQAAOw==);
+	background-position: center right;
+	background-repeat: no-repeat;
+	cursor: pointer;
+	white-space: normal;
+	padding: 4px 20px 4px 4px;
+}
+.tablesorter-MSSQLServerAuditorError thead .headerSortUp,
+.tablesorter-MSSQLServerAuditorError thead .tablesorter-headerSortUp,
+.tablesorter-MSSQLServerAuditorError thead .tablesorter-headerAsc {
+	background-image: url(data:image/gif;base64,R0lGODlhFQAEAIAAACMtMP///yH5BAEAAAEALAAAAAAVAAQAAAINjI8Bya2wnINUMopZAQA7);
+	border-bottom: #000 2px solid;
+}
+.tablesorter-MSSQLServerAuditorError thead .headerSortDown,
+.tablesorter-MSSQLServerAuditorError thead .tablesorter-headerSortDown,
+.tablesorter-MSSQLServerAuditorError thead .tablesorter-headerDesc {
+	background-image: url(data:image/gif;base64,R0lGODlhFQAEAIAAACMtMP///yH5BAEAAAEALAAAAAAVAAQAAAINjB+gC+jP2ptn0WskLQA7);
+	border-bottom: #000 2px solid;
+}
+.tablesorter-MSSQLServerAuditorError thead .sorter-false {
+	background-image: none;
+	padding: 4px;
+}
+
+/* tfoot */
+.tablesorter-MSSQLServerAuditorError tfoot .tablesorter-headerSortUp,
+.tablesorter-MSSQLServerAuditorError tfoot .tablesorter-headerSortDown,
+.tablesorter-MSSQLServerAuditorError tfoot .tablesorter-headerAsc,
+.tablesorter-MSSQLServerAuditorError tfoot .tablesorter-headerDesc {
+	border-top: #000 2px solid;
+}
+
+/* tbody */
+.tablesorter-MSSQLServerAuditorError td {
+	margin: 0px 0 0px;
+	border: 4px;
+	padding: 4px;
+	border-spacing: 4px;
+}
+
+/* Zebra Widget - row alternating colors */
+.tablesorter-MSSQLServerAuditorError tr.odd td {
+	background-color: #CCCCCC;
+}
+
+.tablesorter-MSSQLServerAuditorError tr.even td {
+	background-color: #FFFFFF;
+}
+
+/******************************************************************************/
+/* ************* MSSQLServerAuditor-SQLCodeGuard ******************************/
+/******************************************************************************/
+
+/* overall: MSSQLServerAuditor-SQLCodeGuard */
+.tablesorter-MSSQLServerAuditor-SQLCodeGuard {
+	border-spacing: 0px;
+	border-width: 0px 0 0 1px;
+	font-family:Courier New;
+	font-size: 10px;
+	margin: 0px 0 0px;
+	text-align: left;
+	vertical-align: middle;
+	width: 100%;
+}
+
+/* header */
+.tablesorter-MSSQLServerAuditor-SQLCodeGuard th,
+.tablesorter-MSSQLServerAuditor-SQLCodeGuard thead td {
+	background-color: #ff0000;
+	border-collapse: collapse;
+	border-bottom: #ccc 2px solid;
+	padding: 0px;
+	text-align: center;
+	vertical-align: middle;
+}
+.tablesorter-MSSQLServerAuditor-SQLCodeGuard tfoot th,
+.tablesorter-MSSQLServerAuditor-SQLCodeGuard tfoot td {
+	border: 0;
+}
+.tablesorter-MSSQLServerAuditor-SQLCodeGuard .header,
+.tablesorter-MSSQLServerAuditor-SQLCodeGuard .tablesorter-header {
+	background-image: url(data:image/gif;base64,R0lGODlhFQAJAIAAACMtMP///yH5BAEAAAEALAAAAAAVAAkAAAIXjI+AywnaYnhUMoqt3gZXPmVg94yJVQAAOw==);
+	background-position: center right;
+	background-repeat: no-repeat;
+	cursor: pointer;
+	white-space: normal;
+	padding: 4px 20px 4px 4px;
+}
+.tablesorter-MSSQLServerAuditor-SQLCodeGuard thead .headerSortUp,
+.tablesorter-MSSQLServerAuditor-SQLCodeGuard thead .tablesorter-headerSortUp,
+.tablesorter-MSSQLServerAuditor-SQLCodeGuard thead .tablesorter-headerAsc {
+	background-image: url(data:image/gif;base64,R0lGODlhFQAEAIAAACMtMP///yH5BAEAAAEALAAAAAAVAAQAAAINjI8Bya2wnINUMopZAQA7);
+	border-bottom: #000 2px solid;
+}
+.tablesorter-MSSQLServerAuditor-SQLCodeGuard thead .headerSortDown,
+.tablesorter-MSSQLServerAuditor-SQLCodeGuard thead .tablesorter-headerSortDown,
+.tablesorter-MSSQLServerAuditor-SQLCodeGuard thead .tablesorter-headerDesc {
+	background-image: url(data:image/gif;base64,R0lGODlhFQAEAIAAACMtMP///yH5BAEAAAEALAAAAAAVAAQAAAINjB+gC+jP2ptn0WskLQA7);
+	border-bottom: #000 2px solid;
+}
+.tablesorter-MSSQLServerAuditor-SQLCodeGuard thead .sorter-false {
+	background-image: none;
+	padding: 4px;
+}
+
+/* tfoot */
+.tablesorter-MSSQLServerAuditor-SQLCodeGuard tfoot .tablesorter-headerSortUp,
+.tablesorter-MSSQLServerAuditor-SQLCodeGuard tfoot .tablesorter-headerSortDown,
+.tablesorter-MSSQLServerAuditor-SQLCodeGuard tfoot .tablesorter-headerAsc,
+.tablesorter-MSSQLServerAuditor-SQLCodeGuard tfoot .tablesorter-headerDesc {
+	border-top: #000 2px solid;
+}
+
+/* tbody */
+.tablesorter-MSSQLServerAuditor-SQLCodeGuard td {
+	margin: 0px 0 0px;
+	border: 4px;
+	padding: 4px;
+	border-spacing: 4px;
+}
+
+/* Zebra Widget - row alternating colors */
+.tablesorter-MSSQLServerAuditor-SQLCodeGuard tr.odd td {
+	background-color: #CCCCCC;
+}
+
+.tablesorter-MSSQLServerAuditor-SQLCodeGuard tr.even td {
+	background-color: #FFFFFF;
+}
+

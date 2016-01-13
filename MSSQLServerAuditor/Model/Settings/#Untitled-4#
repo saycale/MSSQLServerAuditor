@@ -1,0 +1,324 @@
+[24/09/2015 11:53:11 AM] Aleksey  Saychenko: ok, that's really good news!
+[24/09/2015 11:54:03 AM] ***  ***
+[24/09/2015 11:54:39 AM] Aleksey  Saychenko: I send you the file with all GM passwords in one place. Please keep it secret...
+[24/09/2015 11:55:07 AM] Angela Han: Oh perfect!!!!
+[24/09/2015 11:55:15 AM] Angela Han: I was making a file here too, but I think yours is MUCH more organised! :)
+[24/09/2015 11:55:50 AM] Aleksey  Saychenko: :)
+[24/09/2015 11:57:03 AM] Aleksey  Saychenko: it really make sense to keep the passwords, as many dependencies are from the passwords for local users and the passwords could not be migrated...
+[24/09/2015 11:59:19 AM] Angela Han: I agree with that! I think we should update our Citrix panel password to something more complex.
+[24/09/2015 11:59:22 AM] Angela Han: Do you agree?
+[24/09/2015 11:59:31 AM] Angela Han: At the moment it's pineappe1406, and that was because it used to be a test account.
+[24/09/2015 12:00:14 PM] Aleksey  Saychenko: That's a good idea!
+[24/09/2015 12:00:19 PM] Angela Han: But now, it is our official panel..
+[24/09/2015 12:00:34 PM] Angela Han: Could you please change it to any of the other complex passwords?
+[24/09/2015 12:00:51 PM] Angela Han: And just send a note to Adrian and Dean too with the new password :)
+[24/09/2015 12:01:00 PM] Aleksey  Saychenko: ok, I will do....
+[24/09/2015 12:08:27 PM] Aleksey  Saychenko: test sites 33/34/35 are all down as I do the migration from C:\ to E:\ drive. It may take an hour to be completed....
+[24/09/2015 12:08:55 PM] Aleksey  Saychenko: production sites are NOT affected
+[24/09/2015 12:23:19 PM] Angela Han: Ok perfect. :)
+[24/09/2015 12:23:39 PM] Angela Han: Thanks Aleksey! Understood. :) I just got an automated call to say that the server is down.
+[24/09/2015 12:23:42 PM] Angela Han: Figured you ere doing something :)
+[9:11:52 AM] Angela Han: Hi Aleksey,
+[9:12:14 AM] Angela Han: None of our emails are working - all the settings for all the computers say "Verify the server information entered correctly in the Account Settings, and that your DNS settings in the Network pane of System Preferences are correct'
+[9:12:24 AM] Angela Han: I've flushed the DNS for the Macs and one of it works still.
+[9:13:17 AM] Angela Han: Usually after a DNS flush it usually works.
+[9:13:32 AM] Angela Han: Let me try flushing DNS again, but we have a few computers without email
+[9:16:10 AM] Angela Han: So it looks like gunnamatamedia.com works
+[9:16:27 AM] Angela Han: But jewellermagazine.com and quarrymagazine.com DNS hasn't been configred propery...
+[9:17:58 AM] Angela Han: That is why I didn't pick up on any problems last night - I use a gunnamattamedia.com email address.
+[9:18:19 AM] Angela Han: All our staff who have a quarrymagazine.com and jewellermagazine.com email address have email problems.
+[9:20:19 AM] Angela Han: Can you please fix this issue urgently?
+[9:24:29 AM] Aleksey  Saychenko: Thank you, Angela. Let me check, please....
+[9:24:35 AM] Angela Han: Thanks Aleksey :)
+[9:24:43 AM] Angela Han: Is it possible that it's still propagating? :)
+[9:24:50 AM] Angela Han: It might be that it's still taking time to process...
+[9:24:57 AM] Aleksey  Saychenko: no, it is something different....
+[9:25:03 AM] Angela Han: Ok :)
+[9:29:24 AM] Angela Han: We will be sending out a newsletter today and also just want to confirm that the mailout will be working with the new settings? :)
+[9:32:01 AM] Aleksey  Saychenko: ok, thank you, I am looking to it....
+[9:32:06 AM] Angela Han: Thanks Aleksey :)
+[9:40:05 AM] Aleksey  Saychenko: Angela, could you help me a little bit. Do you have any error messages or screenshots with the problem?
+[9:44:26 AM] Angela Han: Yup
+[9:44:29 AM] Angela Han: Hmm...
+[9:44:36 AM] Angela Han: It is working on some machines, and not working on others now.
+[9:44:39 AM] Angela Han: I just went around to test it all.
+[9:46:21 AM] Aleksey  Saychenko: it may be the case, that the name of DNS server is set to the ip address (103.244.236.236) on some machines... that's could be the issue...
+[9:46:53 AM] Aleksey  Saychenko: if it is the case, all affected local machines need to be check...
+[9:47:07 AM] Angela Han: But that is what I am doing now - I am trying to flush the DNS from the machines but it doesn't appear to be wokig... :(
+[9:47:13 AM] Aleksey  Saychenko: it may be the case, that DNS cache need to be updated locally
+[9:47:27 AM] Aleksey  Saychenko: ipconfig /flushdns on Windows...
+[9:47:35 AM] Angela Han: We use Mac machines here.
+[9:47:42 AM] Aleksey  Saychenko: yes, that's right....
+[9:47:47 AM] Angela Han: https://www.ihash.eu/2013/10/clear-dns-cache-mac-osx-10-9-mavericks/
+[9:48:02 AM] Angela Han: https://support.apple.com/en-au/HT202516
+[9:48:04 AM] Angela Han: I have already tried this :(
+[9:48:40 AM] Aleksey  Saychenko: the issue may be that the DNS server is set on TCP/IP protocols to the 103.244.236.236/237/238
+[9:49:13 AM] Angela Han: Do you mean to say that that's because they all share the same DNS server now?
+[9:49:28 AM] Aleksey  Saychenko: no... DNS server may be set locally....
+[9:49:46 AM] Angela Han: I am not sure that's the case...
+[9:49:51 AM] Angela Han: Is Port 110 still working?
+[9:49:56 AM] Angela Han: Or do we need to set it something elsE?
+[9:50:24 AM] Angela Han: Jewellermagazine.com is working on some computers and not on the others.
+[9:50:37 AM] Aleksey  Saychenko: could you send me the screenshot with mail setting on machine, where mail is not working?
+[9:51:09 AM] Aleksey  Saychenko: it looks like a local problem on affected machines...
+[9:51:10 AM] Angela Han: Suddenly jewellermagazine.com isn't working
+[9:52:43 AM] Angela Han: This is what is coming up.
+[9:52:47 AM] Angela Han: Same screenshot as before.
+[9:52:57 AM] Angela Han: Quarrymagazine.com isn't working but jewellermagazine.com is.
+[9:54:21 AM] Aleksey  Saychenko: if you click on the error details, could you get more information?
+[9:54:28 AM] Angela Han: Unfortunately not.
+[9:54:54 AM] Angela Han: Hang on. Let me see if I can get to the logs.
+[9:55:14 AM] Aleksey  Saychenko: it would be helpful....
+[9:55:59 AM] Angela Han: INITIATING CONNECTION Oct 14 09:55:02.392 host:mail.gunnamattamedia.com -- port:25 -- socket:0x0 -- thread:0x610000a6d540
+
+INITIATING CONNECTION Oct 14 09:55:02.392 host:mail.gunnamattamedia.com -- port:110 -- socket:0x0 -- thread:0x610000679d40
+
+INITIATING CONNECTION Oct 14 09:55:02.392 host:mail.gunnamattamedia.com -- port:110 -- socket:0x0 -- thread:0x608000c61600
+
+INITIATING CONNECTION Oct 14 09:55:02.393 host:mail.gunnamattamedia.com -- port:25 -- socket:0x0 -- thread:0x608000a74180
+
+INITIATING CONNECTION Oct 14 09:55:02.393 host:mail.jewellermagazine.com -- port:25 -- socket:0x0 -- thread:0x618000462cc0
+
+INITIATING CONNECTION Oct 14 09:55:02.393 host:mail.gunnamattamedia.com -- port:110 -- socket:0x0 -- thread:0x600000279400
+
+INITIATING CONNECTION Oct 14 09:55:02.393 host:mail.quarrymagazine.com -- port:110 -- socket:0x0 -- thread:0x600001061e40
+
+INITIATING CONNECTION Oct 14 09:55:02.393 host:mail.gunnamattamedia.com -- port:25 -- socket:0x0 -- thread:0x610000673a80
+
+INITIATING CONNECTION Oct 14 09:55:02.393 host:mail.quarrymagazine.com -- port:25 -- socket:0x0 -- thread:0x61800047af80
+
+INITIATING CONNECTION Oct 14 09:55:02.393 host:mail.jewellermagazine.com -- port:110 -- socket:0x0 -- thread:0x60800087e980
+
+CONNECTED Oct 14 09:55:02.416 [kCFStreamSocketSecurityLevelNone] -- host:mail.gunnamattamedia.com -- port:110 -- socket:0x6080004d6e30 -- thread:0x608000c61600
+
+CONNECTED Oct 14 09:55:02.416 [kCFStreamSocketSecurityLevelNone] -- host:mail.gunnamattamedia.com -- port:110 -- socket:0x6180004c1c00 -- thread:0x610000679d40
+
+CONNECTED Oct 14 09:55:02.418 [kCFStreamSocketSecurityLevelNone] -- host:mail.gunnamattamedia.com -- port:25 -- socket:0x6080002c2530 -- thread:0x610000a6d540
+
+CONNECTED Oct 14 09:55:02.422 [kCFStreamSocketSecurityLevelNone] -- host:mail.gunnamattamedia.com -- port:25 -- socket:0x6080002cf260 -- thread:0x610000673a80
+
+CONNECTED Oct 14 09:55:02.422 [kCFStreamSocketSecurityLevelNone] -- host:mail.gunnamattamedia.com -- port:110 -- socket:0x6080002cf730 -- thread:0x600000279400
+
+CONNECTED Oct 14 09:55:02.424 [kCFStreamSocketSecurityLevelNone] -- host:mail.gunnamattamedia.com -- port:25 -- socket:0x6080002dda40 -- thread:0x608000a74180
+
+READ Oct 14 09:55:02.425 [kCFStreamSocketSecurityLevelNone] -- host:mail.gunnamattamedia.com -- port:110 -- socket:0x6180004c1c00 -- thread:0x610000679d40
++OK Welcome to MailEnable POP3 Server
+
+WROTE Oct 14 09:55:02.426 [kCFStreamSocketSecurityLevelNone] -- host:mail.gunnamattamedia.com -- port:110 -- socket:0x6180004c1c00 -- thread:0x610000679d40
+CAPA
+
+READ Oct 14 09:55:02.427 [kCFStreamSocketSecurityLevelNone] -- host:mail.gunnamattamedia.com -- port:110 -- socket:0x6080004d6e30 -- thread:0x608000c61600
++OK Welcome to MailEnable POP3 Server
+
+WROTE Oct 14 09:55:02.427 [kCFStreamSocketSecurityLevelNone] -- host:mail.gunnamattamedia.com -- port:110 -- socket:0x6080004d6e30 -- thread:0x608000c61600
+CAPA
+[9:56:07 AM] Angela Han: READ Oct 14 09:55:02.430 [kCFStreamSocketSecurityLevelNone] -- host:mail.gunnamattamedia.com -- port:25 -- socket:0x6080002c2530 -- thread:0x610000a6d540
+220 mail.gunnamattamedia.com ESMTP MailEnable Service, Version: 8.60-- ready at 10/14/15 09:54:58
+
+READ Oct 14 09:55:02.431 [kCFStreamSocketSecurityLevelNone] -- host:mail.gunnamattamedia.com -- port:110 -- socket:0x6080002cf730 -- thread:0x600000279400
++OK Welcome to MailEnable POP3 Server
+
+WROTE Oct 14 09:55:02.431 [kCFStreamSocketSecurityLevelNone] -- host:mail.gunnamattamedia.com -- port:110 -- socket:0x6080002cf730 -- thread:0x600000279400
+CAPA
+
+READ Oct 14 09:55:02.432 [kCFStreamSocketSecurityLevelNone] -- host:mail.gunnamattamedia.com -- port:25 -- socket:0x6080002cf260 -- thread:0x610000673a80
+220 mail.gunnamattamedia.com ESMTP MailEnable Service, Version: 8.60-- ready at 10/14/15 09:54:58
+
+READ Oct 14 09:55:02.433 [kCFStreamSocketSecurityLevelNone] -- host:mail.gunnamattamedia.com -- port:25 -- socket:0x6080002dda40 -- thread:0x608000a74180
+220 mail.gunnamattamedia.com ESMTP MailEnable Service, Version: 8.60-- ready at 10/14/15 09:54:58
+
+READ Oct 14 09:55:02.440 [kCFStreamSocketSecurityLevelNone] -- host:mail.gunnamattamedia.com -- port:110 -- socket:0x6180004c1c00 -- thread:0x610000679d40
++OK Capability list follows
+TOP
+USER
+UIDL
+.
+
+READ Oct 14 09:55:02.441 [kCFStreamSocketSecurityLevelNone] -- host:mail.gunnamattamedia.com -- port:110 -- socket:0x6080004d6e30 -- thread:0x608000c61600
++OK Capability list follows
+TOP
+USER
+UIDL
+.
+
+WROTE Oct 14 09:55:02.441 [kCFStreamSocketSecurityLevelNone] -- host:mail.gunnamattamedia.com -- port:25 -- socket:0x6080002c2530 -- thread:0x610000a6d540
+EHLO [192.168.1.107]
+
+WROTE Oct 14 09:55:02.441 [kCFStreamSocketSecurityLevelNone] -- host:mail.gunnamattamedia.com -- port:25 -- socket:0x6080002cf260 -- thread:0x610000673a80
+EHLO [192.168.1.107]
+
+WROTE Oct 14 09:55:02.442 [kCFStreamSocketSecurityLevelNone] -- host:mail.gunnamattamedia.com -- port:25 -- socket:0x6080002dda40 -- thread:0x608000a74180
+EHLO [192.168.1.107]
+
+READ Oct 14 09:55:02.444 [kCFStreamSocketSecurityLevelNone] -- host:mail.gunnamattamedia.com -- port:110 -- socket:0x6080002cf730 -- thread:0x600000279400
++OK Capability list follows
+TOP
+USER
+UIDL
+.
+
+WROTE Oct 14 09:55:02.449 [kCFStreamSocketSecurityLevelNone] -- host:mail.gunnamattamedia.com -- port:110 -- socket:0x6180004c1c00 -- thread:0x610000679d40
+USER info@gunnamattamedia.com
+
+READ Oct 14 09:55:02.454 [kCFStreamSocketSecurityLevelNone] -- host:mail.gunnamattamedia.com -- port:25 -- socket:0x6080002c2530 -- thread:0x610000a6d540
+250-gunnamattamedia.com [202.173.154.122], this server offers 4 extensions
+250-AUTH LOGIN
+250-SIZE 25600000
+250-HELP
+250 AUTH=LOGIN
+
+WROTE Oct 14 09:55:02.454 [kCFStreamSocketSecurityLevelNone] -- host:mail.gunnamattamedia.com -- port:25 -- socket:0x6080002c2530 -- thread:0x610000a6d540
+EHLO [192.168.1.107]
+
+WROTE Oct 14 09:55:02.455 [kCFStreamSocketSecurityLevelNone] -- host:mail.gunnamattamedia.com -- port:110 -- socket:0x6080004d6e30 -- thread:0x608000c61600
+USER thara.vidyaratne@gunnamattamedia.com
+
+READ Oct 14 09:55:02.455 [kCFStreamSocketSecurityLevelNone] -- host:mail.gunnamattamedia.com -- port:25 -- socket:0x6080002cf260 -- thread:0x610000673a80
+250-gunnamattamedia.com [202.173.154.122], this server offers 4 extensions
+250-AUTH LOGIN
+250-SIZE 25600000
+250-HELP
+250 AUTH=LOGIN
+
+WROTE Oct 14 09:55:02.456 [kCFStreamSocketSecurityLevelNone] -- host:mail.gunnamattamedia.com -- port:25 -- socket:0x6080002cf260 -- thread:0x610000673a80
+EHLO [192.168.1.107]
+
+READ Oct 14 09:55:02.456 [kCFStreamSocketSecurityLevelNone] -- host:mail.gunnamattamedia.com -- port:25 -- socket:0x6080002dda40 -- thread:0x608000a74180
+250-gunnamattamedia.com [202.173.154.122], this server offers 4 extensions
+250-AUTH LOGIN
+250-SIZE 25600000
+250-HELP
+250 AUTH=LOGIN
+
+WROTE Oct 14 09:55:02.456 [kCFStreamSocketSecurityLevelNone] -- host:mail.gunnamattamedia.com -- port:25 -- socket:0x6080002dda40 -- thread:0x608000a74180
+EHLO [192.168.1.107]
+
+WROTE Oct 14 09:55:02.460 [kCFStreamSocketSecurityLevelNone] -- host:mail.gunnamattamedia.com -- port:110 -- socket:0x6080002cf730 -- thread:0x600000279400
+USER fax@gunnamattamedia.com
+
+READ Oct 14 09:55:02.462 [kCFStreamSocketSecurityLevelNone] -- host:mail.gunnamattamedia.com -- port:110 -- socket:0x6180004c1c00 -- thread:0x610000679d40
++OK
+
+WROTE Oct 14 09:55:02.462 [kCFStreamSocketSecurityLevelNone] -- host:mail.gunnamattamedia.com -- port:110 -- socket:0x6180004c1c00 -- thread:0x610000679d40
+PASS *********
+
+READ Oct 14 09:55:02.467 [kCFStreamSocketSecurityLevelNone] -- host:mail.gunnamattamedia.com -- port:25 -- socket:0x6080002c2530 -- thread:0x610000a6d540
+250-gunnamattamedia.com [202.173.154.122], this server offers 4 extensions
+250-AUTH LOGIN
+250-SIZE 25600000
+250-HELP
+250 AUTH=LOGIN
+[9:56:15 AM] Angela Han: WROTE Oct 14 09:55:02.467 [kCFStreamSocketSecurityLevelNone] -- host:mail.gunnamattamedia.com -- port:25 -- socket:0x6080002c2530 -- thread:0x610000a6d540
+AUTH LOGIN
+
+READ Oct 14 09:55:02.468 [kCFStreamSocketSecurityLevelNone] -- host:mail.gunnamattamedia.com -- port:110 -- socket:0x6080004d6e30 -- thread:0x608000c61600
++OK
+
+WROTE Oct 14 09:55:02.468 [kCFStreamSocketSecurityLevelNone] -- host:mail.gunnamattamedia.com -- port:110 -- socket:0x6080004d6e30 -- thread:0x608000c61600
+PASS ************
+
+READ Oct 14 09:55:02.471 [kCFStreamSocketSecurityLevelNone] -- host:mail.gunnamattamedia.com -- port:25 -- socket:0x6080002cf260 -- thread:0x610000673a80
+250-gunnamattamedia.com [202.173.154.122], this server offers 4 extensions
+250-AUTH LOGIN
+250-SIZE 25600000
+250-HELP
+250 AUTH=LOGIN
+
+WROTE Oct 14 09:55:02.471 [kCFStreamSocketSecurityLevelNone] -- host:mail.gunnamattamedia.com -- port:25 -- socket:0x6080002cf260 -- thread:0x610000673a80
+AUTH LOGIN
+
+READ Oct 14 09:55:02.472 [kCFStreamSocketSecurityLevelNone] -- host:mail.gunnamattamedia.com -- port:25 -- socket:0x6080002dda40 -- thread:0x608000a74180
+250-gunnamattamedia.com [202.173.154.122], this server offers 4 extensions
+250-AUTH LOGIN
+250-SIZE 25600000
+250-HELP
+250 AUTH=LOGIN
+
+WROTE Oct 14 09:55:02.472 [kCFStreamSocketSecurityLevelNone] -- host:mail.gunnamattamedia.com -- port:25 -- socket:0x6080002dda40 -- thread:0x608000a74180
+AUTH LOGIN
+
+READ Oct 14 09:55:02.472 [kCFStreamSocketSecurityLevelNone] -- host:mail.gunnamattamedia.com -- port:110 -- socket:0x6080002cf730 -- thread:0x600000279400
++OK
+
+WROTE Oct 14 09:55:02.473 [kCFStreamSocketSecurityLevelNone] -- host:mail.gunnamattamedia.com -- port:110 -- socket:0x6080002cf730 -- thread:0x600000279400
+PASS *********
+
+READ Oct 14 09:55:02.476 [kCFStreamSocketSecurityLevelNone] -- host:mail.gunnamattamedia.com -- port:110 -- socket:0x6180004c1c00 -- thread:0x610000679d40
++OK
+
+WROTE Oct 14 09:55:02.476 [kCFStreamSocketSecurityLevelNone] -- host:mail.gunnamattamedia.com -- port:110 -- socket:0x6180004c1c00 -- thread:0x610000679d40
+QUIT
+
+READ Oct 14 09:55:02.479 [kCFStreamSocketSecurityLevelNone] -- host:mail.gunnamattamedia.com -- port:25 -- socket:0x6080002c2530 -- thread:0x610000a6d540
+334 VXNlcm5hbWU6
+
+WROTE Oct 14 09:55:02.488 [kCFStreamSocketSecurityLevelNone] -- host:mail.gunnamattamedia.com -- port:25 -- socket:0x6080002c2530 -- thread:0x610000a6d540
+aW5mb0BndW5uYW1hdHRhbWVkaWEuY29t
+
+READ Oct 14 09:55:02.489 [kCFStreamSocketSecurityLevelNone] -- host:mail.gunnamattamedia.com -- port:25 -- socket:0x6080002cf260 -- thread:0x610000673a80
+334 VXNlcm5hbWU6
+
+READ Oct 14 09:55:02.490 [kCFStreamSocketSecurityLevelNone] -- host:mail.gunnamattamedia.com -- port:25 -- socket:0x6080002dda40 -- thread:0x608000a74180
+334 VXNlcm5hbWU6
+
+READ Oct 14 09:55:02.490 [kCFStreamSocketSecurityLevelNone] -- host:mail.gunnamattamedia.com -- port:110 -- socket:0x6080002cf730 -- thread:0x600000279400
++OK
+
+WROTE Oct 14 09:55:02.491 [kCFStreamSocketSecurityLevelNone] -- host:mail.gunnamattamedia.com -- port:110 -- socket:0x6080002cf730 -- thread:0x600000279400
+QUIT
+
+READ Oct 14 09:55:02.491 [kCFStreamSocketSecurityLevelNone] -- host:mail.gunnamattamedia.com -- port:110 -- socket:0x6180004c1c00 -- thread:0x610000679d40
++OK Goodbye
+
+READ Oct 14 09:55:02.494 [kCFStreamSocketSecurityLevelNone] -- host:mail.gunnamattamedia.com -- port:110 -- socket:0x6080004d6e30 -- thread:0x608000c61600
++OK
+
+WROTE Oct 14 09:55:02.494 [kCFStreamSocketSecurityLevelNone] -- host:mail.gunnamattamedia.com -- port:110 -- socket:0x6080004d6e30 -- thread:0x608000c61600
+QUIT
+
+READ Oct 14 09:55:02.501 [kCFStreamSocketSecurityLevelNone] -- host:mail.gunnamattamedia.com -- port:25 -- socket:0x6080002c2530 -- thread:0x610000a6d540
+334 UGFzc3dvcmQ6
+
+WROTE Oct 14 09:55:02.504 [kCFStreamSocketSecurityLevelNone] -- host:mail.gunnamattamedia.com -- port:25 -- socket:0x6080002cf260 -- thread:0x610000673a80
+dGhhcmEudmlkeWFyYXRuZUBndW5uYW1hdHRhbWVkaWEuY29t
+
+WROTE Oct 14 09:55:02.508 [kCFStreamSocketSecurityLevelNone] -- host:mail.gunnamattamedia.com -- port:25 -- socket:0x6080002c2530 -- thread:0x610000a6d540
+************
+
+READ Oct 14 09:55:02.510 [kCFStreamSocketSecurityLevelNone] -- host:mail.gunnamattamedia.com -- port:110 -- socket:0x6080002cf730 -- thread:0x600000279400
++OK Goodbye
+
+READ Oct 14 09:55:02.510 [kCFStreamSocketSecurityLevelNone] -- host:mail.gunnamattamedia.com -- port:110 -- socket:0x6080004d6e30 -- thread:0x608000c61600
++OK Goodbye
+
+WROTE Oct 14 09:55:02.512 [kCFStreamSocketSecurityLevelNone] -- host:mail.gunnamattamedia.com -- port:25 -- socket:0x6080002dda40 -- thread:0x608000a74180
+ZmF4QGd1bm5hbWF0dGFtZWRpYS5jb20=
+
+READ Oct 14 09:55:02.516 [kCFStreamSocketSecurityLevelNone] -- host:mail.gunnamattamedia.com -- port:25 -- socket:0x6080002cf260 -- thread:0x610000673a80
+334 UGFzc3dvcmQ6
+
+READ Oct 14 09:55:02.520 [kCFStreamSocketSecurityLevelNone] -- host:mail.gunnamattamedia.com -- port:25 -- socket:0x6080002c2530 -- thread:0x610000a6d540
+235 Authenticated
+
+WROTE Oct 14 09:55:02.520 [kCFStreamSocketSecurityLevelNone] -- host:mail.gunnamattamedia.com -- port:25 -- socket:0x6080002c2530 -- thread:0x610000a6d540
+QUIT
+
+WROTE Oct 14 09:55:02.521 [kCFStreamSocketSecurityLevelNone] -- host:mail.gunnamattamedia.com -- port:25 -- socket:0x6080002cf260 -- thread:0x610000673a80
+****************
+
+READ Oct 14 09:55:02.528 [kCFStreamSocketSecurityLevelNone] -- host:mail.gunnamattamedia.com -- port:25 -- socket:0x6080002dda40 -- thread:0x608000a74180
+334 UGFzc3dvcmQ6
+
+WROTE Oct 14 09:55:02.533 [kCFStreamSocketSecurityLevelNone] -- host:mail.gunnamattamedia.com -- port:25 -- socket:0x6080002dda40 -- thread:0x608000a74180
+[9:56:21 AM] Angela Han: READ Oct 14 09:55:02.534 [kCFStreamSocketSecurityLevelNone] -- host:mail.gunnamattamedia.com -- port:25 -- socket:0x6080002cf260 -- thread:0x610000673a80
+235 Authenticated
+
+WROTE Oct 14 09:55:02.535 [kCFStreamSocketSecurityLevelNone] -- host:mail.gunnamattamedia.com -- port:25 -- socket:0x6080002cf260 -- thread:0x610000673a80
+QUIT
+
+READ Oct 14 09:55:02.547 [kCFStreamSocketSecurityLevelNone] -- host:mail.gunnamattamedia.com -- port:25 -- socket:0x6080002dda40 -- thread:0x608000a74180
+235 Authenticated
+
+WROTE Oct 14 09:55:02.547 [kCFStreamSocketSecurityLevelNone] -- host:mail.gunnamattamedia.com -- port:25 -- socket:0x6080002dda40 -- thread:0x608000a74180
+QUIT
+[9:56:24 AM] Angela Han: That is the whole log file.

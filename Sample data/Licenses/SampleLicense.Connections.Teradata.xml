@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<MSSQLServerAuditorConnections xmlns:xi="http://www.w3.org/2003/XInclude" version="1.0">
+
+	<connections name="MyTeradataInstance" template="MSSQLServerAuditor.Template.Teradata.xml">
+		<connection name="MyTeradataInstance" instance="MyTeradataSQLServer" type="TDSQL">
+			<authentication isWindows="false" username="TeradataUser" password="TeradataPassword"/>
+			<license hostname="MyComputerName" osusername="MyDomain\MyLoginName" expirydate="99991231" buildexpirydate="99991231" signature=""/>
+		</connection>
+	</connections>
+
+</MSSQLServerAuditorConnections>

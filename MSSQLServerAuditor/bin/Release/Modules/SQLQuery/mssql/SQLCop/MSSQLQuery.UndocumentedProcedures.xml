@@ -1,0 +1,203 @@
+﻿<?xml version="1.0" encoding="UTF-8"?>
+<root xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+<sqlquery type="MSSQL">
+	<sql-select name="GetListOfProceduresWithUndocumentedProcedures">
+		<description>
+			Identify procedures that call SQL Server undocumented procedures
+		</description>
+		<reference>
+			http://blogs.lessthandot.com/index.php/DataMgmt/DataDesign/identify-procedures-that-call-sql-server
+		</reference>
+		<sql-select-text MinSupportedVersion="8.*" MaxSupportedVersion="8.*" signature="">
+			SET NOCOUNT ON;
+			SET DEADLOCK_PRIORITY LOW;
+
+			DECLARE @Temp TABLE
+			(
+				[ProcedureName] [NVARCHAR](128)
+			);
+
+			INSERT INTO @Temp VALUES(N'sp_MStablespace');
+			INSERT INTO @Temp VALUES(N'sp_who2');
+			INSERT INTO @Temp VALUES(N'sp_tempdbspace');
+			INSERT INTO @Temp VALUES(N'sp_MSkilldb');
+			INSERT INTO @Temp VALUES(N'sp_MSindexspace');
+			INSERT INTO @Temp VALUES(N'sp_MShelptype');
+			INSERT INTO @Temp VALUES(N'sp_MShelpindex');
+			INSERT INTO @Temp VALUES(N'sp_MShelpcolumns');
+			INSERT INTO @Temp VALUES(N'sp_MSforeachtable');
+			INSERT INTO @Temp VALUES(N'sp_MSforeachdb');
+			INSERT INTO @Temp VALUES(N'sp_fixindex');
+			INSERT INTO @Temp VALUES(N'sp_columns_rowset');
+			INSERT INTO @Temp VALUES(N'sp_MScheck_uid_owns_anything');
+			INSERT INTO @Temp VALUES(N'sp_MSgettools_path');
+			INSERT INTO @Temp VALUES(N'sp_gettypestring');
+			INSERT INTO @Temp VALUES(N'sp_MSdrop_object');
+			INSERT INTO @Temp VALUES(N'sp_MSget_qualified_name');
+			INSERT INTO @Temp VALUES(N'sp_MSgetversion');
+			INSERT INTO @Temp VALUES(N'xp_dirtree');
+			INSERT INTO @Temp VALUES(N'xp_subdirs');
+			INSERT INTO @Temp VALUES(N'xp_enum_oledb_providers');
+			INSERT INTO @Temp VALUES(N'xp_enumcodepages');
+			INSERT INTO @Temp VALUES(N'xp_enumdsn');
+			INSERT INTO @Temp VALUES(N'xp_enumerrorlogs');
+			INSERT INTO @Temp VALUES(N'xp_enumgroups');
+			INSERT INTO @Temp VALUES(N'xp_fileexist');
+			INSERT INTO @Temp VALUES(N'xp_fixeddrives');
+			INSERT INTO @Temp VALUES(N'xp_getnetname');
+			INSERT INTO @Temp VALUES(N'xp_readerrorlog');
+			INSERT INTO @Temp VALUES(N'sp_msdependencies');
+			INSERT INTO @Temp VALUES(N'xp_qv');
+			INSERT INTO @Temp VALUES(N'xp_delete_file');
+			INSERT INTO @Temp VALUES(N'sp_checknames');
+			INSERT INTO @Temp VALUES(N'sp_enumoledbdatasources');
+			INSERT INTO @Temp VALUES(N'sp_MS_marksystemobject');
+			INSERT INTO @Temp VALUES(N'sp_MSaddguidcolumn');
+			INSERT INTO @Temp VALUES(N'sp_MSaddguidindex');
+			INSERT INTO @Temp VALUES(N'sp_MSaddlogin_implicit_ntlogin');
+			INSERT INTO @Temp VALUES(N'sp_MSadduser_implicit_ntlogin');
+			INSERT INTO @Temp VALUES(N'sp_MSdbuseraccess');
+			INSERT INTO @Temp VALUES(N'sp_MSdbuserpriv');
+			INSERT INTO @Temp VALUES(N'sp_MSloginmappings');
+			INSERT INTO @Temp VALUES(N'sp_MStablekeys');
+			INSERT INTO @Temp VALUES(N'sp_MStablerefs');
+			INSERT INTO @Temp VALUES(N'sp_MSuniquetempname');
+			INSERT INTO @Temp VALUES(N'sp_MSuniqueobjectname');
+			INSERT INTO @Temp VALUES(N'sp_MSuniquecolname');
+			INSERT INTO @Temp VALUES(N'sp_MSuniquename');
+			INSERT INTO @Temp VALUES(N'sp_MSunc_to_drive');
+			INSERT INTO @Temp VALUES(N'sp_MSis_pk_col');
+			INSERT INTO @Temp VALUES(N'xp_get_MAPI_default_profile');
+			INSERT INTO @Temp VALUES(N'xp_get_MAPI_profiles');
+			INSERT INTO @Temp VALUES(N'xp_regdeletekey');
+			INSERT INTO @Temp VALUES(N'xp_regdeletevalue');
+			INSERT INTO @Temp VALUES(N'xp_regread');
+			INSERT INTO @Temp VALUES(N'xp_regenumvalues');
+			INSERT INTO @Temp VALUES(N'xp_regaddmultistring');
+			INSERT INTO @Temp VALUES(N'xp_regremovemultistring');
+			INSERT INTO @Temp VALUES(N'xp_regwrite');
+			INSERT INTO @Temp VALUES(N'xp_varbintohexstr');
+			INSERT INTO @Temp VALUES(N'sp_MSguidtostr');
+
+			SELECT
+				 tSU.[name]   AS [SchemaName]
+				,tSO.[name]   AS [ObjectName]
+				,tSO.[xtype]  AS [ObjectType]
+				,tSO.[crdate] AS [ObjectCreateDate]
+			FROM
+				[dbo].[sysobjects] tSO
+				INNER JOIN [dbo].[sysusers] tSU ON
+					tSU.[uid] = tSO.[uid]
+				INNER JOIN [dbo].[syscomments] tSC ON
+					tSC.[id] = tSO.[id]
+				INNER JOIN @Temp t ON
+					tSC.[text] COLLATE DATABASE_DEFAULT LIKE '%' + t.[ProcedureName] + '%' COLLATE DATABASE_DEFAULT
+			WHERE
+				tSO.[xtype] = N'P'
+				AND OBJECTPROPERTY(tSO.[id], N'IsMSShipped') = 0
+			GROUP BY
+				 tSU.[name]
+				,tSO.[name]
+				,tSO.[xtype]
+				,tSO.[crdate]
+			ORDER BY
+				 tSU.[name]
+				,tSO.[name];
+		</sql-select-text>
+		<sql-select-text MinSupportedVersion="9.*" MaxSupportedVersion="*" signature="">
+			SET NOCOUNT ON;
+			SET DEADLOCK_PRIORITY LOW;
+
+			DECLARE @Temp TABLE
+			(
+				[ProcedureName] [NVARCHAR](128)
+			);
+
+			INSERT INTO @Temp VALUES(N'sp_MStablespace');
+			INSERT INTO @Temp VALUES(N'sp_who2');
+			INSERT INTO @Temp VALUES(N'sp_tempdbspace');
+			INSERT INTO @Temp VALUES(N'sp_MSkilldb');
+			INSERT INTO @Temp VALUES(N'sp_MSindexspace');
+			INSERT INTO @Temp VALUES(N'sp_MShelptype');
+			INSERT INTO @Temp VALUES(N'sp_MShelpindex');
+			INSERT INTO @Temp VALUES(N'sp_MShelpcolumns');
+			INSERT INTO @Temp VALUES(N'sp_MSforeachtable');
+			INSERT INTO @Temp VALUES(N'sp_MSforeachdb');
+			INSERT INTO @Temp VALUES(N'sp_fixindex');
+			INSERT INTO @Temp VALUES(N'sp_columns_rowset');
+			INSERT INTO @Temp VALUES(N'sp_MScheck_uid_owns_anything');
+			INSERT INTO @Temp VALUES(N'sp_MSgettools_path');
+			INSERT INTO @Temp VALUES(N'sp_gettypestring');
+			INSERT INTO @Temp VALUES(N'sp_MSdrop_object');
+			INSERT INTO @Temp VALUES(N'sp_MSget_qualified_name');
+			INSERT INTO @Temp VALUES(N'sp_MSgetversion');
+			INSERT INTO @Temp VALUES(N'xp_dirtree');
+			INSERT INTO @Temp VALUES(N'xp_subdirs');
+			INSERT INTO @Temp VALUES(N'xp_enum_oledb_providers');
+			INSERT INTO @Temp VALUES(N'xp_enumcodepages');
+			INSERT INTO @Temp VALUES(N'xp_enumdsn');
+			INSERT INTO @Temp VALUES(N'xp_enumerrorlogs');
+			INSERT INTO @Temp VALUES(N'xp_enumgroups');
+			INSERT INTO @Temp VALUES(N'xp_fileexist');
+			INSERT INTO @Temp VALUES(N'xp_fixeddrives');
+			INSERT INTO @Temp VALUES(N'xp_getnetname');
+			INSERT INTO @Temp VALUES(N'xp_readerrorlog');
+			INSERT INTO @Temp VALUES(N'sp_msdependencies');
+			INSERT INTO @Temp VALUES(N'xp_qv');
+			INSERT INTO @Temp VALUES(N'xp_delete_file');
+			INSERT INTO @Temp VALUES(N'sp_checknames');
+			INSERT INTO @Temp VALUES(N'sp_enumoledbdatasources');
+			INSERT INTO @Temp VALUES(N'sp_MS_marksystemobject');
+			INSERT INTO @Temp VALUES(N'sp_MSaddguidcolumn');
+			INSERT INTO @Temp VALUES(N'sp_MSaddguidindex');
+			INSERT INTO @Temp VALUES(N'sp_MSaddlogin_implicit_ntlogin');
+			INSERT INTO @Temp VALUES(N'sp_MSadduser_implicit_ntlogin');
+			INSERT INTO @Temp VALUES(N'sp_MSdbuseraccess');
+			INSERT INTO @Temp VALUES(N'sp_MSdbuserpriv');
+			INSERT INTO @Temp VALUES(N'sp_MSloginmappings');
+			INSERT INTO @Temp VALUES(N'sp_MStablekeys');
+			INSERT INTO @Temp VALUES(N'sp_MStablerefs');
+			INSERT INTO @Temp VALUES(N'sp_MSuniquetempname');
+			INSERT INTO @Temp VALUES(N'sp_MSuniqueobjectname');
+			INSERT INTO @Temp VALUES(N'sp_MSuniquecolname');
+			INSERT INTO @Temp VALUES(N'sp_MSuniquename');
+			INSERT INTO @Temp VALUES(N'sp_MSunc_to_drive');
+			INSERT INTO @Temp VALUES(N'sp_MSis_pk_col');
+			INSERT INTO @Temp VALUES(N'xp_get_MAPI_default_profile');
+			INSERT INTO @Temp VALUES(N'xp_get_MAPI_profiles');
+			INSERT INTO @Temp VALUES(N'xp_regdeletekey');
+			INSERT INTO @Temp VALUES(N'xp_regdeletevalue');
+			INSERT INTO @Temp VALUES(N'xp_regread');
+			INSERT INTO @Temp VALUES(N'xp_regenumvalues');
+			INSERT INTO @Temp VALUES(N'xp_regaddmultistring');
+			INSERT INTO @Temp VALUES(N'xp_regremovemultistring');
+			INSERT INTO @Temp VALUES(N'xp_regwrite');
+			INSERT INTO @Temp VALUES(N'xp_varbintohexstr');
+			INSERT INTO @Temp VALUES(N'sp_MSguidtostr');
+
+			SELECT
+				 tSS.[name]        AS [SchemaName]
+				,tSO.[name]        AS [ObjectName]
+				,tSO.[type_desc]   AS [ObjectType]
+				,tSO.[create_date] AS [ObjectCreateDate]
+			FROM
+				[sys].[objects] tSO
+				INNER JOIN [sys].[schemas] tSS ON
+					tSS.[schema_id] = tSO.[schema_id]
+				INNER JOIN @Temp t ON
+					Object_Definition(tSO.[object_id]) COLLATE DATABASE_DEFAULT LIKE N'%' + t.[ProcedureName] + N'%' COLLATE DATABASE_DEFAULT
+			WHERE
+				tSO.[type_desc] = N'SQL_STORED_PROCEDURE'
+				AND OBJECTPROPERTY(tSO.[object_id], N'IsMSShipped') = 0
+			GROUP BY
+				 tSS.[name]
+				,tSO.[name]
+				,tSO.[type_desc]
+				,tSO.[create_date]
+			ORDER BY
+				 tSS.[name]
+				,tSO.[name];
+		</sql-select-text>
+	</sql-select>
+</sqlquery>
+</root>

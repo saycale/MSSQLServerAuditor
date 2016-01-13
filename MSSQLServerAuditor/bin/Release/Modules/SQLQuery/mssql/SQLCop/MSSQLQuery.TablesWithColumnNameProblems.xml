@@ -1,0 +1,81 @@
+﻿<?xml version="1.0" encoding="UTF-8"?>
+<root xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+<sqlquery type="MSSQL">
+	<sql-select name="GetTablesWithColumnNameProblems">
+		<description>
+			Do not use spaces or other invalid characters in your column names
+		</description>
+		<reference>
+			http://blogs.lessthandot.com/index.php/DataMgmt/DBProgramming/do-not-use-spaces-or-other-invalid-chara
+		</reference>
+		<sql-select-text MinSupportedVersion="8.*" MaxSupportedVersion="8.*" signature="">
+			SET NOCOUNT ON;
+			SET DEADLOCK_PRIORITY LOW;
+
+			DECLARE
+				@strAcceptableSymbols [NVARCHAR](256);
+
+			SET @strAcceptableSymbols = N'_$';
+
+			SELECT
+				 tSU.[name]   AS [SchemaName]
+				,tSO.[name]   AS [ObjectName]
+				,tSO.[xtype]  AS [ObjectType]
+				,tSO.[crdate] AS [ObjectCreateDate]
+				,tSC.[name]   AS [ObjectColumnName]
+			FROM
+				[dbo].[sysobjects] tSO
+				INNER JOIN [dbo].[sysusers] tSU ON
+					tSU.[uid] = tSO.[uid]
+				INNER JOIN [dbo].[syscolumns] AS tSC ON
+						tSC.[id] = tSO.[id]
+			WHERE
+				tSO.[xtype] IN (
+					 N'U'
+					,N'V'
+				)
+				AND OBJECTPROPERTY(tSO.[id], N'IsMSShipped') = 0
+				AND LOWER(tSC.[name]) LIKE N'%[^a-z' + @strAcceptableSymbols + N']%'
+			ORDER BY
+				 tSU.[name]
+				,tSO.[name]
+				,tSC.[name]
+			;
+		</sql-select-text>
+		<sql-select-text MinSupportedVersion="9.*" MaxSupportedVersion="*" signature="">
+			SET NOCOUNT ON;
+			SET DEADLOCK_PRIORITY LOW;
+
+			DECLARE
+				@strAcceptableSymbols [NVARCHAR](256);
+
+			SET @strAcceptableSymbols = N'_$';
+
+			SELECT
+				 tSS.[name]        AS [SchemaName]
+				,tSO.[name]        AS [ObjectName]
+				,tSO.[type_desc]   AS [ObjectType]
+				,tSO.[create_date] AS [ObjectCreateDate]
+				,tSC.[name]        AS [ObjectColumnName]
+			FROM
+				[sys].[objects] tSO
+				INNER JOIN [sys].[schemas] tSS ON
+					tSS.[schema_id] = tSO.[schema_id]
+				INNER JOIN [sys].[columns] AS tSC ON
+					tSC.[object_id] = tSO.[object_id]
+			WHERE
+				tSO.[type_desc] IN (
+					 N'USER_TABLE'
+					,N'VIEW'
+				)
+				AND OBJECTPROPERTY(tSO.[object_id], N'IsMSShipped') = 0
+				AND LOWER(tSC.[name]) LIKE N'%[^a-z' + @strAcceptableSymbols + N']%'
+			ORDER BY
+				 tSS.[name]
+				,tSO.[name]
+				,tSC.[name]
+			;
+		</sql-select-text>
+	</sql-select>
+</sqlquery>
+</root>

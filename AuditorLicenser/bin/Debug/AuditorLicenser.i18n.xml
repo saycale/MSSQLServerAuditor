@@ -1,0 +1,297 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- edited with XMLSpy v2011 rel. 2 (http://www.altova.com) by TeaM DJiNN (TeaM DJiNN) -->
+<!-- edited with XMLSPY v5 rel. 3 U (http://www.xmlspy.com) by zulu1 (zulu1) -->
+<root xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+	<local>
+		<frmMain>
+			<createCfgRb>
+				<i18n name="en">Create new</i18n>
+				<i18n name="ru">Создать</i18n>
+			</createCfgRb>
+			<loadCfgRb>
+				<i18n name="en">Open</i18n>
+				<i18n name="ru">Загрузить</i18n>
+			</loadCfgRb>
+			<signPublicKeyLabel>
+				<i18n name="en">Public</i18n>
+				<i18n name="ru">Открытый</i18n>
+			</signPublicKeyLabel>
+			<signPrivateKeyLabel>
+				<i18n name="en">Private</i18n>
+				<i18n name="ru">Закрытый</i18n>
+			</signPrivateKeyLabel>
+			<cryptPublicKeyLabel>
+				<i18n name="en">Public</i18n>
+				<i18n name="ru">Открытый</i18n>
+			</cryptPublicKeyLabel>
+			<cryptPrivateKeyLabel>
+				<i18n name="en">Private</i18n>
+				<i18n name="ru">Закрытый</i18n>
+			</cryptPrivateKeyLabel>
+			<signNewButton>
+				<i18n name="en">New</i18n>
+				<i18n name="ru">Новый</i18n>
+			</signNewButton>
+			<cryptNewButton>
+				<i18n name="en">New</i18n>
+				<i18n name="ru">Новый</i18n>
+			</cryptNewButton>
+			<licenseToSignLabel>
+				<i18n name="en">File to sign: </i18n>
+				<i18n name="ru">Файл "на подпись":</i18n>
+			</licenseToSignLabel>
+			<licenseOutputLabel>
+				<i18n name="en">Output file: </i18n>
+				<i18n name="ru">Выходной файл: </i18n>
+			</licenseOutputLabel>
+			<dstFolderLabel>
+				<i18n name="en">Destination folder: </i18n>
+				<i18n name="ru">Папка для записи:</i18n>
+			</dstFolderLabel>
+			<sourceFolderLabel>
+				<i18n name="en">Configuration folder: </i18n>
+				<i18n name="ru">Папка конфигурации: </i18n>
+			</sourceFolderLabel>
+			<langFileLabel>
+				<i18n name="en">Language file: </i18n>
+				<i18n name="ru">Файл языка:</i18n>
+			</langFileLabel>
+			<sysSettingsFileLabel>
+				<i18n name="en">Sys. settings file:</i18n>
+				<i18n name="ru">Файл cист. настроек:</i18n>
+			</sysSettingsFileLabel>
+			<userSettingsFileLabel>
+				<i18n name="en">User settings file:</i18n>
+				<i18n name="ru">  пользовательских:</i18n>
+			</userSettingsFileLabel>
+			<frameworkFolderLabel>
+				<i18n name="en">.NET Framework folder:</i18n>
+				<i18n name="ru">Папка платформы .NET:</i18n>
+			</frameworkFolderLabel>
+			<frameworkVerLabel>
+				<i18n name="en">Version:</i18n>
+				<i18n name="ru">Версия:</i18n>
+			</frameworkVerLabel>
+			<dnGuardFolderLabel>
+				<i18n name="en">DNGuard folder:</i18n>
+				<i18n name="ru">Папка DNGuard:</i18n>
+			</dnGuardFolderLabel>
+			<dnGuardExeLabel>
+				<i18n name="en">DNGuard exe name:</i18n>
+				<i18n name="ru">Имя exe-файла DNGuard:</i18n>
+			</dnGuardExeLabel>
+			<chbDnGuardUse>
+				<i18n name="en">Enable protection</i18n>
+				<i18n name="ru">Использовать</i18n>
+			</chbDnGuardUse>
+			<dnGuardOptionsLabel>
+				<i18n name="en">Options</i18n>
+				<i18n name="ru">Параметры</i18n>
+			</dnGuardOptionsLabel>
+			<resetDnGuardOptionsButton>
+				<i18n name="en">Rest options</i18n>
+				<i18n name="ru">Параметры по-умолчанию</i18n>
+			</resetDnGuardOptionsButton>
+			<wixFolderLabel>
+				<i18n name="en">Wix folder:</i18n>
+				<i18n name="ru">Папка Wix:</i18n>
+			</wixFolderLabel>
+			<wixFileLabel>
+				<i18n name="en">Wix file:</i18n>
+				<i18n name="ru">Файл Wix:</i18n>
+			</wixFileLabel>
+			<billboardLabel>
+				<i18n name="en">Banner:</i18n>
+				<i18n name="ru">Баннер:</i18n>
+			</billboardLabel>
+			<installPackPutputFileLabel>
+				<i18n name="en">Output file:</i18n>
+				<i18n name="ru">Выходной файл:</i18n>
+			</installPackPutputFileLabel>
+			<doConfigurationButton>
+				<i18n name="en">Execute</i18n>
+				<i18n name="ru">Выполнить</i18n>
+			</doConfigurationButton>
+			<keysSaveButton>
+				<i18n name="en">Save</i18n>
+				<i18n name="ru">Запомнить</i18n>
+			</keysSaveButton>
+			<subscribeLicenseButton>
+				<i18n name="en">Sign it</i18n>
+				<i18n name="ru">Подписать</i18n>
+			</subscribeLicenseButton>
+			<srcFilesSignButton>
+				<i18n name="en">Sign it</i18n>
+				<i18n name="ru">Подписать</i18n>
+			</srcFilesSignButton>
+			<buildApplicationButton>
+				<i18n name="en">Execute</i18n>
+				<i18n name="ru">Выполнить</i18n>
+			</buildApplicationButton>
+			<buildInstallPackButton>
+				<i18n name="en">Execute</i18n>
+				<i18n name="ru">Выполнить</i18n>
+			</buildInstallPackButton>
+			<configTabPage>
+				<i18n name="en">Configuration</i18n>
+				<i18n name="ru">Конфигурация</i18n>
+			</configTabPage>
+			<keysTabPage>
+				<i18n name="en">Keys</i18n>
+				<i18n name="ru">Ключи</i18n>
+			</keysTabPage>
+			<licensesTabPage>
+				<i18n name="en">Licenses</i18n>
+				<i18n name="ru">Лицензии</i18n>
+			</licensesTabPage>
+			<srcTabPage>
+				<i18n name="en">Source data</i18n>
+				<i18n name="ru">Исходные данные</i18n>
+			</srcTabPage>
+			<getAssemblyTabPage>
+				<i18n name="en">Application building</i18n>
+				<i18n name="ru">Сбор приложения</i18n>
+			</getAssemblyTabPage>
+			<makeDistribTabPage>
+				<i18n name="en">Distribution pack</i18n>
+				<i18n name="ru">Сбор дистрибутива</i18n>
+			</makeDistribTabPage>
+			<keysSignTab>
+				<i18n name="en">Signing</i18n>
+				<i18n name="ru">Подпись</i18n>
+			</keysSignTab>
+			<keysCryptTab>
+				<i18n name="en">Encypting</i18n>
+				<i18n name="ru">Шифрование</i18n>
+			</keysCryptTab>
+			<AppVersion>
+				<i18n name="en">Application version: </i18n>
+				<i18n name="ru">Версия приложения: </i18n>
+			</AppVersion>
+			<TemplateFileNotFound>
+				<i18n name="en">TemplateFileNotFound: </i18n>
+				<i18n name="ru">Не найден файл шаблонов: </i18n>
+			</TemplateFileNotFound>
+			<InitializingConfiguration>
+				<i18n name="en">Initializing configuration...</i18n>
+				<i18n name="ru">Инициализация конфигурации...</i18n>
+			</InitializingConfiguration>
+			<InitializingConfigurationComplete>
+				<i18n name="en">Initializing configuration complete.</i18n>
+				<i18n name="ru">Инициализация конфигурации выполнена.</i18n>
+			</InitializingConfigurationComplete>
+			<ProcessingConfiguration>
+				<i18n name="en">Processing configuration...</i18n>
+				<i18n name="ru">Обработка конфигурации...</i18n>
+			</ProcessingConfiguration>
+			<ProcessingConfigurationComplete>
+				<i18n name="en">Processing configuration complete.</i18n>
+				<i18n name="ru">Обработка конфигурации выполнена.</i18n>
+			</ProcessingConfigurationComplete>
+			<BuildingApplication>
+				<i18n name="en">Building Application...</i18n>
+				<i18n name="ru">Сбор приложенияи...</i18n>
+			</BuildingApplication>
+			<BuildingApplicationComplete>
+				<i18n name="en">Building Application complete: </i18n>
+				<i18n name="ru">Сбор приложенияи завершен: </i18n>
+			</BuildingApplicationComplete>
+			<BuildingInstallPack>
+				<i18n name="en">Building intallation package...</i18n>
+				<i18n name="ru">Сбор дистрибутива...</i18n>
+			</BuildingInstallPack>
+			<BuildingInstallPackComplete>
+				<i18n name="en">Building intallation package complete</i18n>
+				<i18n name="ru">Сбор дистрибутива заввершен</i18n>
+			</BuildingInstallPackComplete>
+			<BuildingInstallPackFailed>
+				<i18n name="en">Building intallation package faild. Please, see detaild in log above.</i18n>
+				<i18n name="ru">Не удалось собрать дистрибутив. Описание проблемы должно быть указано в логе выше.</i18n>
+			</BuildingInstallPackFailed>
+			<ApplyingKeys>
+				<i18n name="en">Applying keys...</i18n>
+				<i18n name="ru">Применение ключей...</i18n>
+			</ApplyingKeys>
+			<ApplyingKeysSuccess>
+				<i18n name="en">The keys has been successfuly applied</i18n>
+				<i18n name="ru">Ключи применены успешно</i18n>
+			</ApplyingKeysSuccess>
+			<ReadingPrivateSigningKeyFaild>
+				<i18n name="en">Reading private signing key faild.</i18n>
+				<i18n name="ru">Не удалось прочитать закрытый ключ подписи.</i18n>
+			</ReadingPrivateSigningKeyFaild>
+			<ReadingPublicSigningKeyFaild>
+				<i18n name="en">Reading public signing key faild.</i18n>
+				<i18n name="ru">Не удалось прочитать открытый ключ подписи.</i18n>
+			</ReadingPublicSigningKeyFaild>
+			<ReadingPrivateCryptKeyFaild>
+				<i18n name="en">Reading private encrypting key faild.</i18n>
+				<i18n name="ru">Не удалось прочитать закрытый ключ шифрования.</i18n>
+			</ReadingPrivateCryptKeyFaild>
+			<ReadingPublicCryptKeyFaild>
+				<i18n name="en">Reading public encrypting key faild.</i18n>
+				<i18n name="ru">Не удалось прочитать открытый ключ шифрования.</i18n>
+			</ReadingPublicCryptKeyFaild>
+			<LicenseHasBeenSigned>
+				<i18n name="en">License(s) has been signed and saved to spcified destination.</i18n>
+				<i18n name="ru">Лицензия(и) подписана(ы) и записана в новый файл.</i18n>
+			</LicenseHasBeenSigned>
+			<SettingsButtonTooltip>
+				<i18n name="en">Settings</i18n>
+				<i18n name="ru">Настройки</i18n>
+			</SettingsButtonTooltip>
+			<templatesLabel>
+				<i18n name="en">Template files:</i18n>
+				<i18n name="ru">Шаблоны:</i18n>
+			</templatesLabel>
+			<addTemplateFileAsRelativePathCheckBox>
+				<i18n name="en">use relative paths for new added template files</i18n>
+				<i18n name="ru">добавлять шаблоны с относительным путем</i18n>
+			</addTemplateFileAsRelativePathCheckBox>
+			<lblAdditionalTemplate>
+				<i18n name="en">Additional HTML for reports:</i18n>
+				<i18n name="ru">Дополнительные HTML для отчетов:</i18n>
+			</lblAdditionalTemplate>
+			<lbAdditionalSql>
+				<i18n name="en">Additional SQL for querys:</i18n>
+				<i18n name="ru">Дополнительный SQL для всех запросов:</i18n>
+			</lbAdditionalSql>
+		</frmMain>
+		<LicenserModel>
+			<NoLicenseDataForInstance>
+				<i18n name="en">No license data is specified for Instance </i18n>
+				<i18n name="ru">Не указаны данные лицензии для Instance </i18n>
+			</NoLicenseDataForInstance>
+			<TemplateTreeFileNotFound>
+				<i18n name="en">Template tree file not found: </i18n>
+				<i18n name="ru">Не найден файл шаблона дерева: </i18n>
+			</TemplateTreeFileNotFound>
+			<ReportXslFileNotFound>
+				<i18n name="en">Report XSL file not found: </i18n>
+				<i18n name="ru">Не найден XSL-файл шаблона оформления: </i18n>
+			</ReportXslFileNotFound>
+			<QueriesXmlFileNotFound>
+				<i18n name="en">Queries Xml file not found: </i18n>
+				<i18n name="ru">Не найден XML-файл запросов: </i18n>
+			</QueriesXmlFileNotFound>
+			<QueriyNotFoundInFile>
+				<i18n name="en">Query \"{0}\" not found in \"{0}\"</i18n>
+				<i18n name="ru">Не найден запрос \"{0}\" в файле \"{1}\"</i18n>
+			</QueriyNotFoundInFile>
+		</LicenserModel>
+		<SettingsForm>
+			<Caption>
+				<i18n name="en">Settings</i18n>
+				<i18n name="ru">Настройки</i18n>
+			</Caption>
+			<uiLanglabel>
+				<i18n name="en">Intarface language</i18n>
+				<i18n name="ru">Язык интерфейса</i18n>
+			</uiLanglabel>
+			<cancelButton>
+				<i18n name="en">Cancel</i18n>
+				<i18n name="ru">Отмена</i18n>
+			</cancelButton>
+		</SettingsForm>
+	</local>
+</root>

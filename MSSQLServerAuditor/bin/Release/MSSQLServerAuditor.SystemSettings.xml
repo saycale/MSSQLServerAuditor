@@ -1,0 +1,192 @@
+﻿<?xml version="1.0" encoding="UTF-8"?>
+<root xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+<settings>
+	<sqltimeout>90</sqltimeout>
+
+	<available_ui_lang>en</available_ui_lang>
+	<available_ui_lang>ru</available_ui_lang>
+
+	<available_report_lang>en</available_report_lang>
+	<available_report_lang>ru</available_report_lang>
+
+	<interface_lang>en</interface_lang>
+	<report_lang>en</report_lang>
+
+	<MainWindowTitle>
+		<i18n name="en">
+			Server Auditor [$ApplicationProductName$ - $ApplicationProductVersion$]
+		</i18n>
+		<i18n name="ru">
+			Аудитор сервера [$ApplicationProductName$ - $ApplicationProductVersion$]
+		</i18n>
+	</MainWindowTitle>
+
+	<ConnectionTypes>
+		<ConnectionType id="MSSQL">
+			<i18n name="en">
+				MS SQL
+			</i18n>
+			<i18n name="ru">
+				MS SQL
+			</i18n>
+			<ModuleTypes>
+				<ModuleType id="MSSQL">
+					<i18n name="en">
+						MS SQL
+					</i18n>
+					<i18n name="ru">
+						MS SQL
+					</i18n>
+				</ModuleType>
+			</ModuleTypes>
+		</ConnectionType>
+
+		<ConnectionType id="TDSQL">
+			<i18n name="en">
+				Teradata
+			</i18n>
+			<i18n name="ru">
+				Teradata
+			</i18n>
+			<ModuleTypes>
+				<ModuleType id="TDSQL">
+					<i18n name="en">
+						Teradata
+					</i18n>
+					<i18n name="ru">
+						Teradata
+					</i18n>
+				</ModuleType>
+			</ModuleTypes>
+		</ConnectionType>
+
+		<ConnectionType id="ActiveDirectory">
+			<i18n name="en">
+				Active Directory
+			</i18n>
+			<i18n name="ru">
+				Active Directory
+			</i18n>
+			<ModuleTypes>
+				<ModuleType id="ActiveDirectory">
+					<i18n name="en">
+						Active Directory
+					</i18n>
+					<i18n name="ru">
+						Active Directory
+					</i18n>
+				</ModuleType>
+			</ModuleTypes>
+		</ConnectionType>
+
+		<ConnectionType id="EventLog">
+			<i18n name="en">
+				Event Log
+			</i18n>
+			<i18n name="ru">
+				Event Log
+			</i18n>
+			<ModuleTypes>
+				<ModuleType id="EventLog">
+					<i18n name="en">
+						Event Log
+					</i18n>
+					<i18n name="ru">
+						Event Log
+					</i18n>
+				</ModuleType>
+			</ModuleTypes>
+		</ConnectionType>
+
+		<ConnectionType id="NetworkInformation">
+			<i18n name="en">
+				Network Information
+			</i18n>
+			<i18n name="ru">
+				Network Information
+			</i18n>
+			<ModuleTypes>
+				<ModuleType id="NetworkInformation">
+					<i18n name="en">
+						Network Information
+					</i18n>
+					<i18n name="ru">
+						Network Information
+					</i18n>
+				</ModuleType>
+			</ModuleTypes>
+		</ConnectionType>
+
+		<ConnectionType id="SQLiteExternal">
+			<i18n name="en">
+				SQLite external
+			</i18n>
+			<i18n name="ru">
+				Внешняя база SQLite
+			</i18n>
+			<ModuleTypes>
+				<ModuleType id="SQLiteExternal">
+					<i18n name="en">
+						SQLite external
+					</i18n>
+					<i18n name="ru">
+						Внешняя база SQLite
+					</i18n>
+				</ModuleType>
+			</ModuleTypes>
+		</ConnectionType>
+
+		<ConnectionType id="SQLite">
+			<i18n name="en">
+				SQLite internal
+			</i18n>
+			<i18n name="ru">
+				Внутренняя база SQLite
+			</i18n>
+			<ModuleTypes>
+				<ModuleType id="SQLite-MSSQL">
+					<i18n name="en">
+						SQLite - MSSQL
+					</i18n>
+					<i18n name="ru">
+						SQLite - MSSQL
+					</i18n>
+				</ModuleType>
+				<ModuleType id="SQLite-NetworkInformation">
+					<i18n name="en">
+						SQLite - NetworkInformation
+					</i18n>
+					<i18n name="ru">
+						SQLite - NetworkInformation
+					</i18n>
+				</ModuleType>
+			</ModuleTypes>
+		</ConnectionType>
+	</ConnectionTypes>
+
+	<SupportEmail>support@mssqlserverauditor.com</SupportEmail>
+	<SupportUrl>http://www.mssqlserverauditor.com/</SupportUrl>
+	<SupportSubject>MSSQLServerAuditor - support request</SupportSubject>
+	<SupportTemplateMail>{0}{1}{2}</SupportTemplateMail>
+
+	<LogDirectory>Logs</LogDirectory>
+	<LoggingEnabled>true</LoggingEnabled>
+
+	<LicenseDirectory>Licenses</LicenseDirectory>
+
+	<MaximumDBRequestsThreadCount>10</MaximumDBRequestsThreadCount>
+
+	<UserDocsAppFolder>MSSQLServerAuditor</UserDocsAppFolder>
+
+	<ShowXML>false</ShowXML>
+
+	<TemplateDirectory>Modules</TemplateDirectory>
+
+	<PostBuildCurrentDb>SQLite\MSSQLServerAuditor.PostBuildCurrentDb.xml</PostBuildCurrentDb>
+
+	<PostBuildSqliteDb Alias="hist" FileName="historical">SQLite\MSSQLServerAuditor.PostBuildHistoricDb.xml</PostBuildSqliteDb>
+
+	<ServiceDataUpdateTimeout>120</ServiceDataUpdateTimeout>
+	<ServiceRunJobsTimeout>5</ServiceRunJobsTimeout>
+</settings>
+</root>

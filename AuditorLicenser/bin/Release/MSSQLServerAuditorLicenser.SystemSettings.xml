@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Settings xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+	<available_ui_lang>en</available_ui_lang>
+	<available_ui_lang>ru</available_ui_lang>
+
+	<interface_lang>en</interface_lang>
+</Settings>

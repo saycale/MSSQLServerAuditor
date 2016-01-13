@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<root xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+<SQLiteQuery>
+	<sql-select name="GetInstanceCPUUtilization" group="" scope="instance">
+		<sql-select-text MinSupportedVersion="10.*" MaxSupportedVersion="*" signature="">
+			SELECT
+				 t.[EventTime]
+				,t.[MemoryUtilization]
+				,t.[SystemIdle]
+				,t.[SQLProcessCPUUtilization]
+				,t.[OtherProcessesCPUUtilization]
+			FROM
+				[hist].[h_GetInstanceCPUUtilization] t
+			WHERE
+				t.[d_Instance_id] = @d_Instance_id
+				AND t.[EventTime] &gt; DATETIME('now', @strDateTimeModifier)
+			ORDER BY
+				t.[EventTime] ASC;
+		</sql-select-text>
+		<sql-select-parameters>
+			<sql-select-parameter name="@strDateTimeModifier" type="NVarChar" />
+		</sql-select-parameters>
+	</sql-select>
+</SQLiteQuery>
+</root>
+

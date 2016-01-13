@@ -1,0 +1,9 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<MSSQLServerAuditorConnections xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
+  <connections template="MSSQLServerAuditor.Template.xml" name="localExpress">
+    <connection name="localExpress" instance="ANDREY-PC\SQLEXPRESS">
+      <authentication isWindows="true" username="" password="" />
+      <license hostname="A1NDREY-PC" osusername="Andrey-PC\Андрей" expirydate="20140520" signature="SEbg8v+dlPTWVV00Px9F0o1AhWNGKaW8x1eLduZmFWVwG5n+i0JeogPbL9Gdq69jCThf2EgQERxfdvGVRZLgqjAqD9PAifxsc/qT3XCNRj4moALrEIp9kLHv94QWPrqkYQeBvVIucz98cbHiSTubsOCB8oq0mPMVjO6isdCjSxk=" />
+    </connection>
+  </connections>
+</MSSQLServerAuditorConnections>

@@ -1,0 +1,250 @@
+﻿<?xml version="1.0" encoding="UTF-8"?>
+<root xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+<sqlquery type="SQLite">
+	<sql-select name="GetInstanceBatchRequestsSecMonth">
+		<sql-select-text MinSupportedVersion="*" MaxSupportedVersion="*" signature="">
+			SELECT
+				 strftime('%Y%m', hIOPC.[EventDay])                               AS [NodeUName]
+				,strftime('%Y%m', hIOPC.[EventDay])                               AS [NodeUId]
+				,1                                                                AS [NodeEnabled]
+				,'NodeIcon'                                                       AS [NodeUIcon]
+				,'#080808'                                                        AS [NodeFontColor]
+				,'normal'                                                         AS [NodeFontStyle]
+				,date(MIN(hIOPC.[EventDay]),'start of month')                     AS [EventDayMin]
+				,date(MIN(hIOPC.[EventDay]),'start of month','+1 month','-1 day') AS [EventDayMax]
+			FROM
+				[hist].[h_InstanceOSPerformanceCounters] hIOPC
+				INNER JOIN [hist].[h_InstanceOSPerformanceCounterObjects] hIOPCO ON
+					hIOPCO.[h_ServerInstance_id] = hIOPC.[h_ServerInstance_id]
+					AND hIOPCO.[ObjectId] = hIOPC.[ObjectId]
+					AND (
+						hIOPCO.[ObjectName] LIKE '%:SQL Statistics%'
+						OR
+						hIOPCO.[ObjectName] LIKE '%:Access Methods%'
+					)
+				INNER JOIN [hist].[h_InstanceOSPerformanceCounterCounters] hIOPCC ON
+					hIOPCC.[h_ServerInstance_id] = hIOPC.[h_ServerInstance_id]
+					AND hIOPCC.[ObjectId] = hIOPC.[ObjectId]
+					AND hIOPCC.[CounterId] = hIOPC.[CounterId]
+					AND hIOPCC.[CounterName] IN (
+						 'Batch Requests/sec'
+						,'SQL Compilations/sec'
+						,'SQL Re-Compilations/sec'
+						,'Page Splits/sec'
+					)
+				INNER JOIN [hist].[h_ServerInstance] hSI ON
+					hSI.[rowid] = hIOPC.[h_ServerInstance_id]
+					AND hSI.[d_ServerInstance_id] = @d_ServerInstance_id
+			WHERE
+				hIOPC.[EventTime] &gt; (
+					SELECT
+						DATETIME(MAX(hIOPC.[EventTime]), @strDateTimeModifier)
+					FROM
+						[hist].[h_InstanceOSPerformanceCounters] hIOPC
+						INNER JOIN [hist].[h_InstanceOSPerformanceCounterObjects] hIOPCO ON
+							hIOPCO.[h_ServerInstance_id] = hIOPC.[h_ServerInstance_id]
+							AND hIOPCO.[ObjectId] = hIOPC.[ObjectId]
+							AND (
+								hIOPCO.[ObjectName] LIKE '%:SQL Statistics%'
+								OR
+								hIOPCO.[ObjectName] LIKE '%:Access Methods%'
+							)
+						INNER JOIN [hist].[h_InstanceOSPerformanceCounterCounters] hIOPCC ON
+							hIOPCC.[h_ServerInstance_id] = hIOPC.[h_ServerInstance_id]
+							AND hIOPCC.[ObjectId] = hIOPC.[ObjectId]
+							AND hIOPCC.[CounterId] = hIOPC.[CounterId]
+							AND hIOPCC.[CounterName] IN (
+								 'Batch Requests/sec'
+								,'SQL Compilations/sec'
+								,'SQL Re-Compilations/sec'
+								,'Page Splits/sec'
+							)
+						INNER JOIN [hist].[h_ServerInstance] hSI ON
+							hSI.[rowid] = hIOPC.[h_ServerInstance_id]
+							AND hSI.[d_ServerInstance_id] = @d_ServerInstance_id
+				)
+			GROUP BY
+				strftime('%Y%m', hIOPC.[EventDay])
+			ORDER BY
+				strftime('%Y%m', hIOPC.[EventDay]) DESC
+			;
+		</sql-select-text>
+		<sql-select-parameters>
+			<sql-select-parameter name="@strDateTimeModifier" type="NVarChar" />
+		</sql-select-parameters>
+	</sql-select>
+
+	<sql-select name="GetInstanceBatchRequestsSecDays">
+		<sql-select-text MinSupportedVersion="*" MaxSupportedVersion="*" signature="">
+			SELECT
+				 strftime('%Y%m%d', hIOPC.[EventDay]) AS [NodeUName]
+				,strftime('%Y%m%d', hIOPC.[EventDay]) AS [NodeUId]
+				,1                                    AS [NodeEnabled]
+				,'NodeIcon'                           AS [NodeUIcon]
+				,CASE
+					WHEN (strftime('%w', hIOPC.[EventDay]) = '0') THEN
+						'#CC0000'
+					ELSE
+						'#080808'
+				END                                   AS [NodeFontColor]
+				,'normal'                             AS [NodeFontStyle]
+				,MIN(hIOPC.[EventDay])                AS [EventDayMin]
+				,MAX(hIOPC.[EventDay])                AS [EventDayMax]
+			FROM
+				[hist].[h_InstanceOSPerformanceCounters] hIOPC
+				INNER JOIN [hist].[h_InstanceOSPerformanceCounterObjects] hIOPCO ON
+					hIOPCO.[h_ServerInstance_id] = hIOPC.[h_ServerInstance_id]
+					AND hIOPCO.[ObjectId] = hIOPC.[ObjectId]
+					AND (
+						hIOPCO.[ObjectName] LIKE '%:SQL Statistics%'
+						OR
+						hIOPCO.[ObjectName] LIKE '%:Access Methods%'
+					)
+				INNER JOIN [hist].[h_InstanceOSPerformanceCounterCounters] hIOPCC ON
+					hIOPCC.[h_ServerInstance_id] = hIOPC.[h_ServerInstance_id]
+					AND hIOPCC.[ObjectId] = hIOPC.[ObjectId]
+					AND hIOPCC.[CounterId] = hIOPC.[CounterId]
+					AND hIOPCC.[CounterName] IN (
+						 'Batch Requests/sec'
+						,'SQL Compilations/sec'
+						,'SQL Re-Compilations/sec'
+						,'Page Splits/sec'
+					)
+				INNER JOIN [hist].[h_ServerInstance] hSI ON
+					hSI.[rowid] = hIOPC.[h_ServerInstance_id]
+					AND hSI.[d_ServerInstance_id] = @d_ServerInstance_id
+			WHERE
+				hIOPC.[EventDay] BETWEEN date(@EventDayMin) AND date(@EventDayMax)
+			GROUP BY
+				strftime('%Y%m%d', hIOPC.[EventDay])
+			ORDER BY
+				strftime('%Y%m%d', hIOPC.[EventDay]) DESC
+			;
+		</sql-select-text>
+		<sql-select-parameters>
+			<sql-select-parameter name="@EventDayMin" type="Date" />
+			<sql-select-parameter name="@EventDayMax" type="Date" />
+		</sql-select-parameters>
+	</sql-select>
+
+	<sql-select name="GetInstanceBatchRequestsSec">
+		<name>
+			GetInstanceBatchRequestsSec
+		</name>
+		<description>
+			"Batch Requests/Sec" measures the number of batches SQL Server is receiving per second.
+			This counter is a good indicator of how much activity is being processed by your SQL
+			Server box. The higher the number, the more queries are being executed on your box. Like
+			many counters, there is no single number that can be used universally to indicate your
+			machine is too busy. Today's machines are getting more and more powerful all the time
+			and therefore can process more batch requests per second. You should review this counter
+			over time to determine a baseline number for your environment.
+		</description>
+		<description>
+			The "SQL Compilations/sec" measure the number of times SQL Server compiles an execution
+			plan per second. Compiling an execution plan is a resource-intensive operation.
+			Compilations/Sec should be compared with the number of SQL Compilations/sec to get an
+			indication of whether or not complications might be hurting your performance. To do
+			that, divide the number of batch requests by the number of compiles per second to give
+			you a ratio of the number of batches executed per compile. Ideally you want to have one
+			compile per every 10 batch requests.
+		</description>
+		<description>
+			When the execution plan is invalidated due to some significant event, SQL Server will
+			re-compile it. The "Re-Compilations/Sec" counter measures the number of time a re-compile
+			event was triggered per second. Re-compiles, like compiles, are expensive operations so
+			you want to minimize the number of re-compiles. Ideally you want to keep this counter
+			less than 10% of the number of Compilations/Sec.
+		</description>
+		<description>
+			'Page Splits/sec' - This counter measures the number of times SQL Server had to split a page when updating
+			or inserting data per second. Page splits are expensive, and cause your table to perform
+			more poorly due to fragmentation. Therefore, the fewer page splits you have the better
+			your system will perform. Ideally this counter should be less than 20% of the batch
+			requests per second
+		</description>
+		<reference>
+			http://www.databasejournal.com/features/mssql/article.php/3932406/Top-10-SQL-Server-Counters-for-Monitoring-SQL-Server-Performance.htm
+		</reference>
+		<sql-select-text MinSupportedVersion="*" MaxSupportedVersion="*" signature="">
+			SELECT
+				 hIOPC.[EventTime]    AS [EventTime]
+				,hIOPCC.[CounterName] AS [CounterName]
+				,CASE
+					WHEN (hIOPC.[CounterValue] &gt; hIOPC.[CounterValueLast]) THEN
+						CAST((hIOPC.[CounterValue] - hIOPC.[CounterValueLast]) AS [REAL]) / CAST((strftime('%s', hIOPC.[EventTime]) - strftime('%s', hIOPC.[EventTimeLast])) AS [REAL])
+					ELSE
+						0.0
+				END                   AS [CounterValue]
+			FROM
+				[hist].[h_InstanceOSPerformanceCounters] hIOPC
+				INNER JOIN [hist].[h_InstanceOSPerformanceCounterObjects] hIOPCO ON
+					hIOPCO.[h_ServerInstance_id] = hIOPC.[h_ServerInstance_id]
+					AND hIOPCO.[ObjectId] = hIOPC.[ObjectId]
+					AND (
+						hIOPCO.[ObjectName] LIKE '%:SQL Statistics%'
+						OR
+						hIOPCO.[ObjectName] LIKE '%:Access Methods%'
+					)
+				INNER JOIN [hist].[h_InstanceOSPerformanceCounterCounters] hIOPCC ON
+					hIOPCC.[h_ServerInstance_id] = hIOPC.[h_ServerInstance_id]
+					AND hIOPCC.[ObjectId] = hIOPC.[ObjectId]
+					AND hIOPCC.[CounterId] = hIOPC.[CounterId]
+					AND hIOPCC.[CounterName] IN (
+						 'Batch Requests/sec'
+						,'SQL Compilations/sec'
+						,'SQL Re-Compilations/sec'
+						,'Page Splits/sec'
+					)
+				INNER JOIN [hist].[h_ServerInstance] hSI ON
+					hSI.[rowid] = hIOPC.[h_ServerInstance_id]
+					AND hSI.[d_ServerInstance_id] = @d_ServerInstance_id
+			WHERE
+				hIOPC.[EventTimeLast] IS NOT NULL
+				AND hIOPC.[EventTime] &gt; hIOPC.[EventTimeLast]
+				AND CASE
+					WHEN ((@EventDayMin IS NOT NULL) AND (@EventDayMax IS NOT NULL)) THEN
+						hIOPC.[EventDay] BETWEEN date(@EventDayMin) AND date(@EventDayMax)
+					WHEN (@strDateTimeModifier IS NOT NULL) THEN
+						hIOPC.[EventTime] &gt; (
+							SELECT
+								DATETIME(MAX(hIOPC.[EventTime]), @strDateTimeModifier)
+							FROM
+								[hist].[h_InstanceOSPerformanceCounters] hIOPC
+								INNER JOIN [hist].[h_InstanceOSPerformanceCounterObjects] hIOPCO ON
+									hIOPCO.[h_ServerInstance_id] = hIOPC.[h_ServerInstance_id]
+									AND hIOPCO.[ObjectId] = hIOPC.[ObjectId]
+									AND (
+										hIOPCO.[ObjectName] LIKE '%:SQL Statistics%'
+										OR
+										hIOPCO.[ObjectName] LIKE '%:Access Methods%'
+									)
+								INNER JOIN [hist].[h_InstanceOSPerformanceCounterCounters] hIOPCC ON
+									hIOPCC.[h_ServerInstance_id] = hIOPC.[h_ServerInstance_id]
+									AND hIOPCC.[ObjectId] = hIOPC.[ObjectId]
+									AND hIOPCC.[CounterId] = hIOPC.[CounterId]
+									AND hIOPCC.[CounterName] IN (
+										 'Batch Requests/sec'
+										,'SQL Compilations/sec'
+										,'SQL Re-Compilations/sec'
+										,'Page Splits/sec'
+									)
+								INNER JOIN [hist].[h_ServerInstance] hSI ON
+									hSI.[rowid] = hIOPC.[h_ServerInstance_id]
+									AND hSI.[d_ServerInstance_id] = @d_ServerInstance_id
+						)
+					ELSE
+						hIOPC.[EventDay] = date('1900-01-01')
+				END
+			ORDER BY
+				hIOPC.[EventTime] ASC
+			;
+		</sql-select-text>
+		<sql-select-parameters>
+			<sql-select-parameter name="@EventDayMin"         type="Date"     />
+			<sql-select-parameter name="@EventDayMax"         type="Date"     />
+			<sql-select-parameter name="@strDateTimeModifier" type="NVarChar" />
+		</sql-select-parameters>
+	</sql-select>
+</sqlquery>
+</root>

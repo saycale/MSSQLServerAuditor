@@ -1,0 +1,467 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<root xmlns:xi="http://www.w3.org/2003/XInclude">
+<sqlquery type="MSSQL">
+	<sql-select name="DatabasesCount">
+		<sql-select-parameters>
+			<sql-select-parameter name="@intMonthInHistory" type="Int" isnull="false" default="1"/>
+		</sql-select-parameters>
+
+		<sql-select-text MinSupportedVersion="*" MaxSupportedVersion="8.*" signature="">
+			SELECT
+				COUNT(*) AS [NumberOfDatabases]
+			FROM
+				[master].[dbo].[sysdatabases]
+		</sql-select-text>
+		<sql-select-text MinSupportedVersion="9.*" MaxSupportedVersion="*" signature="">
+			SELECT
+				COUNT(*) AS [NumberOfDatabases]
+			FROM
+				[master].[sys].[databases];
+		</sql-select-text>
+	</sql-select>
+
+	<sql-select name="GetVarbinary">
+		<sql-select-text MinSupportedVersion="*" MaxSupportedVersion="*" signature="">
+			declare @a as varbinary
+			set @a = 10
+			select @a
+		</sql-select-text>
+	</sql-select>
+
+	<sql-select name="GetJobsExecutionHistory">
+		<sql-select-text MinSupportedVersion="*" MaxSupportedVersion="*" signature="">
+			SELECT
+				 CONVERT([DATETIME], N'2013-08-25T01:23:05') AS [JobRunStartDateTime]
+				,CONVERT([DATETIME], N'2013-08-26T03:25:00') AS [JobRunEndDateTime]
+				,N'JobTest1'                                 AS [JobName]
+				,100                                         AS [JobDurationInSeconds]
+
+			UNION ALL
+
+			SELECT
+				 CONVERT([DATETIME], N'2013-08-26T08:25:00') AS [JobRunStartDateTime]
+				,CONVERT([DATETIME], N'2013-08-26T10:35:00') AS [JobRunEndDateTime]
+				,N'JobTest2'                                 AS [JobName]
+				,120                                         AS [JobDurationInSeconds]
+
+			UNION ALL
+
+			SELECT
+				 CONVERT([DATETIME], N'2013-08-26T05:35:00') AS [JobRunStartDateTime]
+				,CONVERT([DATETIME], N'2013-08-26T07:45:00') AS [JobRunEndDateTime]
+				,N'JobTest3'                                 AS [JobName]
+				,80                                          AS [JobDurationInSeconds]
+
+			UNION ALL
+
+			SELECT
+				 CONVERT([DATETIME], N'2013-08-26T10:45:00') AS [JobRunStartDateTime]
+				,CONVERT([DATETIME], N'2013-08-26T15:45:00') AS [JobRunEndDateTime]
+				,N'JobTest4'                                 AS [JobName]
+				,70                                          AS [JobDurationInSeconds]
+
+			UNION ALL
+
+			SELECT
+				 CONVERT([DATETIME], N'2013-08-26T15:45:00') AS [JobRunStartDateTime]
+				,CONVERT([DATETIME], N'2013-08-26T18:45:00') AS [JobRunEndDateTime]
+				,N'JobTest1'                                 AS [JobName]
+				,101                                         AS [JobDurationInSeconds]
+
+			UNION ALL
+
+			SELECT
+				 CONVERT([DATETIME], N'2013-08-26T17:35:00') AS [JobRunStartDateTime]
+				,CONVERT([DATETIME], N'2013-08-26T22:45:00') AS [JobRunEndDateTime]
+				,N'JobTest3'                                 AS [JobName]
+				,44                                          AS [JobDurationInSeconds]
+
+			UNION ALL
+
+			SELECT
+				 CONVERT([DATETIME], N'2013-08-26T14:25:00') AS [JobRunStartDateTime]
+				,CONVERT([DATETIME], N'2013-08-26T17:35:00') AS [JobRunEndDateTime]
+				,N'JobTest2'                                 AS [JobName]
+				,55                                          AS [JobDurationInSeconds]
+			;
+		</sql-select-text>
+	</sql-select>
+
+	<sql-select name="test">
+		<sql-select-text MinSupportedVersion="*" MaxSupportedVersion="*" signature="">
+			WAITFOR DELAY '00:00:5';
+
+			SELECT
+				 CONVERT([DATETIME], N'20130715') AS [JobRunDateTime]
+				,N'test1'                         AS [JobName]
+				,10                               AS [JobDurationInSeconds]
+
+			UNION ALL
+
+			SELECT
+				 CONVERT([DATETIME], N'20130715') AS [JobRunDateTime]
+				,N'test2'                         AS [JobName]
+				,5                                AS [JobDurationInSeconds]
+
+			UNION ALL
+
+			SELECT
+				 CONVERT([DATETIME], N'20130715') AS [JobRunDateTime]
+				,N'test3'                         AS [JobName]
+				,7                                AS [JobDurationInSeconds]
+			;
+		</sql-select-text>
+	</sql-select>
+
+	<sql-select name="Ticket21TestSql">
+		<sql-select-text MinSupportedVersion="*" MaxSupportedVersion="*">
+			SELECT
+				 CONVERT([DATETIME], N'20130715') AS [JobRunDateTime]
+				,N'test1'                         AS [JobName]
+				,1000                             AS [JobDurationInSeconds]
+
+			UNION ALL
+
+			SELECT
+				 CONVERT([DATETIME], N'20130715') AS [JobRunDateTime]
+				,N'test2'                         AS [JobName]
+				,500                              AS [JobDurationInSeconds]
+
+			UNION ALL
+
+			SELECT
+				 CONVERT([DATETIME], N'20130715') AS [JobRunDateTime]
+				,N'test3'                         AS [JobName]
+				,700                              AS [JobDurationInSeconds]
+
+			UNION ALL
+
+			SELECT
+				 CONVERT([DATETIME], N'20130716') AS [JobRunDateTime]
+				,N'test1'                         AS [JobName]
+				,1700                             AS [JobDurationInSeconds]
+
+			UNION ALL
+
+			SELECT
+				 CONVERT([DATETIME], N'20130716') AS [JobRunDateTime]
+				,N'test2'                         AS [JobName]
+				,1200                             AS [JobDurationInSeconds]
+
+			UNION ALL
+
+			SELECT
+				 CONVERT([DATETIME], N'20130716') AS [JobRunDateTime]
+				,N'test3'                         AS [JobName]
+				,1500                             AS [JobDurationInSeconds]
+
+			UNION ALL
+
+			SELECT
+				 CONVERT([DATETIME], N'20130717') AS [JobRunDateTime]
+				,N'test1'                         AS [JobName]
+				,1900                             AS [JobDurationInSeconds]
+
+			UNION ALL
+
+			SELECT
+				 CONVERT([DATETIME], N'20130717') AS [JobRunDateTime]
+				,N'test2'                         AS [JobName]
+				,1020                             AS [JobDurationInSeconds]
+
+			UNION ALL
+
+			SELECT
+				 CONVERT([DATETIME], N'20130717') AS [JobRunDateTime]
+				,N'test3'                         AS [JobName]
+				,1050                             AS [JobDurationInSeconds]
+			;
+		</sql-select-text>
+	</sql-select>
+
+	<sql-select name="Ticket58TestSql">
+		<sql-select-text MinSupportedVersion="*" MaxSupportedVersion="*">
+			SET NOCOUNT ON;
+			SET DEADLOCK_PRIORITY LOW;
+
+			SELECT
+				 N'MSSQLServer'                              AS [Instance]
+				,N'Database1'                                AS [DatabaseName]
+				,N'D'                                        AS [RestoreType]
+				,CONVERT([DATETIME], N'2014-07-01T13:18:45') AS [RestoreDate]
+				,CONVERT([DECIMAL](24,4), 120123.51)         AS [DatabaseRestoreSizeMB]
+
+			UNION ALL
+
+			SELECT
+				 N'MSSQLServer'                              AS [Instance]
+				,N'Database2'                                AS [DatabaseName]
+				,N'D'                                        AS [RestoreType]
+				,CONVERT([DATETIME], N'2014-07-02T14:18:45') AS [RestoreDate]
+				,CONVERT([DECIMAL](24,4), 340123.67)         AS [DatabaseRestoreSizeMB]
+
+			UNION ALL
+
+			SELECT
+				 N'MSSQLServer'                              AS [Instance]
+				,N'Database3'                                AS [DatabaseName]
+				,N'D'                                        AS [RestoreType]
+				,CONVERT([DATETIME], N'2014-07-03T14:28:45') AS [RestoreDate]
+				,CONVERT([DECIMAL](24,4), 430345.55)         AS [DatabaseRestoreSizeMB]
+
+			UNION ALL
+
+			SELECT
+				 N'MSSQLServer'                              AS [Instance]
+				,N'Database4'                                AS [DatabaseName]
+				,N'D'                                        AS [RestoreType]
+				,CONVERT([DATETIME], N'2014-07-04T15:11:05') AS [RestoreDate]
+				,CONVERT([DECIMAL](24,4), 330567.89)         AS [DatabaseRestoreSizeMB]
+			;
+		</sql-select-text>
+	</sql-select>
+
+	<sql-select name="Database" group="Instance" signature="">
+		<sql-select-text MinSupportedVersion="*" MaxSupportedVersion="8" signature="">
+			SELECT
+				 t.[name]      AS [Name]
+				,t.[cmptlevel] AS [CompatibilityLevel]
+			FROM
+				[master].[dbo].[sysdatabases] t
+		</sql-select-text>
+		<sql-select-text MinSupportedVersion="9" MaxSupportedVersion="*" signature="">
+			SELECT
+				 t.[name]                AS [Name]
+				,t.[compatibility_level] AS [CompatibilityLevel]
+			FROM
+				[master].[sys].[databases] t
+		</sql-select-text>
+	</sql-select>
+
+	<sql-select name="DatabaseObjectsCount" scope="database">
+		<database-select-text MinSupportedVersion="8.*" MaxSupportedVersion="8.*" signature="">
+			SET NOCOUNT ON;
+			SET DEADLOCK_PRIORITY LOW;
+
+			SELECT
+				 tSD.[name] AS [DatabaseName]
+				,tSD.[dbid] AS [DatabaseID]
+			FROM
+				[master].[dbo].[sysdatabases] tSD
+			WHERE
+				DatabasePropertyEx(tSD.[name], N'Status') IN (
+					N'ONLINE'
+				)
+				AND tSD.[name] NOT IN (
+					N'tempdb'
+				);
+		</database-select-text>
+		<database-select-text MinSupportedVersion="9.*" MaxSupportedVersion="*" signature="">
+			SET NOCOUNT ON;
+			SET DEADLOCK_PRIORITY LOW;
+
+			SELECT
+				 tSD.[name]        AS [DatabaseName]
+				,tSD.[database_id] AS [DatabaseID]
+			FROM
+				[master].[sys].[databases] tSD
+			WHERE
+				DatabasePropertyEx(tSD.[name], N'Status') IN (
+					N'ONLINE'
+				)
+				AND tSD.[name] NOT IN (
+					N'tempdb'
+				);
+		</database-select-text>
+		<sql-select-text MinSupportedVersion="8.*" MaxSupportedVersion="8.*" signature="">
+			SET NOCOUNT ON;
+			SET DEADLOCK_PRIORITY LOW;
+
+			SELECT
+				 tSO.[xtype] AS [TypeDesc]
+				,COUNT(*)    AS [TypeCount]
+			FROM
+				[dbo].[sysobjects] tSO
+			WHERE
+				tSO.[xtype] = ISNULL(@xtype, tSO.[xtype])
+			GROUP BY
+				tSO.[xtype]
+			ORDER BY
+				tSO.[xtype];
+		</sql-select-text>
+		<sql-select-text MinSupportedVersion="9.*" MaxSupportedVersion="*" signature="">
+			SET NOCOUNT ON;
+			SET DEADLOCK_PRIORITY LOW;
+
+			SELECT
+				 tSO.[type_desc] AS [TypeDesc]
+				,COUNT(*)        AS [TypeCount]
+			FROM
+				[sys].[objects] tSO
+			WHERE
+				tSO.[type_desc] = ISNULL(@type_desc, tSO.[type_desc])
+			GROUP BY
+				tSO.[type_desc]
+			ORDER BY
+				tSO.[type_desc];
+		</sql-select-text>
+		<sql-select-parameters>
+			<sql-select-parameter name="@type_desc" type="NVarChar" isnull="true" default=""/>
+			<sql-select-parameter name="@xtype" type="NVarChar" isnull="true" default=""/>
+		</sql-select-parameters>
+	</sql-select>
+
+	<sql-select name="GetJobsExecutionHistory">
+		<sql-select-text MinSupportedVersion="*" MaxSupportedVersion="*" signature="">
+			SET NOCOUNT ON;
+			SET DEADLOCK_PRIORITY LOW;
+
+			DECLARE
+				@datetimeStart [DATETIME];
+
+			SET @datetimeStart = GETDATE();
+
+			IF (@intMonthesInHistory IS NOT NULL)
+			BEGIN
+				SET @datetimeStart = DATEADD(month, -1 * @intMonthesInHistory, GETDATE());
+			END
+
+			IF (@intWeeksInHistory IS NOT NULL)
+			BEGIN
+				SET @datetimeStart = DATEADD(week, -1 * @intWeeksInHistory, GETDATE());
+			END
+
+			IF (@intDaysInHistory IS NOT NULL)
+			BEGIN
+				SET @datetimeStart = DATEADD(day, -1 * @intDaysInHistory, GETDATE());
+			END
+
+			SELECT
+				CONVERT([DATETIME]
+					,CONVERT([NVARCHAR], tSJH.[run_date])
+					+ N' '
+					+ STUFF(STUFF(REPLACE(STR(tSJH.[run_time], 6, 0), ' ', '0'), 5, 0, ':'), 3, 0, ':')
+				)                                           AS [JobRunDateTime]
+				,REPLACE(tSJ.[name], N'&amp;', N'_')        AS [JobName]
+				,(
+					(tSJH.[run_duration] / 1000000) * 86400)
+					+ (((tSJH.[run_duration]-((tSJH.[run_duration]/1000000)*1000000))/10000)*3600)
+					+ (((tSJH.[run_duration]-((tSJH.[run_duration]/10000)*10000))/100)*60)
+					+ (tSJH.[run_duration]-(tSJH.[run_duration]/100)*100
+				)                                           AS [JobDurationInSeconds]
+			FROM
+				[msdb].[dbo].[sysjobs] tSJ
+				INNER JOIN [msdb].[dbo].[sysjobhistory] tSJH ON
+					tSJH.[job_id] = tSJ.[job_id]
+			WHERE
+				tSJH.[step_id] = 0
+				AND tSJH.[run_duration] &gt;= 0
+				AND CONVERT([DATETIME], CONVERT([NVARCHAR], tSJH.[run_date])) &gt;= @datetimeStart
+			ORDER BY
+				1 DESC;
+		</sql-select-text>
+		<sql-select-parameters>
+			<sql-select-parameter name="@intMonthesInHistory" type="Int" isnull="true" default=""/>
+			<sql-select-parameter name="@intWeeksInHistory" type="Int" isnull="true" default=""/>
+			<sql-select-parameter name="@intDaysInHistory" type="Int" isnull="true" default=""/>
+		</sql-select-parameters>
+	</sql-select>
+
+	<sql-select name="TestMultiTableSelect">
+		<sql-select-text MinSupportedVersion="*" MaxSupportedVersion="*" signature="">
+			DBCC MEMORYSTATUS;
+		</sql-select-text>
+	</sql-select>
+
+	<sql-select name="GetInstanceMemoryStatus">
+		<sql-select-text MinSupportedVersion="*" MaxSupportedVersion="*" signature="">
+			DBCC MEMORYSTATUS;
+		</sql-select-text>
+	</sql-select>
+
+	<sql-select name="Ticket188TestSql">
+		<sql-select-text MinSupportedVersion="*" MaxSupportedVersion="*">
+			SET NOCOUNT ON;
+			SET DEADLOCK_PRIORITY LOW;
+
+			SELECT
+				 N'MSSQLServer'                              AS [Instance]
+				,N'Database1'                                AS [DatabaseName]
+				,N'D'                                        AS [RestoreType]
+				,DATEADD(mi, -10, GETDATE())                 AS [RestoreDate]
+				,CONVERT([DECIMAL](24,4), 120123.51)         AS [DatabaseRestoreSizeMB]
+
+			UNION ALL
+
+			SELECT
+				 N'MSSQLServer'                              AS [Instance]
+				,N'Database2'                                AS [DatabaseName]
+				,N'D'                                        AS [RestoreType]
+				,DATEADD(mi, -20, GETDATE())                 AS [RestoreDate]
+				,CONVERT([DECIMAL](24,4), 340123.67)         AS [DatabaseRestoreSizeMB]
+
+			UNION ALL
+
+			SELECT
+				 N'MSSQLServer'                              AS [Instance]
+				,N'Database3'                                AS [DatabaseName]
+				,N'D'                                        AS [RestoreType]
+				,DATEADD(mi, -30, GETDATE())                 AS [RestoreDate]
+				,CONVERT([DECIMAL](24,4), 430345.55)         AS [DatabaseRestoreSizeMB]
+
+			UNION ALL
+
+			SELECT
+				 N'MSSQLServer'                              AS [Instance]
+				,N'Database4'                                AS [DatabaseName]
+				,N'D'                                        AS [RestoreType]
+				,DATEADD(mi, -40, GETDATE())                 AS [RestoreDate]
+				,CONVERT([DECIMAL](24,4), 330567.89)         AS [DatabaseRestoreSizeMB]
+			;
+		</sql-select-text>
+	</sql-select>
+
+	<sql-select name="Ticket400TestSql">
+		<sql-select-text MinSupportedVersion="*" MaxSupportedVersion="*">
+			SET NOCOUNT ON;
+			SET DEADLOCK_PRIORITY LOW;
+
+			DECLARE
+				@intIndex [INTEGER]
+			;
+
+			CREATE TABLE #t
+			(
+				[ItemNumber] [INTEGER] NOT NULL
+			);
+
+			SET @intIndex = 1;
+
+			WHILE (@intIndex &lt;= @NumberOfItems)
+			BEGIN
+				INSERT INTO #t
+				(
+					[ItemNumber]
+				)
+				VALUES
+				(
+					@intIndex
+				);
+
+				SET @intIndex = @intIndex + 1;
+			END
+
+			SELECT
+				t.[ItemNumber] AS [ItemNumber]
+			FROM
+				#t t
+			ORDER BY
+				t.[ItemNumber] DESC
+			;
+		</sql-select-text>
+		<sql-select-parameters>
+			<sql-select-parameter name="@NumberOfItems" type="Int" default="1" />
+		</sql-select-parameters>
+	</sql-select>
+</sqlquery>
+</root>

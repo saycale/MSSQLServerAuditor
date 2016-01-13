@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<root xmlns:xi="http://www.w3.org/2003/XInclude">
+<sqlquery type="MSSQL">
+	<sql-select name="GetLongExecutionQuery">
+		<sql-select-text MinSupportedVersion="*" MaxSupportedVersion="*" signature="">
+			DECLARE
+				 @ReportStartTime [DATETIME]
+				,@intLoop         [INTEGER]
+			;
+
+			SET @ReportStartTime = GETDATE();
+
+			SET @intLoop = 1;
+
+			WHILE (@intLoop &lt;= ISNULL(@NumberOfExecutions, 1))
+			BEGIN
+				WAITFOR DELAY @WaitForDelay;
+
+				SET @intLoop = @intLoop + 1;
+			END
+
+			SELECT
+				 @ReportStartTime AS [ReportStartDateTime]
+				,GETDATE()        AS [ReportEndDateTime]
+				,@@SPID           AS [SpId]
+			;
+		</sql-select-text>
+		<sql-select-parameters>
+			<sql-select-parameter name="@WaitForDelay" type="NVarChar" />
+			<sql-select-parameter name="@NumberOfExecutions" type="Int" />
+		</sql-select-parameters>
+	</sql-select>
+</sqlquery>
+</root>
+

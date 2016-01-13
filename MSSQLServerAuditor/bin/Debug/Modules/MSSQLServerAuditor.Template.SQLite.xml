@@ -1,0 +1,21 @@
+﻿<?xml version="1.0" encoding="UTF-8"?>
+<MSSQLServerAuditorTemplate id="SQLite" type="MSSQL" xmlns:xi="http://www.w3.org/2003/XInclude" version="1.0">
+	<i18n name="en">
+		SQLite
+	</i18n>
+	<i18n name="ru">
+		SQLite
+	</i18n>
+
+	<template id="1000000" name="SQLiteVersion" file="sqlite\MSSQLServerAuditor.SQLiteVersion.xsl" icon="doc" showIfEmpty="true" showNumberOfRecords="true" hideEmptyResultDatabases="false">
+		<i18n name="en">
+			SQLiteVersion
+		</i18n>
+		<i18n name="ru">
+			SQLiteVersion
+		</i18n>
+
+		<sql-select id="1" file="SQLQuery\sqlite\MSSQLServerAuditor.SQLiteQuery.CheckVersion.xml" name="GetSQLiteVersion" hierarchy="">
+		</sql-select>
+	</template>
+</MSSQLServerAuditorTemplate>

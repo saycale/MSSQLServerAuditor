@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<root xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+<sqlquery type="SQLiteExternal">
+	<sql-select name="GetSQLiteCurrentDate">
+		<sql-select-text MinSupportedVersion="*" MaxSupportedVersion="*" signature="">
+			SELECT
+				 strftime('YYYY-MM-DDTHH:MM:SS', 'now') AS [CurrentDateTime1]
+				,strftime('YYYY-MM-DDTHH:MM:SS', 'now') AS [CurrentDateTime2]
+				,strftime('%s','now')                   AS [CurrentDateTime3]
+				,strftime("%Y-%m-%dT%H:%M:%S", 'now')   AS [CurrentDateTime4]
+				,strftime('%d-%m-%Y', 'now')            AS [CurrentDateTime5]
+				,date('now')                            AS [CurrentDateTime6]
+				,time('now')                            AS [CurrentDateTime7]
+			;
+		</sql-select-text>
+	</sql-select>
+</sqlquery>
+</root>

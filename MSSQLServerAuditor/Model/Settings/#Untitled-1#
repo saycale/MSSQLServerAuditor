@@ -1,0 +1,13 @@
+@echo off
+@rem job status check
+osql.exe -E -S BCPSYDSQL01 -d master -h-1 /Q "SET NOCOUNT ON;SELECT 50 AS [UsersProcesses], 60 AS [SystemProcesses] FROM [master].[dbo].[sysprocesses];" -o MSSQLNumberOfProcesses.out
+@rem
+@rem save output value to the local variable
+@rem
+set /p strSQLOutput=<MSSQLNumberOfProcesses.out
+
+for /f "tokens=1,2 delims=/ " %%a in ("%strSQLOutput%") do set UsersProcesses=%%a&set SystemProcesses=%%b
+
+echo %UsersProcesses%
+echo %SystemProcesses%
+

@@ -1,0 +1,14 @@
+D:\Users\saychenkoa\Projects\MSSQLServerAuditor\svn\trunk\MSSQLServerAuditorServiceTestApp\bin\Debug\MSSQLServerAuditorServiceTestApp.exe.config
+D:\Users\saychenkoa\Projects\MSSQLServerAuditor\svn\trunk\MSSQLServerAuditorServiceTestApp\bin\Debug\MSSQLServerAuditorServiceTestApp.exe
+D:\Users\saychenkoa\Projects\MSSQLServerAuditor\svn\trunk\MSSQLServerAuditorServiceTestApp\bin\Debug\MSSQLServerAuditorServiceTestApp.pdb
+D:\Users\saychenkoa\Projects\MSSQLServerAuditor\svn\trunk\MSSQLServerAuditorServiceTestApp\bin\Debug\log4net.dll
+D:\Users\saychenkoa\Projects\MSSQLServerAuditor\svn\trunk\MSSQLServerAuditorServiceTestApp\bin\Debug\MSSQLServerAuditor.exe
+D:\Users\saychenkoa\Projects\MSSQLServerAuditor\svn\trunk\MSSQLServerAuditorServiceTestApp\bin\Debug\MSSQLServerAuditorData.dll
+D:\Users\saychenkoa\Projects\MSSQLServerAuditor\svn\trunk\MSSQLServerAuditorServiceTestApp\bin\Debug\System.Data.SQLite.dll
+D:\Users\saychenkoa\Projects\MSSQLServerAuditor\svn\trunk\MSSQLServerAuditorServiceTestApp\bin\Debug\MSSQLServerAuditorData.pdb
+D:\Users\saychenkoa\Projects\MSSQLServerAuditor\svn\trunk\MSSQLServerAuditorServiceTestApp\bin\Debug\MSSQLServerAuditor.xml
+D:\Users\saychenkoa\Projects\MSSQLServerAuditor\svn\trunk\MSSQLServerAuditorServiceTestApp\bin\Debug\log4net.xml
+D:\Users\saychenkoa\Projects\MSSQLServerAuditor\svn\trunk\MSSQLServerAuditorServiceTestApp\bin\Debug\System.Data.SQLite.xml
+D:\Users\saychenkoa\Projects\MSSQLServerAuditor\svn\trunk\MSSQLServerAuditorServiceTestApp\obj\Debug\MSSQLServerAuditorServiceTestApp.csprojResolveAssemblyReference.cache
+D:\Users\saychenkoa\Projects\MSSQLServerAuditor\svn\trunk\MSSQLServerAuditorServiceTestApp\obj\Debug\MSSQLServerAuditorServiceTestApp.exe
+D:\Users\saychenkoa\Projects\MSSQLServerAuditor\svn\trunk\MSSQLServerAuditorServiceTestApp\obj\Debug\MSSQLServerAuditorServiceTestApp.pdb

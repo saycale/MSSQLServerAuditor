@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<root xmlns:xi="http://www.w3.org/2003/XInclude">
+<sqlquery type="EventLog">
+	<sql-select name="GetEventLogMessages">
+		<name>
+			GetEventLogMessages
+		</name>
+		<description>
+			get messages from event log: EntryType 528 or 4624.
+		</description>
+		<reference>
+			https://msdn.microsoft.com/en-us/library/system.diagnostics.eventlog.entries.aspx
+		</reference>
+		<reference>
+			https://msdn.microsoft.com/en-us/library/system.diagnostics.eventlog.machinename.aspx
+		</reference>
+		<sql-select-text MinSupportedVersion="*" MaxSupportedVersion="*" signature="">
+			&lt;QueryList&gt;
+				&lt;Query Id=&quot;0&quot; Path=&quot;Security&quot;&gt;
+					&lt;Select Path=&quot;Security&quot;&gt;
+						*[System[(EventID=&quot;4624&quot;) and
+						TimeCreated[timediff(@SystemTime) &amp;lt;= 1800000]]]
+					&lt;/Select&gt;
+				&lt;/Query&gt;
+			&lt;/QueryList&gt;
+		</sql-select-text>
+	</sql-select>
+</sqlquery>
+</root>

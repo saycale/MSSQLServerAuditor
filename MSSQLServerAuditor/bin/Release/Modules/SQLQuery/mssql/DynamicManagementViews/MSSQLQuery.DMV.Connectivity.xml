@@ -1,0 +1,50 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<root xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+<sqlquery type="MSSQL">
+	<sql-select name="DMV.GetInstanceConnectivity">
+		<description>
+			Troubleshooting aid for a connectivity issues to diagnose.
+		</description>
+		<reference>
+			http://www.johnsansom.com/using-sys-dm_os_ring_buffers-troubleshoot-connectivity-issues/
+		</reference>
+		<sql-select-text MinSupportedVersion="10.*" MaxSupportedVersion="*" signature="">
+			SELECT
+				 x.[RecordEventTime]                                                                  AS [RecordEventTime]
+				,x.[RecordTimeStamp]                                                                  AS [RecordTimeStamp]
+				,x.[RingBufferType]                                                                   AS [RingBufferType]
+				,XMLRecord.value('(//Record/@id)[1]', 'int')                                          AS [RecordId]
+				,XMLRecord.value('(./Record/ConnectivityTraceRecord/RecordType)[1]', 'varchar(max)')  AS [ConnectivityRecordType]
+				,XMLRecord.value('(./Record/ConnectivityTraceRecord/SniConsumerError)[1]', 'int')     AS [ConnectivityError]
+				,XMLRecord.value('(./Record/ConnectivityTraceRecord/State)[1]', 'int')                AS [ConnectivityState]
+				,XMLRecord.value('(./Record/ConnectivityTraceRecord/Spid)[1]', 'int')                 AS [ConnectivitySpid]
+				,XMLRecord.value('(./Record/ConnectivityTraceRecord/RemoteHost)[1]', 'varchar(max)')  AS [ConnectivityRemoteHost]
+				,XMLRecord.value('(./Record/ConnectivityTraceRecord/RemotePort)[1]', 'varchar(max)')  AS [ConnectivityRemotePort]
+				,XMLRecord.value('(./Record/ConnectivityTraceRecord/LocalHost)[1]', 'varchar(max)')   AS [ConnectivityLocalHost]
+				,tSM.[text]                                                                           AS [ConnectivityErrorText]
+			FROM (
+				SELECT
+					 DATEADD(ms, t.[timestamp] - tSDOSI.[ms_ticks], GETDATE()) AS [RecordEventTime]
+					,t.[timestamp]                                             AS [RecordTimeStamp]
+					,t.[ring_buffer_type]                                      AS [RingBufferType]
+					,CONVERT([XML], t.[record])                                AS [XMLRecord]
+				FROM
+					[sys].[dm_os_ring_buffers] t
+					CROSS JOIN [sys].[dm_os_sys_info] AS tSDOSI
+				WHERE
+					t.[ring_buffer_type] = N'RING_BUFFER_CONNECTIVITY'
+					AND t.[record] LIKE '% %'
+					AND (tSDOSI.[ms_ticks] - t.[timestamp]) &lt; 2147483647
+			) AS x
+			LEFT JOIN [sys].[messages] tSM ON
+				ISNULL(XMLRecord.value('(./Record/ConnectivityTraceRecord/SniConsumerError)[1]', 'int'), -1) = tSM.[message_id]
+				AND tSM.[language_id] = 1033
+			WHERE
+				XMLRecord.value('(./Record/ConnectivityTraceRecord/SniConsumerError)[1]', 'int') IS NOT NULL
+			ORDER BY
+				x.[RecordEventTime] ASC
+			;
+		</sql-select-text>
+	</sql-select>
+</sqlquery>
+</root>

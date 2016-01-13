@@ -1,0 +1,110 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<root xmlns:xi="http://www.w3.org/2003/XInclude">
+<sqlquery type="EventLog">
+	<sql-select name="GetEventLogMessages">
+		<name>
+			GetEventLogMessages
+		</name>
+		<description>
+			get messages from event log: EntryType 528 or 4624.
+		</description>
+		<reference>
+			https://msdn.microsoft.com/en-us/library/system.diagnostics.eventlog.entries.aspx
+		</reference>
+		<reference>
+			https://msdn.microsoft.com/en-us/library/system.diagnostics.eventlog.machinename.aspx
+		</reference>
+		<sql-select-text MinSupportedVersion="*" MaxSupportedVersion="*" signature="">
+			&lt;QueryList&gt;
+				&lt;Query Id=&quot;0&quot; Path=&quot;Security&quot;&gt;
+					&lt;Select Path=&quot;Security&quot;&gt;
+						*[System[(EventID=&quot;528&quot; or EventID=&quot;4624&quot;) and
+						TimeCreated[timediff(@SystemTime) &amp;lt;= 1800000]]]
+						and
+						*[EventData[Data[@Name=&quot;LogonType&quot;]
+						and
+						(Data=&quot;7&quot; or Data=&quot;8&quot; or Data=&quot;10&quot; or Data=&quot;3&quot;)]]
+					&lt;/Select&gt;
+				&lt;/Query&gt;
+			&lt;/QueryList&gt;
+		</sql-select-text>
+	</sql-select>
+
+	<sql-select name="GetEventLogSecurityMessages">
+		<name>
+			GetEventLogSecurityMessages
+		</name>
+		<description>
+			get messages from "Security" event log with EventIds:
+				564 - Object Deletion failure due to restricted permissions
+				536 - NetLogon inactive or not available for this user
+				537 - Unknown/Unexpected error
+				513 - Server shutting down
+		</description>
+		<reference>
+			https://www.manageengine.com/network-monitoring/monitoring-event-log.html
+		</reference>
+		<sql-select-text MinSupportedVersion="*" MaxSupportedVersion="*" signature="">
+			&lt;QueryList&gt;
+				&lt;Query Id=&quot;0&quot; Path=&quot;Security&quot;&gt;
+					&lt;Select Path=&quot;Security&quot;&gt;
+						*[System[(EventID=&quot;564&quot; or EventID=&quot;536&quot; or EventID=&quot;537&quot; or EventID=&quot;513&quot;) and
+						TimeCreated[timediff(@SystemTime) &amp;lt;= 18000000]]]
+					&lt;/Select&gt;
+				&lt;/Query&gt;
+			&lt;/QueryList&gt;
+		</sql-select-text>
+	</sql-select>
+
+	<sql-select name="GetEventLogApplicationMessages">
+		<name>
+			GetEventLogApplicationMessages
+		</name>
+		<description>
+			get messages from "Application" event log with EventIds:
+				11000                        - ISA Service failure
+				17052                        - Insufficient memory available for MS SQL
+				5774, 5775, 5781, 5783, 5805 - Netlogon service events
+				40960, 40961                 - LDAP service events
+		</description>
+		<reference>
+			https://www.manageengine.com/network-monitoring/monitoring-event-log.html
+		</reference>
+		<sql-select-text MinSupportedVersion="*" MaxSupportedVersion="*" signature="">
+			&lt;QueryList&gt;
+				&lt;Query Id=&quot;0&quot; Path=&quot;Application&quot;&gt;
+					&lt;Select Path=&quot;Application&quot;&gt;
+						*[System[(EventID=&quot;11000&quot; or EventID=&quot;17052&quot; or EventID=&quot;5774&quot; or EventID=&quot;5775&quot; or EventID=&quot;5781&quot; or EventID=&quot;5783&quot; or EventID=&quot;5805&quot; or EventID=&quot;40960&quot; or EventID=&quot;40961&quot;) and
+						TimeCreated[timediff(@SystemTime) &amp;lt;= 18000000]]]
+					&lt;/Select&gt;
+				&lt;/Query&gt;
+			&lt;/QueryList&gt;
+		</sql-select-text>
+	</sql-select>
+
+	<sql-select name="GetEventLogSystemMessages">
+		<name>
+			GetEventLogSystemMessages
+		</name>
+		<description>
+			get messages from "System" event log with EventIds:
+				64001 - System file replacement
+				7     - Disk : Bad Sector detected
+				4202  - Network adaptor disconnected
+		</description>
+		<reference>
+			https://www.manageengine.com/network-monitoring/monitoring-event-log.html
+		</reference>
+		<sql-select-text MinSupportedVersion="*" MaxSupportedVersion="*" signature="">
+			&lt;QueryList&gt;
+				&lt;Query Id=&quot;0&quot; Path=&quot;System&quot;&gt;
+					&lt;Select Path=&quot;System&quot;&gt;
+						*[System[(EventID=&quot;64001&quot; or EventID=&quot;7&quot; or EventID=&quot;4202&quot;) and
+						TimeCreated[timediff(@SystemTime) &amp;lt;= 18000000]]]
+					&lt;/Select&gt;
+				&lt;/Query&gt;
+			&lt;/QueryList&gt;
+		</sql-select-text>
+	</sql-select>
+</sqlquery>
+</root>

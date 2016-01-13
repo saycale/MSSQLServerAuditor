@@ -1,0 +1,54 @@
+﻿<?xml version="1.0" encoding="UTF-8"?>
+<root xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+<sqlquery type="MSSQL">
+	<sql-select name="GetDatabasesBackingUpToTheSameDrive">
+		<name>
+			Backing Up to Same Drive Where Databases Reside
+		</name>
+		<description>
+			Some drive houses both database files AND backups taken in the past. This represents a serious risk if that disk array fails.
+		</description>
+		<reference>
+			http://BrentOzar.com/go/backup
+		</reference>
+		<sql-select-text MinSupportedVersion="9.*" MaxSupportedVersion="*" signature="">
+			SET NOCOUNT ON;
+			SET DEADLOCK_PRIORITY LOW;
+
+			DECLARE
+				@ServerName [NVARCHAR](128)
+			;
+
+			SET @ServerName = CONVERT([NVARCHAR](128), SERVERPROPERTY(N'Servername'));
+
+			SELECT
+				 UPPER(LEFT(bmf.[physical_device_name], 3)) AS [PhysicalDrive]
+				,tBS.[database_name]                        AS [DatabaseName]
+				,tBS.[type]                                 AS [DatabaseBackupType]
+				,MAX(tBS.[backup_start_date])               AS [LatestDatabaseBackupDate]
+			FROM
+				[msdb].[dbo].[backupmediafamily] bmf
+				INNER JOIN [msdb].[dbo].[backupset] tBS ON
+					bmf.[media_set_id] = tBS.[media_set_id]
+				INNER JOIN [master].[sys].[master_files] mf ON
+					UPPER(LEFT(mf.[physical_name] COLLATE SQL_Latin1_General_CP1_CI_AS, 3)) = UPPER(LEFT(bmf.[physical_device_name] COLLATE SQL_Latin1_General_CP1_CI_AS, 3))
+			WHERE
+				tBS.[server_name] = @ServerName
+				AND tBS.[backup_start_date] &gt;= (DATEADD(dd, -1 * ISNULL(@intDaysInHistoryToBeChecked, 14), GETDATE()))
+			GROUP BY
+				 UPPER(LEFT(bmf.[physical_device_name], 3))
+				,tBS.[database_name]
+				,tBS.[type]
+			ORDER BY
+				 UPPER(LEFT(bmf.[physical_device_name], 3))
+				,tBS.[database_name]
+				,tBS.[type]
+			;
+		</sql-select-text>
+		<sql-select-parameters>
+			<sql-select-parameter name="@intDaysInHistoryToBeChecked" type="Int" />
+		</sql-select-parameters>
+	</sql-select>
+</sqlquery>
+</root>
+

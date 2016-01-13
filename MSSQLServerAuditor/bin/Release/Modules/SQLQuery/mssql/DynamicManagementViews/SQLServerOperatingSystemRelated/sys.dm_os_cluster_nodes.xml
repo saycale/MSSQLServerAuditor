@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<root xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+<sqlquery type="MSSQL">
+	<sql-select name="sys.dm_os_cluster_nodes">
+		<name>
+			sys.dm_os_cluster_nodes
+		</name>
+		<description>
+			Returns one row for each node in the failover cluster instance configuration.
+		</description>
+		<reference>
+			http://technet.microsoft.com/en-us/library/ms187341.aspx
+		</reference>
+		<sql-select-text MinSupportedVersion="9.*" MaxSupportedVersion="*" signature="">
+			SET NOCOUNT ON;
+			SET DEADLOCK_PRIORITY LOW;
+
+			SELECT
+				*
+			FROM
+				[sys].[dm_os_cluster_nodes]
+			;
+		</sql-select-text>
+	</sql-select>
+</sqlquery>
+</root>
+

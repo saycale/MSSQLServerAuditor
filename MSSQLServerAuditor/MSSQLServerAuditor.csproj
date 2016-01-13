@@ -1,0 +1,908 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <PropertyGroup>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <Platform Condition=" '$(Platform)' == '' ">x86</Platform>
+    <ProductVersion>8.0.30703</ProductVersion>
+    <SchemaVersion>2.0</SchemaVersion>
+    <ProjectGuid>{A43F98C5-12F3-4637-A6C0-A213FD634A4F}</ProjectGuid>
+    <OutputType>WinExe</OutputType>
+    <AppDesignerFolder>Properties</AppDesignerFolder>
+    <RootNamespace>MSSQLServerAuditor</RootNamespace>
+    <AssemblyName>MSSQLServerAuditor</AssemblyName>
+    <TargetFrameworkVersion>v4.0</TargetFrameworkVersion>
+    <TargetFrameworkProfile>Client</TargetFrameworkProfile>
+    <FileAlignment>512</FileAlignment>
+    <PublishUrl>publish\</PublishUrl>
+    <Install>true</Install>
+    <InstallFrom>Disk</InstallFrom>
+    <UpdateEnabled>false</UpdateEnabled>
+    <UpdateMode>Foreground</UpdateMode>
+    <UpdateInterval>7</UpdateInterval>
+    <UpdateIntervalUnits>Days</UpdateIntervalUnits>
+    <UpdatePeriodically>false</UpdatePeriodically>
+    <UpdateRequired>false</UpdateRequired>
+    <MapFileExtensions>true</MapFileExtensions>
+    <ApplicationRevision>0</ApplicationRevision>
+    <ApplicationVersion>1.0.0.%2a</ApplicationVersion>
+    <IsWebBootstrapper>false</IsWebBootstrapper>
+    <UseApplicationTrust>false</UseApplicationTrust>
+    <BootstrapperEnabled>true</BootstrapperEnabled>
+    <NuGetPackageImportStamp>02ff8568</NuGetPackageImportStamp>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|x86' ">
+    <PlatformTarget>x86</PlatformTarget>
+    <DebugSymbols>true</DebugSymbols>
+    <DebugType>full</DebugType>
+    <Optimize>false</Optimize>
+    <OutputPath>bin\Debug\</OutputPath>
+    <DefineConstants>DEBUG;TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+    <DocumentationFile>
+    </DocumentationFile>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|x86' ">
+    <PlatformTarget>x86</PlatformTarget>
+    <DebugType>pdbonly</DebugType>
+    <Optimize>true</Optimize>
+    <OutputPath>bin\Release\</OutputPath>
+    <DefineConstants>TRACE;RELEASE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <PropertyGroup>
+    <ApplicationIcon>appIcon.ico</ApplicationIcon>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Debug|AnyCPU'">
+    <DebugSymbols>true</DebugSymbols>
+    <OutputPath>bin\Debug\</OutputPath>
+    <DefineConstants>DEBUG;TRACE</DefineConstants>
+    <DebugType>full</DebugType>
+    <PlatformTarget>AnyCPU</PlatformTarget>
+    <ErrorReport>prompt</ErrorReport>
+    <CodeAnalysisRuleSet>MinimumRecommendedRules.ruleset</CodeAnalysisRuleSet>
+    <DocumentationFile>bin\Debug\MSSQLServerAuditor.xml</DocumentationFile>
+    <NoWarn>1591,1572,1571,1573,1587,1570</NoWarn>
+    <RunCodeAnalysis>false</RunCodeAnalysis>
+    <UseVSHostingProcess>true</UseVSHostingProcess>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Release|AnyCPU'">
+    <OutputPath>bin\Release\</OutputPath>
+    <DefineConstants>TRACE;RELEASE</DefineConstants>
+    <Optimize>true</Optimize>
+    <DebugType>pdbonly</DebugType>
+    <PlatformTarget>AnyCPU</PlatformTarget>
+    <ErrorReport>prompt</ErrorReport>
+    <CodeAnalysisRuleSet>MinimumRecommendedRules.ruleset</CodeAnalysisRuleSet>
+    <DocumentationFile>bin\Release\MSSQLServerAuditor.xml</DocumentationFile>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Trial|x86'">
+    <OutputPath>bin\Trial\x86</OutputPath>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Trial|AnyCPU'">
+    <OutputPath>bin\Trial\</OutputPath>
+    <DebugType>pdbonly</DebugType>
+    <DebugSymbols>true</DebugSymbols>
+    <DefineConstants>TRIAL</DefineConstants>
+  </PropertyGroup>
+  <PropertyGroup>
+    <ApplicationManifest>app.manifest</ApplicationManifest>
+  </PropertyGroup>
+  <ItemGroup>
+    <Reference Include="CommandLine">
+      <HintPath>..\packages\CommandLineParser.2.0.275-beta\lib\net40\CommandLine.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="log4net">
+      <HintPath>..\packages\log4net.2.0.3\lib\net40-client\log4net.dll</HintPath>
+    </Reference>
+    <Reference Include="Microsoft.Data.ConnectionUI">
+      <HintPath>..\packages\Microsoft\Microsoft.Data.ConnectionUI.dll</HintPath>
+    </Reference>
+    <Reference Include="Microsoft.Data.ConnectionUI.Dialog">
+      <HintPath>..\packages\Microsoft\Microsoft.Data.ConnectionUI.Dialog.dll</HintPath>
+    </Reference>
+    <Reference Include="Microsoft.ReportViewer.Common, Version=11.0.0.0, Culture=neutral, PublicKeyToken=89845dcd8080cc91">
+      <Private>False</Private>
+    </Reference>
+    <Reference Include="Microsoft.ReportViewer.ProcessingObjectModel, Version=11.0.0.0, Culture=neutral, PublicKeyToken=89845dcd8080cc91, processorArchitecture=MSIL" />
+    <Reference Include="Microsoft.ReportViewer.WinForms, Version=11.0.0.0, Culture=neutral, PublicKeyToken=89845dcd8080cc91, processorArchitecture=MSIL">
+      <Private>False</Private>
+    </Reference>
+    <Reference Include="ParallelExtensionsExtras">
+      <HintPath>..\packages\MSFT.ParallelExtensionsExtras.1.2.0\lib\ParallelExtensionsExtras.dll</HintPath>
+    </Reference>
+    <Reference Include="SqlCodeGuard.API">
+      <HintPath>..\packages\SqlCodeGuard\SqlCodeGuard.API.dll</HintPath>
+    </Reference>
+    <Reference Include="System" />
+    <Reference Include="System.ComponentModel.DataAnnotations" />
+    <Reference Include="System.Core" />
+    <Reference Include="System.Data.Linq" />
+    <Reference Include="System.Data.SQLite">
+      <HintPath>..\packages\System.Data.SQLite.Core.1.0.98.1\lib\net40\System.Data.SQLite.dll</HintPath>
+    </Reference>
+    <Reference Include="System.DirectoryServices" />
+    <Reference Include="System.Runtime.Serialization" />
+    <Reference Include="System.Security" />
+    <Reference Include="System.Transactions" />
+    <Reference Include="System.Web.Services" />
+    <Reference Include="System.Windows.Forms.DataVisualization" />
+    <Reference Include="System.Xml.Linq" />
+    <Reference Include="System.Data.DataSetExtensions" />
+    <Reference Include="Microsoft.CSharp" />
+    <Reference Include="System.Data" />
+    <Reference Include="System.Deployment" />
+    <Reference Include="System.Drawing" />
+    <Reference Include="System.Windows.Forms" />
+    <Reference Include="System.Xml" />
+    <Reference Include="Teradata.Client.Entity">
+      <HintPath>..\packages\Teradata\Teradata.Client.Entity.dll</HintPath>
+    </Reference>
+    <Reference Include="Teradata.Client.Provider, Version=15.0.0.0, Culture=neutral, PublicKeyToken=76b417ee2e04956c, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\packages\Teradata\Teradata.Client.Provider.dll</HintPath>
+    </Reference>
+    <Reference Include="Teradata.Client.Provider.Install">
+      <HintPath>..\packages\Teradata\Teradata.Client.Provider.Install.dll</HintPath>
+    </Reference>
+    <Reference Include="Teradata.Client.Provider.resources, Version=15.0.0.0, Culture=ja, PublicKeyToken=76b417ee2e04956c, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\packages\Teradata\Teradata.Client.Provider.resources.dll</HintPath>
+    </Reference>
+    <Reference Include="Teradata.Net.Security.Tdgss, Version=15.0.0.0, Culture=neutral, PublicKeyToken=76b417ee2e04956c, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\packages\Teradata\Teradata.Net.Security.Tdgss.dll</HintPath>
+    </Reference>
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="BusinessLogic\ConnectionGroupManager.cs" />
+    <Compile Include="BusinessLogic\ConnectionsManager.cs" />
+    <Compile Include="BusinessLogic\EmailNotificationTask.cs" />
+    <Compile Include="BusinessLogic\GraphicsInfo.cs" />
+    <Compile Include="BusinessLogic\LocalStorage\CodeGuardResultReader.cs" />
+    <Compile Include="BusinessLogic\LocalStorage\DbEntriesProvider.cs" />
+    <Compile Include="BusinessLogic\LocalStorage\StorageSerializationInfo.cs" />
+    <Compile Include="BusinessLogic\LoginManager.cs" />
+    <Compile Include="BusinessLogic\ServerInstanceManager.cs" />
+    <Compile Include="BusinessLogic\TemplateManager.cs" />
+    <Compile Include="Gui\Base\TabPageBuffer.cs" />
+    <Compile Include="Gui\CommonConnectionStringDialog.cs" />
+    <Compile Include="Gui\ConnectionStringDialogFactory.cs" />
+    <Compile Include="Gui\CreateDirectConnectionDialog.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Gui\CreateDirectConnectionDialog.Designer.cs">
+      <DependentUpon>CreateDirectConnectionDialog.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Gui\CustomControls\LabelWithProgress.cs">
+      <SubType>Component</SubType>
+    </Compile>
+    <Compile Include="Gui\CustomControls\LabelWithProgress.Designer.cs">
+      <DependentUpon>LabelWithProgress.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Gui\CustomControls\ToolStripStatusLabelWithProgress.cs" />
+    <Compile Include="Gui\CustomControls\ToolStripStatusLabelWithProgress.Designer.cs">
+      <DependentUpon>ToolStripStatusLabelWithProgress.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Gui\DirectConnectionDialog.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Gui\DirectConnectionDialog.Designer.cs">
+      <DependentUpon>DirectConnectionDialog.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Gui\EditDirectConnectionDialog.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Gui\EditDirectConnectionDialog.Designer.cs">
+      <DependentUpon>EditDirectConnectionDialog.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Gui\frmNewScheduleId.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Gui\frmNewScheduleId.Designer.cs">
+      <DependentUpon>frmNewScheduleId.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Gui\IConnectionStringDialog.cs" />
+    <Compile Include="Gui\InternalSqliteConnectionDialog.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Gui\InternalSqliteConnectionDialog.Designer.cs">
+      <DependentUpon>InternalSqliteConnectionDialog.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Gui\LayoutSettings\SplitterSettings.cs" />
+    <Compile Include="Gui\NetworkInformationConnectionDialog.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Gui\NetworkInformationConnectionDialog.Designer.cs">
+      <DependentUpon>NetworkInformationConnectionDialog.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Gui\NonSqlDataConnectionDialog.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Gui\NonSqlDataConnectionDialog.designer.cs">
+      <DependentUpon>NonSqlDataConnectionDialog.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Gui\ProgressForm.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Gui\ProgressForm.designer.cs">
+      <DependentUpon>ProgressForm.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Gui\UserSettingScheduleControl.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="Gui\UserSettingScheduleControl.Designer.cs">
+      <DependentUpon>UserSettingScheduleControl.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Managers\NodeCounter.cs" />
+    <Compile Include="BusinessLogic\LocalStorage\NodeResultReader.cs" />
+    <Compile Include="BusinessLogic\LocalStorage\MetaResultReader.cs" />
+    <Compile Include="BusinessLogic\LocalStorage\MultiQueryResultReader.cs" />
+    <Compile Include="Gui\frmUserSettingsParameters.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Gui\frmUserSettingsParameters.Designer.cs">
+      <DependentUpon>frmUserSettingsParameters.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Gui\frmUserSettingsParametersLayout.cs" />
+    <Compile Include="Gui\GridColumnSettings.cs" />
+    <Compile Include="Gui\LayoutSettings\IFormLayoutSettings.cs" />
+    <Compile Include="Gui\LayoutSettings\ILayoutSettingsProvider.cs" />
+    <Compile Include="Gui\LayoutSettings\LayoutSettingsProvider.cs" />
+    <Compile Include="Managers\TreeJob.cs" />
+    <Compile Include="Managers\TreeJobChangedEventArgs.cs" />
+    <Compile Include="Managers\TreeJobState.cs" />
+    <Compile Include="Managers\TreeTask.cs" />
+    <Compile Include="Model\AsyncResult.cs" />
+    <Compile Include="Model\BindingWrapper.cs" />
+    <Compile Include="Model\Commands\IQueryCommand.cs" />
+    <Compile Include="Model\Connections\ActiveDirectoryConnection.cs" />
+    <Compile Include="Model\Connections\Factories\CachingQueryConnectionFactory.cs" />
+    <Compile Include="Model\Connections\Factories\ConnectionFactory.cs" />
+    <Compile Include="Model\Connections\Factories\IQueryConnectionFactory.cs" />
+    <Compile Include="Model\Connections\Factories\QueryConnectionFactory.cs" />
+    <Compile Include="Model\Connections\Factories\QueryConnectionFactoryDecorator.cs" />
+    <Compile Include="Model\Connections\Parameters\ParametersParser.cs" />
+    <Compile Include="Model\Connections\Query\ActiveDirectoryQueryConnection.cs" />
+    <Compile Include="Model\Connections\Query\AttachingSqliteQueryConnection.cs" />
+    <Compile Include="Model\Connections\Query\DbQueryConnection.cs" />
+    <Compile Include="Model\Connections\Query\EventLogQueryConnection.cs" />
+    <Compile Include="Model\Connections\Query\IQueryConnection.cs" />
+    <Compile Include="Model\Connections\Query\MsSqlQueryConnection.cs" />
+    <Compile Include="Model\Connections\Query\NetworkInformationQueryConnection.cs" />
+    <Compile Include="Model\Connections\Query\OdbcQueryConnection.cs" />
+    <Compile Include="Model\Connections\EventLogConnection.cs" />
+    <Compile Include="Model\Connections\NetworkInformationConnection.cs" />
+    <Compile Include="Model\Connections\Query\SqliteExternalQueryConnection.cs" />
+    <Compile Include="Model\Connections\Query\SqliteInnerQueryConnection.cs" />
+    <Compile Include="Model\Connections\Query\SqliteInternalQueryConnection.cs" />
+    <Compile Include="Model\Connections\Query\SqliteQueryConnection.cs" />
+    <Compile Include="Model\Connections\Query\TeradataSqlQueryConnection.cs" />
+    <Compile Include="Model\InstanceInfoResolver.cs" />
+    <Compile Include="Model\ParameterInfoLocalizable.cs" />
+    <Compile Include="Model\Delegates\QueryDelegate.cs" />
+    <Compile Include="Model\Connections\DynamicConnection.cs" />
+    <Compile Include="Model\FormWindowTitle.cs" />
+    <Compile Include="Model\Scheduling\ScheduleJobProcessor.cs" />
+    <Compile Include="Model\ServerProperties.cs" />
+    <Compile Include="Model\Settings\EmailNotificationSettings.cs" />
+    <Compile Include="Model\Settings\i18n.cs" />
+    <Compile Include="Model\Settings\ConnectionType.cs" />
+    <Compile Include="Model\Settings\ModuleType.cs" />
+    <Compile Include="Model\Settings\PostBuildSqliteDb.cs" />
+    <Compile Include="Model\Settings\SmtpSettings.cs" />
+    <Compile Include="Model\TemplateTreeTitle.cs" />
+    <Compile Include="Model\UserSettingsParameters\IQueryParameters.cs" />
+    <Compile Include="Model\UserSettingsParameters\QueryKey.cs" />
+    <Compile Include="Model\UserSettingsParameters\QueryParameters.cs" />
+    <Compile Include="Preprocessor\ContentFactory.cs" />
+    <Compile Include="Preprocessor\IContentFactory.cs" />
+    <Compile Include="Preprocessor\IQueryResultXmlTransformer.cs" />
+    <Compile Include="Preprocessor\MailContent.cs" />
+    <Compile Include="Preprocessor\NodeDataProvider.cs" />
+    <Compile Include="Preprocessor\Preprocessor.cs" />
+    <Compile Include="Preprocessor\PreprocessorData.cs" />
+    <Compile Include="Preprocessor\QueryResultDataSource.cs" />
+    <Compile Include="Preprocessor\QueryResultXmlTransformer.cs" />
+    <Compile Include="SQLite\Common\AutoincrementTableRow.cs" />
+    <Compile Include="SQLite\Common\Definitions\TableDefinitionFactory.cs" />
+    <Compile Include="SQLite\Common\ITableRow.cs" />
+    <Compile Include="SQLite\Common\ReportTable.cs" />
+    <Compile Include="SQLite\Common\CurrentStorageTable.cs" />
+    <Compile Include="SQLite\Common\Definitions\PrimaryKeyDefinition.cs" />
+    <Compile Include="SQLite\Common\EncryptedTableRow.cs" />
+    <Compile Include="SQLite\Common\PrimaryKey.cs" />
+    <Compile Include="SQLite\Common\RowConverter.cs" />
+    <Compile Include="SQLite\Common\RowUpdateInput.cs" />
+    <Compile Include="SQLite\Common\RowUpdateOrderInput.cs" />
+    <Compile Include="SQLite\Databases\ReportMemoryStorage.cs" />
+    <Compile Include="SQLite\Databases\ReportStorage.cs" />
+    <Compile Include="SQLite\Tables\Directories\ConnectionGroupDirectory.cs" />
+    <Compile Include="SQLite\Tables\Directories\ConnectionGroupRow.cs" />
+    <Compile Include="SQLite\Tables\Directories\DynamicConnectionDirectory.cs" />
+    <Compile Include="SQLite\Tables\Directories\LoginRow.cs" />
+    <Compile Include="SQLite\Tables\Directories\QueryDirectories.cs" />
+    <Compile Include="SQLite\Tables\Directories\QueryDirectoryBase.cs" />
+    <Compile Include="SQLite\Tables\Directories\QueryParameterDirectoryBase.cs" />
+    <Compile Include="SQLite\Tables\Directories\QueryResultsDirectory.cs" />
+    <Compile Include="SQLite\Tables\Directories\ServerInstanceRow.cs" />
+    <Compile Include="SQLite\Tables\Directories\TemplateRow.cs" />
+    <Compile Include="SQLite\Tables\FileTable.cs" />
+    <Compile Include="SQLite\Tables\FolderTable.cs" />
+    <Compile Include="SQLite\Tables\LastConnectionProtocolTable.cs" />
+    <Compile Include="SQLite\Tables\LastConnectionRow.cs" />
+    <Compile Include="SQLite\Tables\LastConnectionTable.cs" />
+    <Compile Include="SQLite\Tables\MetaResultTable.cs" />
+    <Compile Include="SQLite\Tables\NodeInstanceRow.cs" />
+    <Compile Include="SQLite\Tables\NodeInstanceTable.cs" />
+    <Compile Include="SQLite\Tables\Directories\QueryDirectory.cs" />
+    <Compile Include="SQLite\Tables\Directories\QueryGroupDirectory.cs" />
+    <Compile Include="SQLite\Tables\Directories\LoginDirectory.cs" />
+    <Compile Include="SQLite\Tables\Directories\ServerInstanceDirectory.cs" />
+    <Compile Include="SQLite\Tables\Directories\QueryGroupParameterDirectory.cs" />
+    <Compile Include="SQLite\Tables\Directories\QueryParameterDirectory.cs" />
+    <Compile Include="SQLite\Tables\Directories\TemplateNodeDirectory.cs" />
+    <Compile Include="SQLite\Tables\Directories\TemplateDirectory.cs" />
+    <Compile Include="SQLite\Tables\Directories\TemplateNodeQueryDirectory.cs" />
+    <Compile Include="SQLite\Tables\Directories\TemplateNodeQueryGroupDirectory.cs" />
+    <Compile Include="SQLite\Tables\Directories\TemplateNodeQueryGroupParameterDirectory.cs" />
+    <Compile Include="SQLite\Tables\Directories\TemplateNodeQueryParameterDirectory.cs" />
+    <Compile Include="SQLite\Common\CommonRowFiller.cs" />
+    <Compile Include="SQLite\Databases\DbFS.cs" />
+    <Compile Include="SQLite\Tables\Directories\TableDirectory.cs" />
+    <Compile Include="BusinessLogic\LocalStorage\IStorageManager.cs" />
+    <Compile Include="SQLite\Databases\CurrentStorage.cs" />
+    <Compile Include="SQLite\Databases\HistoryStorage.cs" />
+    <Compile Include="BusinessLogic\LocalStorage\StorageManager.cs" />
+    <Compile Include="BusinessLogic\UserSettings\ScheduleSettingsManager.cs" />
+    <Compile Include="BusinessLogic\UserSettings\UserSettingsManager.cs" />
+    <Compile Include="SQLite\Tables\NodeInstanceAttributeTable.cs" />
+    <Compile Include="BusinessLogic\LocalStorage\ReadonlyStorageManager.cs" />
+    <Compile Include="BusinessLogic\LocalStorage\StorageSerializer.cs" />
+    <Compile Include="SQLite\Tables\ServiceInfoTable.cs" />
+    <Compile Include="SQLite\Common\SQLiteBool.cs" />
+    <Compile Include="SQLite\Common\TableBase.cs" />
+    <Compile Include="SQLite\Tables\UserSettings\ScheduleSettingsRow.cs" />
+    <Compile Include="SQLite\Tables\UserSettings\ScheduleSettingsTable.cs" />
+    <Compile Include="SQLite\Tables\UserSettings\UserSettingsRow.cs" />
+    <Compile Include="SQLite\Tables\UserSettings\UserSettingsTable.cs" />
+    <Compile Include="BusinessLogic\VisualizeProcessor.cs" />
+    <Compile Include="Cache\MemoryCache.cs" />
+    <Compile Include="Consts.cs" />
+    <Compile Include="SQLite\Commands\ReadTableCommand.cs" />
+    <Compile Include="SQLite\Commands\SqlCustomCommand.cs" />
+    <Compile Include="SQLite\Commands\SqlScalarCommand.cs" />
+    <Compile Include="SQLite\Commands\SqlSelectCommand.cs" />
+    <Compile Include="SQLite\Commands\TableCommandBase.cs" />
+    <Compile Include="SQLite\Common\Triggers\PreserveTrigger.cs" />
+    <Compile Include="SQLite\Common\Triggers\SetNewValueAtUpdateTrigger.cs" />
+    <Compile Include="SQLite\Common\Triggers\UpdateTrigger.cs" />
+    <Compile Include="SQLite\Common\Definitions\IndexDefinition.cs" />
+    <Compile Include="SQLite\Common\Definitions\QueryDefinition.cs" />
+    <Compile Include="SQLite\Common\OpenCloseConnectionWrapper.cs" />
+    <Compile Include="SQLite\Common\SQLiteConnectionExtensions.cs" />
+    <Compile Include="Entities\AppVersionType.cs" />
+    <Compile Include="SQLite\Commands\CommandBase.cs" />
+    <Compile Include="SQLite\Commands\CreateTriggersCommand.cs" />
+    <Compile Include="SQLite\Commands\ReplaceCommand.cs" />
+    <Compile Include="SQLite\Commands\RowDeleteCommand.cs" />
+    <Compile Include="SQLite\Commands\CreateIndexCommand.cs" />
+    <Compile Include="SQLite\Commands\RowUpdateCommand.cs" />
+    <Compile Include="SQLite\Commands\RowUpdateByHashCommand.cs" />
+    <Compile Include="SQLite\Commands\CopyTableCommand.cs" />
+    <Compile Include="SQLite\Commands\CreateTableCommand.cs" />
+    <Compile Include="SQLite\Commands\DropTableCommand.cs" />
+    <Compile Include="SQLite\Commands\GetTableDefinitionCommand.cs" />
+    <Compile Include="SQLite\Commands\RowInsertCommand.cs" />
+    <Compile Include="SQLite\Commands\SelectTableCommand.cs" />
+    <Compile Include="SQLite\Commands\SQLiteFieldType.cs" />
+    <Compile Include="SQLite\Commands\TableRenameCommand.cs" />
+    <Compile Include="SQLite\Common\Database.cs" />
+    <Compile Include="SQLite\Common\Definitions\FieldDefinition.cs" />
+    <Compile Include="SQLite\Commands\IDbCommand.cs" />
+    <Compile Include="SQLite\Common\Queries\QueryRow.cs" />
+    <Compile Include="SQLite\Common\Table.cs" />
+    <Compile Include="SQLite\Common\Definitions\TableDefinition.cs" />
+    <Compile Include="SQLite\Common\TableRow.cs" />
+    <Compile Include="SQLite\Common\Triggers\Trigger.cs" />
+    <Compile Include="Entities\BuildDateAttribute.cs" />
+    <Compile Include="Entities\FrequencyType.cs" />
+    <Compile Include="Entities\ScheduleType.cs" />
+    <Compile Include="Graph\GanttJobItem.cs" />
+    <Compile Include="Graph\GraphStateSettings.cs" />
+    <Compile Include="Gui\Base\CloseTabControl.cs">
+      <SubType>Component</SubType>
+    </Compile>
+    <Compile Include="Gui\ConnectionData.cs" />
+    <Compile Include="Gui\ConnectionTabArea.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="Gui\ConnectionTabArea.Designer.cs">
+      <DependentUpon>ConnectionTabArea.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Gui\ConnectionTabControl.RefreshQueries.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="Gui\ConnectionViewArrangeMode.cs" />
+    <Compile Include="Gui\DynamicTableLayoutPanel.cs">
+      <SubType>Component</SubType>
+    </Compile>
+    <Compile Include="Gui\DynamicTableLayoutPanel.Designer.cs">
+      <DependentUpon>DynamicTableLayoutPanel.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Gui\frmAboutLicense.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Gui\frmAboutLicense.Designer.cs">
+      <DependentUpon>frmAboutLicense.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Gui\frmConnectionSelectionSettings.cs" />
+    <Compile Include="Gui\frmExceptionBox.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Gui\frmExceptionBox.Designer.cs">
+      <DependentUpon>frmExceptionBox.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Gui\Base\PreserveHighlightTreeView.cs">
+      <SubType>Component</SubType>
+    </Compile>
+    <Compile Include="Gui\frmComponents.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Gui\frmComponents.Designer.cs">
+      <DependentUpon>frmComponents.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Gui\frmLicenseErrors.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Gui\frmLicenseErrors.Designer.cs">
+      <DependentUpon>frmLicenseErrors.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Gui\frmSaveDialog.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Gui\frmSaveDialog.Designer.cs">
+      <DependentUpon>frmSaveDialog.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Gui\frmStoredConnectionSelector.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Gui\frmStoredConnectionSelector.Designer.cs">
+      <DependentUpon>frmStoredConnectionSelector.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Gui\frmUserSettingSchedule.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Gui\frmUserSettingSchedule.Designer.cs">
+      <DependentUpon>frmUserSettingSchedule.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Gui\frmUserSettingsNode.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Gui\frmUserSettingsNode.Designer.cs">
+      <DependentUpon>frmUserSettingsNode.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Gui\OpenConnectionDialog.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Gui\OpenConnectionDialog.Designer.cs">
+      <DependentUpon>OpenConnectionDialog.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Gui\RunningTaskInfoForm.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Gui\RunningTaskInfoForm.Designer.cs">
+      <DependentUpon>RunningTaskInfoForm.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Gui\TitleFrame.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="Gui\TitleFrame.Designer.cs">
+      <DependentUpon>TitleFrame.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Managers\TreeTaskInfo.cs" />
+    <Compile Include="Managers\TreeTaskManager.cs" />
+    <Compile Include="Managers\TreeTaskProgressInfo.cs" />
+    <Compile Include="Managers\TreeTaskProgressManager.cs" />
+    <Compile Include="Managers\TreeTaskThreadCounter.cs" />
+    <Compile Include="Model\ActivityNodeXML.cs" />
+    <Compile Include="Model\AuditorAsyncResult.cs" />
+    <Compile Include="Model\ConcreteTemplateNodeDefinition.cs" />
+    <Compile Include="Model\InstanceVersion.cs" />
+    <Compile Include="Model\ParameterInfo.cs" />
+    <Compile Include="Model\ParameterInfoType.cs" />
+    <Compile Include="Model\MainThread.cs" />
+    <Compile Include="Model\NodeUpdatingSource.cs" />
+    <Compile Include="Model\Scheduling\DailyFrequency.cs" />
+    <Compile Include="Model\Scheduling\DayOfMonthSettings.cs" />
+    <Compile Include="Model\Scheduling\Job.cs" />
+    <Compile Include="Model\Scheduling\ReccurPeriodTimeUnit.cs" />
+    <Compile Include="Model\Scheduling\ScheduleSettings.cs" />
+    <Compile Include="Model\Scheduling\TemplateNodeUpdateJob.cs" />
+    <Compile Include="Model\Scheduling\TimeUnitBasedPeriod.cs" />
+    <Compile Include="Model\SqlMapper.cs" />
+    <Compile Include="Model\Template.cs" />
+    <Compile Include="Model\TemplateNodeSqlGuardQueryInfo.cs" />
+    <Compile Include="Model\Groups\GroupDefinition.cs" />
+    <Compile Include="Model\FilesProvider.cs" />
+    <Compile Include="Model\InstanceInfo.cs" />
+    <Compile Include="Model\InvalidTemplateException.cs" />
+    <Compile Include="Model\LicenseInfo.cs" />
+    <Compile Include="Model\LicenseState.cs" />
+    <Compile Include="Model\LicenseProblemType.cs" />
+    <Compile Include="Model\NodeAttirbutes.cs" />
+    <Compile Include="Model\ProgressItem.cs" />
+    <Compile Include="Model\Queries\BaseQueryExecutor.cs" />
+    <Compile Include="Model\Queries\DatabaseScopeQueryExecutor.cs" />
+    <Compile Include="Model\Queries\GroupResolvers\BaseGroupResolver.cs" />
+    <Compile Include="Model\Queries\GroupResolvers\DatabaseGroupsResolver.cs" />
+    <Compile Include="Model\Queries\GroupResolvers\InstanceGroupGroupsResolver.cs" />
+    <Compile Include="Model\Queries\GroupResolvers\EmptyGroupsResolver.cs" />
+    <Compile Include="Model\Queries\InstanceGroupScopeQueryExecutor.cs" />
+    <Compile Include="Model\Queries\InstanceScopeQueryExecutor.cs" />
+    <Compile Include="Model\Queries\QueryExecutionParams.cs" />
+    <Compile Include="Model\Queries\QueryExecutorFactory.cs" />
+    <Compile Include="Model\Settings\ActivityLayoutSetting.cs" />
+    <Compile Include="Model\Settings\ApplicationResources.cs" />
+    <Compile Include="Model\Settings\ExtendedSetting.cs" />
+    <Compile Include="Model\Settings\LayoutSettings.cs" />
+    <Compile Include="Model\Settings\SettingBaseTemplate.cs" />
+    <Compile Include="Model\Settings\SettingsBase.cs" />
+    <Compile Include="Model\Settings\SplitterSetting.cs" />
+    <Compile Include="Model\Settings\SystemSettingsInfo.cs" />
+    <Compile Include="Model\Settings\InstanceTemplate.cs" />
+    <Compile Include="Model\NormalizeInfo.cs" />
+    <Compile Include="Model\TemplateNodeLocaleInfo.cs" />
+    <Compile Include="Model\TemplateNodeQueryInfo.cs" />
+    <Compile Include="Model\VisualizeData.cs" />
+    <Compile Include="Model\WindowStateAndBounds.cs" />
+    <Compile Include="Preprocessor\HtmlPreprocessorDialog.cs" />
+    <Compile Include="Preprocessor\DataGridPreprocessorDialog.cs" />
+    <Compile Include="Preprocessor\RDLPreprocessorDialog.cs" />
+    <Compile Include="Preprocessor\PreprocessorArea.cs" />
+    <Compile Include="Properties\Resources.Designer.cs">
+      <DependentUpon>Resources.resx</DependentUpon>
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+    </Compile>
+    <Compile Include="ReportViewer\ReportViewrControl.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="ReportViewer\ReportViewrControl.Designer.cs">
+      <DependentUpon>ReportViewrControl.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Table\ColumnDefinition.cs" />
+    <Compile Include="Table\Settings\ColumnAlign.cs" />
+    <Compile Include="Table\TableConfiguration.cs" />
+    <Compile Include="Table\TableControl.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="Table\TableControl.Designer.cs">
+      <DependentUpon>TableControl.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Table\TableSource.cs" />
+    <Compile Include="Table\TableStateSettings.cs" />
+    <Compile Include="Table\XmlFileTableSource.cs" />
+    <Compile Include="Table\XmlFileTableSourceItem.cs" />
+    <Compile Include="Table\XmlNodePath.cs" />
+    <Compile Include="Utils\AppVersionHelper.cs" />
+    <Compile Include="Utils\Collections.cs" />
+    <Compile Include="Utils\Colors.cs" />
+    <Compile Include="Utils\Cryptography\CachingCryptoService.cs" />
+    <Compile Include="Utils\Cryptography\CryptoService.cs" />
+    <Compile Include="Utils\Cryptography\ICryptoService.cs" />
+    <Compile Include="Utils\CurrentAssembly.cs" />
+    <Compile Include="Utils\CodeGuard\CodeGuardCompleteEventArgs.cs" />
+    <Compile Include="Utils\CodeGuard\CodeGuardProcessEventArgs.cs" />
+    <Compile Include="Utils\Connection\DataConnectionConfiguration.cs" />
+    <Compile Include="Utils\Connection\IDataConnectionConfiguration.cs" />
+    <Compile Include="Utils\ControlExtensions.cs" />
+    <Compile Include="Utils\Extentions.cs" />
+    <Compile Include="Utils\FrameworkVersions.cs" />
+    <Compile Include="Utils\CodeGuard\CodeGuardAnalyzer.cs" />
+    <Compile Include="Utils\Guard.cs" />
+    <Compile Include="Utils\HexHelper.cs" />
+    <Compile Include="Utils\Lists.cs" />
+    <Compile Include="Utils\MayBe.cs" />
+    <Compile Include="Utils\NativeMethods.cs" />
+    <Compile Include="Utils\Network\HostPinger.cs" />
+    <Compile Include="Utils\Network\IPinger.cs" />
+    <Compile Include="Utils\Network\PingResult.cs" />
+    <Compile Include="Utils\Network\TcpPinger.cs" />
+    <Compile Include="Utils\Network\UdpPinger.cs" />
+    <Compile Include="Utils\ObjectExtensions.cs" />
+    <Compile Include="Utils\ObservableConcurrentDictionary.cs" />
+    <Compile Include="Utils\ReadOnlyDirectory.cs" />
+    <Compile Include="Utils\SecureRandom.cs" />
+    <Compile Include="Utils\SQLiteHelper.cs" />
+    <Compile Include="Utils\TaskContinuationExtensions.cs" />
+    <Compile Include="Utils\TryFinally.cs" />
+    <Compile Include="Utils\WaitCursor.cs" />
+    <Compile Include="Utils\CryptoProcessor.cs" />
+    <Compile Include="Model\ErrorLog.cs" />
+    <Compile Include="Gui\frmAboutBox.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Gui\frmAboutBox.Designer.cs">
+      <DependentUpon>frmAboutBox.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Gui\frmErrorLog.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Gui\frmErrorLog.Designer.cs">
+      <DependentUpon>frmErrorLog.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Gui\frmMain.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Gui\frmMain.Designer.cs">
+      <DependentUpon>frmMain.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Gui\ConnectionTabControl.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="Gui\cntConnectionTab.Designer.cs">
+      <DependentUpon>ConnectionTabControl.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Gui\frmSettings.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Gui\frmSettings.Designer.cs">
+      <DependentUpon>frmSettings.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Graph\GraphConfiguration.cs" />
+    <Compile Include="Graph\GraphControl.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="Graph\GraphControl.designer.cs">
+      <DependentUpon>GraphControl.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Graph\GraphData.cs" />
+    <Compile Include="Graph\PlainItem.cs" />
+    <Compile Include="Utils\SystemMenu.cs">
+      <SubType>Component</SubType>
+    </Compile>
+    <Compile Include="Utils\WebBrowserComp.cs" />
+    <Compile Include="Utils\XmlUtils.cs" />
+    <Compile Include="Gui\frmConnectionSelection.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Gui\frmConnectionSelection.Designer.cs">
+      <DependentUpon>frmConnectionSelection.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Model\AuthenticationInfo.cs" />
+    <Compile Include="Model\ConnectionGroupInfo.cs" />
+    <Compile Include="Model\Internationalization\LocaleFormInfo.cs" />
+    <Compile Include="Model\Internationalization\LocaleItemInfo.cs" />
+    <Compile Include="Model\Internationalization\LocaleManager.cs" />
+    <Compile Include="Model\Internationalization\LocaleResourceInfo.cs" />
+    <Compile Include="Model\Internationalization\LocalizableForm.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Model\Loaders\ConnectionsLoader.cs" />
+    <Compile Include="Model\Loaders\SettingsLoader.cs" />
+    <Compile Include="Model\Loaders\QueriesLoader.cs" />
+    <Compile Include="Model\Loaders\TemplateNodesLoader.cs" />
+    <Compile Include="Model\MsSqlAuditorModel.cs" />
+    <Compile Include="Model\ParameterValue.cs" />
+    <Compile Include="Model\QueryInfo.cs" />
+    <Compile Include="Model\Settings\SettingsInfo.cs" />
+    <Compile Include="Model\SqlProcessor.cs" />
+    <Compile Include="Model\TemplateNodeInfo.cs" />
+    <Compile Include="Preprocessor\GraphPreprocessor.cs" />
+    <Compile Include="Preprocessor\IPreprocessor.cs" />
+    <Compile Include="Preprocessor\XslPreprocessManager.cs" />
+    <Compile Include="Program.cs" />
+    <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Utils\DateTimeHelpers.cs" />
+    <Compile Include="Utils\QueryHelper.cs" />
+    <Compile Include="Utils\StringHelpers.cs" />
+    <Compile Include="WebServer\BaseRequest.cs" />
+    <Compile Include="WebServer\GetFileCommand.cs" />
+    <Compile Include="WebServer\GetResultCommand.cs" />
+    <Compile Include="WebServer\WebServerFrontend.cs" />
+    <Compile Include="WebServer\WebServerManager.cs" />
+    <EmbeddedResource Include="Gui\ConnectionTabArea.resx">
+      <DependentUpon>ConnectionTabArea.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Gui\ConnectionTabControl.resx">
+      <DependentUpon>ConnectionTabControl.cs</DependentUpon>
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Gui\CreateDirectConnectionDialog.resx">
+      <DependentUpon>CreateDirectConnectionDialog.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Gui\DirectConnectionDialog.resx">
+      <DependentUpon>DirectConnectionDialog.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Gui\EditDirectConnectionDialog.resx">
+      <DependentUpon>EditDirectConnectionDialog.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Gui\frmNewScheduleId.resx">
+      <DependentUpon>frmNewScheduleId.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Gui\frmAboutBox.resx">
+      <DependentUpon>frmAboutBox.cs</DependentUpon>
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Gui\frmAboutLicense.resx">
+      <DependentUpon>frmAboutLicense.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Gui\frmErrorLog.resx">
+      <DependentUpon>frmErrorLog.cs</DependentUpon>
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Gui\frmComponents.resx">
+      <DependentUpon>frmComponents.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Gui\frmLicenseErrors.resx">
+      <DependentUpon>frmLicenseErrors.cs</DependentUpon>
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Gui\frmMain.resx">
+      <DependentUpon>frmMain.cs</DependentUpon>
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Gui\frmExceptionBox.resx">
+      <DependentUpon>frmExceptionBox.cs</DependentUpon>
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Gui\frmSaveDialog.resx">
+      <DependentUpon>frmSaveDialog.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Gui\frmSettings.resx">
+      <DependentUpon>frmSettings.cs</DependentUpon>
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Graph\GraphControl.resx">
+      <DependentUpon>GraphControl.cs</DependentUpon>
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Gui\frmConnectionSelection.resx">
+      <DependentUpon>frmConnectionSelection.cs</DependentUpon>
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Gui\frmStoredConnectionSelector.resx">
+      <DependentUpon>frmStoredConnectionSelector.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Gui\frmUserSettingSchedule.resx">
+      <DependentUpon>frmUserSettingSchedule.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Gui\frmUserSettingsNode.resx">
+      <DependentUpon>frmUserSettingsNode.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Gui\frmUserSettingsParameters.resx">
+      <DependentUpon>frmUserSettingsParameters.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Gui\InternalSqliteConnectionDialog.resx">
+      <DependentUpon>InternalSqliteConnectionDialog.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Gui\NetworkInformationConnectionDialog.resx">
+      <DependentUpon>NetworkInformationConnectionDialog.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Gui\NonSqlDataConnectionDialog.resx">
+      <DependentUpon>NonSqlDataConnectionDialog.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Gui\OpenConnectionDialog.resx">
+      <DependentUpon>OpenConnectionDialog.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Gui\ProgressForm.resx">
+      <DependentUpon>ProgressForm.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Gui\RunningTaskInfoForm.resx">
+      <DependentUpon>RunningTaskInfoForm.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Gui\TitleFrame.resx">
+      <DependentUpon>TitleFrame.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Gui\UserSettingScheduleControl.resx">
+      <DependentUpon>UserSettingScheduleControl.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Properties\Resources.resx">
+      <Generator>ResXFileCodeGenerator</Generator>
+      <LastGenOutput>Resources.Designer.cs</LastGenOutput>
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
+    <EmbeddedResource Include="ReportViewer\ReportViewrControl.resx">
+      <DependentUpon>ReportViewrControl.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Table\TableControl.resx">
+      <DependentUpon>TableControl.cs</DependentUpon>
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
+    <None Include="app.config">
+      <SubType>Designer</SubType>
+    </None>
+    <None Include="app.manifest">
+      <SubType>Designer</SubType>
+    </None>
+    <None Include="ClassDiagram1.cd" />
+    <None Include="packages.config" />
+    <None Include="Properties\DataSources\MSSQLServerAuditor.Model.AuthenticationInfo.datasource" />
+    <None Include="Properties\DataSources\MSSQLServerAuditor.Model.ConnectionGroupInfo.datasource" />
+    <None Include="Properties\DataSources\MSSQLServerAuditor.Model.ConnectionInfo.datasource" />
+    <None Include="Properties\DataSources\MSSQLServerAuditor.Model.LicenseProblem.datasource" />
+    <None Include="Properties\DataSources\MSSQLServerAuditor.Model.Settings.TemplateFileSetting.datasource" />
+    <None Include="Properties\DataSources\MSSQLServerAuditor.Model.SettingsInfo.datasource" />
+    <None Include="Properties\DataSources\MSSQLServerAuditor.Model.SystemSettingsInfo.datasource" />
+    <None Include="Properties\DataSources\MSSQLServerAuditor.Model.UserSettingsParameters.IQueryParameters.datasource" />
+    <None Include="Properties\Settings.settings">
+      <Generator>SettingsSingleFileGenerator</Generator>
+      <LastGenOutput>Settings.Designer.cs</LastGenOutput>
+    </None>
+    <Compile Include="Properties\Settings.Designer.cs">
+      <AutoGen>True</AutoGen>
+      <DependentUpon>Settings.settings</DependentUpon>
+      <DesignTimeSharedInput>True</DesignTimeSharedInput>
+    </Compile>
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="appIcon.ico" />
+    <None Include="Resources\active_schedule.png" />
+    <None Include="Resources\minus.png" />
+    <None Include="Resources\plus.png" />
+    <None Include="Resources\copy_paste.png" />
+    <None Include="Resources\stop.png" />
+    <None Include="Resources\arrow_redo.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\MSSQLServerAuditorData\MSSQLServerAuditorData.csproj">
+      <Project>{effb82dd-94a6-4666-a3bf-83291c5dcd4f}</Project>
+      <Name>MSSQLServerAuditorData</Name>
+      <Private>True</Private>
+      <EmbedInteropTypes>False</EmbedInteropTypes>
+    </ProjectReference>
+  </ItemGroup>
+  <ItemGroup>
+    <BootstrapperPackage Include=".NETFramework,Version=v4.0,Profile=Client">
+      <Visible>False</Visible>
+      <ProductName>Microsoft .NET Framework 4 Client Profile %28x86 and x64%29</ProductName>
+      <Install>true</Install>
+    </BootstrapperPackage>
+    <BootstrapperPackage Include="Microsoft.Net.Client.3.5">
+      <Visible>False</Visible>
+      <ProductName>.NET Framework 3.5 SP1 Client Profile</ProductName>
+      <Install>false</Install>
+    </BootstrapperPackage>
+    <BootstrapperPackage Include="Microsoft.Net.Framework.3.5.SP1">
+      <Visible>False</Visible>
+      <ProductName>.NET Framework 3.5 SP1</ProductName>
+      <Install>false</Install>
+    </BootstrapperPackage>
+    <BootstrapperPackage Include="Microsoft.Windows.Installer.4.5">
+      <Visible>False</Visible>
+      <ProductName>Windows Installer 4.5</ProductName>
+      <Install>true</Install>
+    </BootstrapperPackage>
+  </ItemGroup>
+  <ItemGroup>
+    <Folder Include="x64\" />
+    <Folder Include="x86\" />
+  </ItemGroup>
+  <ItemGroup>
+    <WCFMetadata Include="Service References\" />
+  </ItemGroup>
+  <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
+  <Import Project="..\packages\System.Data.SQLite.Core.1.0.98.1\build\net40\System.Data.SQLite.Core.Lib.targets" Condition="Exists('..\packages\System.Data.SQLite.Core.1.0.98.1\build\net40\System.Data.SQLite.Core.Lib.targets')" />
+  <Target Name="EnsureNuGetPackageBuildImports" BeforeTargets="PrepareForBuild">
+    <PropertyGroup>
+      <ErrorText>This project references NuGet package(s) that are missing on this computer. Enable NuGet Package Restore to download them.  For more information, see http://go.microsoft.com/fwlink/?LinkID=322105. The missing file is {0}.</ErrorText>
+    </PropertyGroup>
+    <Error Condition="!Exists('..\packages\System.Data.SQLite.Core.1.0.98.1\build\net40\System.Data.SQLite.Core.Lib.targets')" Text="$([System.String]::Format('$(ErrorText)', '..\packages\System.Data.SQLite.Core.1.0.98.1\build\net40\System.Data.SQLite.Core.Lib.targets'))" />
+  </Target>
+  <!-- To modify your build process, add your task inside one of the targets below and uncomment it.
+       Other similar extension points exist, see Microsoft.Common.targets.
+  <Target Name="BeforeBuild">
+  </Target>
+  -->
+  <Target Name="AfterBuild">
+    <ItemGroup>
+      <OutputFiles Include="$(OutputPath)*.dll" />
+      <OutputFiles Include="$(OutputPath)*.pdb" />
+      <OutputFiles Include="$(OutputPath)*.xml" Exclude="$(OutputPath)MSSQLServerAuditor*.xml" />
+    </ItemGroup>
+    <Move SourceFiles="@(OutputFiles)" DestinationFolder="$(OutputPath)lib" OverwriteReadOnlyFiles="true" />
+  </Target>
+</Project>

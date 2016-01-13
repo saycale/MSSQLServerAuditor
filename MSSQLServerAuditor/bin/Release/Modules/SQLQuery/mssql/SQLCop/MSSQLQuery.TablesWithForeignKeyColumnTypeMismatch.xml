@@ -1,0 +1,134 @@
+﻿<?xml version="1.0" encoding="UTF-8"?>
+<root xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+<sqlquery type="MSSQL">
+	<sql-select name="GetTablesWithForeignKeyColumnTypeMismatch">
+		<name>
+			ForeignKey with the mismatched type columns
+		</name>
+		<description>
+			Find all tables with foreign key, where the reference columns have the diffent types.
+		</description>
+		<reference>
+		</reference>
+		<sql-select-text MinSupportedVersion="8.*" MaxSupportedVersion="8.*" signature="">
+			SET NOCOUNT ON;
+			SET DEADLOCK_PRIORITY LOW;
+
+			SELECT
+				 tSFKObj.[name]            AS [ForeignKeyName]
+				,tSUSource.[name]          AS [SourceTableSchema]
+				,tSOSource.[name]          AS [SourceTableName]
+				,tFKSourceSCol.[name]      AS [SourceTableColumnName]
+				,tFKSourceSColStype.[name] AS [SourceTableColumnTypeName]
+				,tFKSourceSCol.[length]    AS [SourceTableColumnLength]
+				,tFKSourceSCol.[xprec]     AS [SourceTableColumnPrecision]
+				,tSUDest.[name]            AS [DestTableSchema]
+				,tSODest.[name]            AS [DestTableName]
+				,tFKDestSCol.[name]        AS [DestTableColumnName]
+				,tFKDestSColSType.[name]   AS [DestTableColumnTypeName]
+				,tFKDestSCol.[length]      AS [DestTableColumnLength]
+				,tFKDestSCol.[xprec]       AS [DestTableColumnPrecision]
+			FROM
+				[dbo].[sysforeignkeys] tSFK
+				INNER JOIN [dbo].[sysobjects] tSFKObj ON
+					tSFKObj.[id] = tSFK.[constid]
+				INNER JOIN [dbo].[sysobjects] tSOSource ON
+					tSOSource.[id] = tSFK.[fkeyid]
+				INNER JOIN [dbo].[sysusers] tSUSource ON
+					tSUSource.[uid] = tSOSource.[uid]
+				INNER JOIN [dbo].[syscolumns] tFKSourceSCol ON
+					tFKSourceSCol.[id] = tSOSource.[id]
+					AND tFKSourceSCol.[colid] = tSFK.[fkey]
+				INNER JOIN [dbo].[systypes] tFKSourceSColStype ON
+					tFKSourceSColStype.[xusertype] = tFKSourceSCol.[xusertype]
+				INNER JOIN [dbo].[sysobjects] tSODest ON
+					tSODest.[id] = tSFK.[rkeyid]
+				INNER JOIN [dbo].[sysusers] tSUDest ON
+					tSUDest.[uid] = tSODest.[uid]
+				INNER JOIN [dbo].[syscolumns] tFKDestSCol ON
+					tFKDestSCol.[id] = tSODest.[id]
+					AND tFKDestSCol.[colid] = tSFK.[rkey]
+				INNER JOIN [dbo].[systypes] tFKDestSColSType ON
+					tFKDestSColSType.[xusertype] = tFKDestSCol.[xusertype]
+			WHERE
+				tFKDestSColSType.[name] != tFKSourceSColStype.[name]
+				OR
+				(
+					tFKDestSColSType.[name] = tFKSourceSColStype.[name]
+					AND tFKDestSCol.[length] != tFKSourceSCol.[length]
+				)
+				OR
+				(
+					tFKDestSColSType.[name] = tFKSourceSColStype.[name]
+					AND tFKDestSCol.[length] = tFKSourceSCol.[length]
+					AND tFKDestSCol.[xprec] != tFKSourceSCol.[xprec]
+				)
+			ORDER BY
+				 tSFKObj.[name]
+				,tSUSource.[name]
+				,tSOSource.[name]
+				,tFKSourceSCol.[name];
+		</sql-select-text>
+		<sql-select-text MinSupportedVersion="9.*" MaxSupportedVersion="*" signature="">
+			SET NOCOUNT ON;
+			SET DEADLOCK_PRIORITY LOW;
+
+			SELECT
+				 tSFK.[name]                AS [ForeignKeyName]
+				,tSSSource.[name]           AS [SourceTableSchema]
+				,tSOSource.[name]           AS [SourceTableName]
+				,tFKSourceSCol.[name]       AS [SourceTableColumnName]
+				,tFKSourceSColStype.[name]  AS [SourceTableColumnTypeName]
+				,tFKSourceSCol.[max_length] AS [SourceTableColumnLength]
+				,tFKSourceSCol.[precision]  AS [SourceTableColumnPrecision]
+				,tSSDest.[name]             AS [DestTableSchema]
+				,tSODest.[name]             AS [DestTableName]
+				,tFKDestSCol.[name]         AS [DestTableColumnName]
+				,tFKDestSColSType.[name]    AS [DestTableColumnTypeName]
+				,tFKDestSCol.[max_length]   AS [DestTableColumnLength]
+				,tFKDestSCol.[precision]    AS [DestTableColumnPrecision]
+			FROM
+				[sys].[foreign_keys] tSFK
+				INNER JOIN [sys].[foreign_key_columns] tSFKCols ON
+					tSFKCols.[constraint_object_id] = tSFK.[object_id]
+					AND tSFKCols.[parent_object_id] = tSFK.[parent_object_id]
+				INNER JOIN [sys].[objects] tSOSource ON
+					tSOSource.[object_id] = tSFK.[parent_object_id]
+				INNER JOIN [sys].[schemas] tSSSource ON
+					tSSSource.[schema_id] = tSOSource.[schema_id]
+				INNER JOIN [sys].[columns] tFKSourceSCol ON
+					tFKSourceSCol.[object_id] = tSOSource.[object_id]
+					AND tFKSourceSCol.[column_id] = tSFKCols.[parent_column_id]
+				INNER JOIN [sys].[types] tFKSourceSColStype ON
+					tFKSourceSColStype.[user_type_id] = tFKSourceSCol.[user_type_id]
+				INNER JOIN [sys].[objects] tSODest ON
+					tSODest.[object_id] = tSFK.[referenced_object_id]
+				INNER JOIN [sys].[schemas] tSSDest ON
+					tSSDest.[schema_id] = tSODest.[schema_id]
+				INNER JOIN [sys].[columns] tFKDestSCol ON
+					tFKDestSCol.[object_id] = tSODest.[object_id]
+					AND tFKDestSCol.[column_id] = tSFKCols.[referenced_column_id]
+				INNER JOIN [sys].[types] tFKDestSColStype ON
+					tFKDestSColStype.[user_type_id] = tFKDestSCol.[user_type_id]
+			WHERE
+				tFKDestSColSType.[name] != tFKSourceSColStype.[name]
+				OR
+				(
+					tFKDestSColSType.[name] = tFKSourceSColStype.[name]
+					AND tFKDestSCol.[max_length] != tFKSourceSCol.[max_length]
+				)
+				OR
+				(
+					tFKDestSColSType.[name] = tFKSourceSColStype.[name]
+					AND tFKDestSCol.[max_length] = tFKSourceSCol.[max_length]
+					AND tFKDestSCol.[precision] != tFKSourceSCol.[precision]
+				)
+			ORDER BY
+				 tSFK.[name]
+				,tSSSource.[name]
+				,tSOSource.[name]
+				,tFKSourceSCol.[name];
+			</sql-select-text>
+	</sql-select>
+</sqlquery>
+</root>
